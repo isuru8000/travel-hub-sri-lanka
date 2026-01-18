@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Language } from './types.ts';
 import Layout from './components/Layout.tsx';
@@ -8,14 +9,21 @@ import Foods from './components/Foods.tsx';
 import CategoriesSection from './components/CategoriesSection.tsx';
 import StorySection from './components/StorySection.tsx';
 import AIModal from './components/AIModal.tsx';
+import LoadingScreen from './components/LoadingScreen.tsx';
 
 type View = 'home' | 'destinations' | 'about' | 'foods';
 
 const App: React.FC = () => {
   const [language, setLanguage] = useState<Language>('EN');
   const [view, setView] = useState<View>('home');
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
 
   useEffect(() => {
+    // Simulate initial asset loading
+    const timer = setTimeout(() => {
+      setIsInitialLoading(false);
+    }, 2500);
+
     const handleAnchorClick = (e: MouseEvent) => {
       const target = e.currentTarget as HTMLAnchorElement;
       const href = target.getAttribute('href');
@@ -35,6 +43,7 @@ const App: React.FC = () => {
     });
 
     return () => {
+      clearTimeout(timer);
       anchors.forEach(anchor => {
         anchor.removeEventListener('click', handleAnchorClick as EventListener);
       });
@@ -42,8 +51,14 @@ const App: React.FC = () => {
   }, [view]);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [view]);
+    if (!isInitialLoading) {
+      window.scrollTo(0, 0);
+    }
+  }, [view, isInitialLoading]);
+
+  if (isInitialLoading) {
+    return <LoadingScreen />;
+  }
 
   const renderContent = () => {
     switch (view) {

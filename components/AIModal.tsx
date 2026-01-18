@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageSquare, X, Send, Bot, Loader2 } from 'lucide-react';
 import { Language } from '../types.ts';
@@ -86,9 +87,15 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
             ))}
             {isLoading && (
               <div className="flex justify-start">
-                <div className="bg-white p-4 rounded-3xl shadow-sm border border-gray-100 flex items-center gap-2">
-                  <Loader2 size={16} className="animate-spin text-[#E1306C]" />
-                  <span className="text-xs text-gray-400 font-bold">Analysing...</span>
+                <div className="bg-white p-4 rounded-3xl shadow-sm border border-gray-100 flex items-center gap-3">
+                  <div className="flex gap-1">
+                    <div className="w-1.5 h-1.5 rounded-full story-ring animate-bounce [animation-delay:-0.3s]"></div>
+                    <div className="w-1.5 h-1.5 rounded-full story-ring animate-bounce [animation-delay:-0.15s]"></div>
+                    <div className="w-1.5 h-1.5 rounded-full story-ring animate-bounce"></div>
+                  </div>
+                  <span className="text-xs text-gray-400 font-bold uppercase tracking-widest">
+                    {language === 'EN' ? 'Analysing...' : 'සලකා බලමින්...'}
+                  </span>
                 </div>
               </div>
             )}

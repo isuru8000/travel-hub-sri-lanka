@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { Language } from '../types';
-import { UI_STRINGS } from '../constants';
+import { Language } from '../types.ts';
+import { UI_STRINGS } from '../constants.tsx';
 import { ChevronRight } from 'lucide-react';
 
 interface HeroProps {
@@ -40,12 +40,6 @@ const Hero: React.FC<HeroProps> = ({ language, setView }) => {
           >
             {UI_STRINGS.exploreDestinations[language]}
             <ChevronRight size={18} />
-          </button>
-          <button 
-            onClick={() => setView('destinations')}
-            className="w-full sm:w-auto px-8 py-4 bg-white text-[#262626] font-bold rounded-xl border border-white hover:bg-gray-100 transition-all shadow-lg"
-          >
-            {UI_STRINGS.planYourTrip[language]}
           </button>
         </div>
       </div>

@@ -6,6 +6,8 @@ export interface Destination {
   name: { EN: string; SI: string };
   category: 'ancient' | 'beach' | 'wildlife' | 'mountains';
   image: string;
+  gallery: string[];
+  videoUrl?: string;
   history: { EN: string; SI: string };
   shortStory: { EN: string; SI: string };
   bestTime: { EN: string; SI: string };
