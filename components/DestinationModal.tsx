@@ -13,6 +13,28 @@ interface DestinationModalProps {
 const DestinationModal: React.FC<DestinationModalProps> = ({ destination, onClose, language }) => {
   if (!destination) return null;
 
+  const getWeatherTip = (timeRange: string, lang: Language) => {
+    const range = timeRange.toLowerCase();
+    if (range.includes('december') || range.includes('april') || range.includes('january')) {
+      return lang === 'EN' 
+        ? "Expect bright sunny days, dry weather, and calm turquoise seas. Ideal for sightseeing and vibrant photography." 
+        : "දීප්තිමත් හිරු රශ්මිය, වියළි කාලගුණය සහ සන්සුන් නිල් පැහැති මුහුදක් අපේක්ෂා කරන්න. සංචාරයට සහ ඡායාරූපකරණයට ඉතා සුදුසුයි.";
+    }
+    if (range.includes('may') || range.includes('september') || range.includes('october')) {
+      return lang === 'EN' 
+        ? "A warm tropical climate with occasional refreshing monsoon showers. Perfect for witnessing lush, emerald green landscapes." 
+        : "උණුසුම් නිවර්තන කාලගුණය සමඟ විටින් විට මෝසම් වැසි ඇති විය හැක. හරිත පැහැයෙන් පිරි පරිසරය නැරඹීමට හොඳම කාලයයි.";
+    }
+    if (range.includes('pilgrimage') || range.includes('mountain')) {
+      return lang === 'EN' 
+        ? "Refreshing cooler temperatures at night with crisp, clear morning skies. Be prepared for occasional mist in the highlands." 
+        : "රාත්‍රියේදී ප්‍රබෝධමත් සිසිල් කාලගුණය සහ උදෑසන පැහැදිලි අහසක් පවතී. කඳුකරයේ මීදුම සහිත තත්ත්වයන්ට සූදානම් වන්න.";
+    }
+    return lang === 'EN' 
+      ? "Stable tropical weather with moderate humidity. Generally pleasant for long outdoor explorations and coastal walks." 
+      : "ස්ථාවර නිවර්තන කාලගුණයක් සහ මධ්‍යස්ථ ආර්ද්‍රතාවයක් පවතී. එළිමහන් සංචාර සහ වෙරළ තීරයේ ඇවිදීමට සුදුසුයි.";
+  };
+
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 md:p-8 animate-in fade-in duration-300">
       <div 
@@ -65,13 +87,29 @@ const DestinationModal: React.FC<DestinationModalProps> = ({ destination, onClos
               </p>
               
               <div className="pt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="bg-[#fafafa] p-6 rounded-3xl border border-gray-100 flex items-center gap-4">
+                {/* Best Time Block with Tooltip */}
+                <div className="relative group bg-[#fafafa] p-6 rounded-3xl border border-gray-100 flex items-center gap-4 cursor-help transition-colors hover:bg-white hover:shadow-lg">
                   <Clock size={24} className="text-[#E1306C]" />
                   <div>
-                    <p className="text-[10px] uppercase font-bold text-gray-400 tracking-widest">Best Time</p>
+                    <p className="text-[10px] uppercase font-bold text-gray-400 tracking-widest">{UI_STRINGS.bestTimeLabel[language]}</p>
                     <p className="font-bold text-[#262626]">{destination.bestTime[language]}</p>
                   </div>
+                  
+                  {/* Custom Styled Tooltip */}
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-72 p-1 bg-gradient-to-br from-[#f09433] to-[#bc1888] rounded-2xl shadow-2xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-20 translate-y-2 group-hover:translate-y-0">
+                    <div className="bg-white rounded-[14px] p-4 text-left">
+                      <p className="text-[10px] font-bold insta-text-gradient uppercase tracking-widest mb-2 border-b border-gray-100 pb-1">
+                        {language === 'EN' ? 'Weather Forecast' : 'කාලගුණ අනාවැකිය'}
+                      </p>
+                      <p className="text-xs text-gray-600 leading-relaxed italic font-medium">
+                        {getWeatherTip(destination.bestTime.EN, language)}
+                      </p>
+                    </div>
+                    {/* Tooltip Arrow */}
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 w-3 h-3 bg-[#bc1888] rotate-45 -mt-1.5 shadow-lg"></div>
+                  </div>
                 </div>
+
                 <div className="bg-[#fafafa] p-6 rounded-3xl border border-gray-100 flex items-center gap-4">
                   <MapPin size={24} className="text-[#E1306C]" />
                   <div>
