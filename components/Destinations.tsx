@@ -238,6 +238,7 @@ const Destinations: React.FC<DestinationsProps> = ({ language }) => {
       <DestinationModal 
         destination={selectedDestination}
         onClose={() => setSelectedDestination(null)}
+        onSelect={setSelectedDestination}
         language={language}
       />
     </section>

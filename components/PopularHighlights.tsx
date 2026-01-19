@@ -70,7 +70,7 @@ const PopularHighlights: React.FC<PopularHighlightsProps> = ({ language, setView
                   <h3 className="text-5xl md:text-6xl lg:text-7xl font-heritage font-bold text-[#262626]">
                     {dest.name[language]}
                   </h3>
-                  <p className="insta-text-gradient font-heritage italic text-3xl leading-snug">
+                  <p className="insta-text-gradient font-heritage italic text-lg md:text-xl leading-relaxed">
                     {dest.shortStory[language]}
                   </p>
                 </div>
@@ -121,6 +121,7 @@ const PopularHighlights: React.FC<PopularHighlightsProps> = ({ language, setView
       <DestinationModal 
         destination={selectedDest}
         onClose={() => setSelectedDest(null)}
+        onSelect={setSelectedDest}
         language={language}
       />
     </section>
