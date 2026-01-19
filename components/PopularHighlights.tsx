@@ -91,7 +91,7 @@ const PopularHighlights: React.FC<PopularHighlightsProps> = ({ language, setView
                     className="flex items-center gap-4 font-heritage font-bold text-2xl md:text-3xl uppercase tracking-wider group/btn hover:scale-105 transition-transform origin-left"
                   >
                     <span className="insta-text-gradient">
-                      {language === 'EN' ? 'Click Me' : 'මා ඔබන්න'}
+                      {language === 'EN' ? 'Explore' : 'බලන්න'}
                     </span>
                     <div className="w-14 h-14 rounded-full story-ring p-[2px] shadow-lg group-hover/btn:rotate-45 transition-all">
                        <div className="bg-white w-full h-full rounded-full flex items-center justify-center">

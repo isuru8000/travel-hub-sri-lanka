@@ -173,7 +173,7 @@ const Destinations: React.FC<DestinationsProps> = ({ language }) => {
                          {language === 'EN' ? 'Discovery' : 'සොයා ගැනීම'}
                       </span>
                       <span className="text-xl md:text-2xl font-heritage font-bold uppercase tracking-wider insta-text-gradient group-hover:translate-x-2 transition-transform origin-left">
-                         {language === 'EN' ? 'Click Me' : 'මා ඔබන්න'}
+                         {language === 'EN' ? 'Explore' : 'බලන්න'}
                       </span>
                     </div>
                     <div className="w-14 h-14 rounded-full story-ring p-[2px] group-hover:rotate-45 group-hover:scale-110 transition-all duration-500 shadow-xl">

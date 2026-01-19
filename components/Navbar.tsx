@@ -6,14 +6,14 @@ import { Menu, X, Globe } from 'lucide-react';
 interface NavbarProps {
   language: Language;
   setLanguage: (lang: Language) => void;
-  setView: (view: 'home' | 'destinations' | 'about' | 'foods') => void;
+  setView: (view: 'home' | 'destinations' | 'about' | 'foods' | 'interests' | 'music') => void;
   currentView: string;
 }
 
 const Navbar: React.FC<NavbarProps> = ({ language, setLanguage, setView, currentView }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleNav = (view: 'home' | 'destinations' | 'about' | 'foods') => {
+  const handleNav = (view: 'home' | 'destinations' | 'about' | 'foods' | 'interests' | 'music') => {
     setView(view);
     setIsOpen(false);
   };
@@ -41,19 +41,25 @@ const Navbar: React.FC<NavbarProps> = ({ language, setLanguage, setView, current
             onClick={() => handleNav('home')} 
             className={`text-sm font-semibold transition-colors ${currentView === 'home' ? 'insta-text-gradient' : 'text-[#262626] hover:text-[#E1306C]'}`}
           >
-            Home
+            {language === 'EN' ? 'Home' : 'මුල් පිටුව'}
           </button>
           <button 
             onClick={() => handleNav('destinations')} 
             className={`text-sm font-semibold transition-colors ${currentView === 'destinations' ? 'insta-text-gradient' : 'text-[#262626] hover:text-[#E1306C]'}`}
           >
-            Destinations
+            {language === 'EN' ? 'Destinations' : 'ගමනාන්ත'}
+          </button>
+          <button 
+            onClick={() => handleNav('interests')} 
+            className={`text-sm font-semibold transition-colors ${currentView === 'interests' ? 'insta-text-gradient' : 'text-[#262626] hover:text-[#E1306C]'}`}
+          >
+            {language === 'EN' ? 'Interests' : 'රුචිකත්වයන්'}
           </button>
           <button 
             onClick={() => handleNav('about')} 
             className={`text-sm font-semibold transition-colors ${currentView === 'about' ? 'insta-text-gradient' : 'text-[#262626] hover:text-[#E1306C]'}`}
           >
-            About
+            {language === 'EN' ? 'About' : 'අපි ගැන'}
           </button>
           <div className="h-4 w-[1px] bg-gray-200"></div>
           <button 
@@ -81,9 +87,10 @@ const Navbar: React.FC<NavbarProps> = ({ language, setLanguage, setView, current
       {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden bg-white border-b border-gray-100 py-4 px-4 space-y-4">
-          <button onClick={() => handleNav('home')} className="block w-full text-left py-2 text-sm font-bold">Home</button>
-          <button onClick={() => handleNav('destinations')} className="block w-full text-left py-2 text-sm font-bold">Destinations</button>
-          <button onClick={() => handleNav('about')} className="block w-full text-left py-2 text-sm font-bold">About</button>
+          <button onClick={() => handleNav('home')} className="block w-full text-left py-2 text-sm font-bold">{language === 'EN' ? 'Home' : 'මුල් පිටුව'}</button>
+          <button onClick={() => handleNav('destinations')} className="block w-full text-left py-2 text-sm font-bold">{language === 'EN' ? 'Destinations' : 'ගමනාන්ත'}</button>
+          <button onClick={() => handleNav('interests')} className="block w-full text-left py-2 text-sm font-bold">{language === 'EN' ? 'Interests' : 'රුචිකත්වයන්'}</button>
+          <button onClick={() => handleNav('about')} className="block w-full text-left py-2 text-sm font-bold">{language === 'EN' ? 'About' : 'අපි ගැන'}</button>
         </div>
       )}
     </nav>

@@ -25,6 +25,17 @@ export interface Food {
   tasteProfile: { EN: string; SI: string };
 }
 
+export interface HeritageMusic {
+  id: string;
+  type: 'instrument' | 'song';
+  name: { EN: string; SI: string };
+  description: { EN: string; SI: string };
+  image: string;
+  origin: { EN: string; SI: string };
+  significance: { EN: string; SI: string };
+  sampleLyrics?: { EN: string; SI: string };
+}
+
 export interface Translation {
   [key: string]: { EN: string; SI: string };
 }

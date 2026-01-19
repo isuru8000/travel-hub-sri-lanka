@@ -1,9 +1,11 @@
+
 import { GoogleGenAI } from "@google/genai";
 import { Language } from "../types.ts";
 
 export const getLankaGuideResponse = async (prompt: string, language: Language) => {
   try {
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || "" });
+    // Fix: Using process.env.API_KEY directly in the initialization object as per requirements
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     const systemInstruction = `
       You are "Lanka Guide AI", a friendly and highly knowledgeable travel assistant for "Travel Hub Sri Lanka". 
       You speak fluently in ${language === 'SI' ? 'Sinhala and English' : 'English and Sinhala'}.
@@ -19,6 +21,7 @@ export const getLankaGuideResponse = async (prompt: string, language: Language) 
       Keep responses concise yet descriptive.
     `;
 
+    // Fix: Using correct model and direct text property access
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
       contents: prompt,

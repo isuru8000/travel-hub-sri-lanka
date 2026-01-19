@@ -1,14 +1,201 @@
 
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Destination, Language } from '../types.ts';
 import { UI_STRINGS } from '../constants.tsx';
-import { X, MapPin, Info, Clock, PlayCircle, Image as ImageIcon, Lightbulb } from 'lucide-react';
+import { X, MapPin, Info, Clock, PlayCircle, Image as ImageIcon, Lightbulb, Play, Pause, Volume2, VolumeX, Maximize } from 'lucide-react';
 
+// Fix: Define YouTube IFrame API types on window object to resolve TypeScript errors
+declare global {
+  interface Window {
+    YT: any;
+    onYouTubeIframeAPIReady: (() => void) | undefined;
+  }
+}
+
+// Fix: Define the missing props interface for DestinationModal component
 interface DestinationModalProps {
   destination: Destination | null;
   onClose: () => void;
   language: Language;
 }
+
+const CustomVideoPlayer: React.FC<{ url: string; title: string }> = ({ url, title }) => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [volume, setVolume] = useState(100);
+  const [isMuted, setIsMuted] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [isReady, setIsReady] = useState(false);
+  const playerRef = useRef<any>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const iframeId = `yt-player-${url.split('/').pop()}`;
+
+  useEffect(() => {
+    // Fix: Safely check for YT global from YouTube IFrame API
+    // Load YouTube IFrame API if not already present
+    if (!window.YT) {
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+    }
+
+    let interval: number;
+
+    const onPlayerReady = (event: any) => {
+      setIsReady(true);
+      playerRef.current = event.target;
+      
+      // Update progress every second
+      interval = window.setInterval(() => {
+        if (playerRef.current && typeof playerRef.current.getCurrentTime === 'function') {
+          const currentTime = playerRef.current.getCurrentTime();
+          const duration = playerRef.current.getDuration();
+          if (duration > 0) {
+            setProgress((currentTime / duration) * 100);
+          }
+        }
+      }, 500);
+    };
+
+    const onPlayerStateChange = (event: any) => {
+      // YT.PlayerState.PLAYING = 1, PAUSED = 2
+      setIsPlaying(event.data === 1);
+    };
+
+    const createPlayer = () => {
+      new window.YT.Player(iframeId, {
+        events: {
+          onReady: onPlayerReady,
+          onStateChange: onPlayerStateChange,
+        },
+      });
+    };
+
+    // Fix: Accessing YT and onYouTubeIframeAPIReady via the extended Window interface to resolve TS errors
+    if (window.YT && window.YT.Player) {
+      createPlayer();
+    } else {
+      window.onYouTubeIframeAPIReady = createPlayer;
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [url]);
+
+  const togglePlay = () => {
+    if (!playerRef.current) return;
+    if (isPlaying) {
+      playerRef.current.pauseVideo();
+    } else {
+      playerRef.current.playVideo();
+    }
+  };
+
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = parseInt(e.target.value);
+    setVolume(val);
+    if (playerRef.current) {
+      playerRef.current.setVolume(val);
+      if (val > 0) setIsMuted(false);
+    }
+  };
+
+  const toggleMute = () => {
+    if (!playerRef.current) return;
+    if (isMuted) {
+      playerRef.current.unMute();
+      setIsMuted(false);
+      playerRef.current.setVolume(volume || 50);
+    } else {
+      playerRef.current.mute();
+      setIsMuted(true);
+    }
+  };
+
+  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const seekTo = parseFloat(e.target.value);
+    setProgress(seekTo);
+    if (playerRef.current) {
+      const duration = playerRef.current.getDuration();
+      playerRef.current.seekTo((seekTo / 100) * duration, true);
+    }
+  };
+
+  return (
+    <div ref={containerRef} className="group relative aspect-video rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-black">
+      {/* Actual IFrame */}
+      <iframe
+        id={iframeId}
+        src={`${url}?enablejsapi=1&controls=0&modestbranding=1&rel=0&iv_load_policy=3`}
+        title={title}
+        className="absolute inset-0 w-full h-full pointer-events-none"
+        allow="autoplay; encrypted-media"
+      ></iframe>
+
+      {/* Custom Controls Overlay */}
+      <div className={`absolute inset-0 bg-black/20 transition-opacity duration-300 ${isPlaying ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'}`}>
+        {/* Play Overlay Button */}
+        {!isPlaying && (
+          <button 
+            onClick={togglePlay}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 story-ring p-1 rounded-full shadow-2xl hover:scale-110 transition-transform"
+          >
+            <div className="bg-white w-full h-full rounded-full flex items-center justify-center">
+              <Play size={32} className="text-[#E1306C] fill-[#E1306C] ml-1" />
+            </div>
+          </button>
+        )}
+
+        {/* Bottom Control Bar */}
+        <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent space-y-4">
+          {/* Progress Bar */}
+          <div className="relative h-1.5 w-full bg-white/20 rounded-full overflow-hidden cursor-pointer">
+            <input 
+              type="range"
+              min="0"
+              max="100"
+              step="0.1"
+              value={progress}
+              onChange={handleSeek}
+              className="absolute inset-0 w-full opacity-0 z-10 cursor-pointer"
+            />
+            <div 
+              className="absolute top-0 left-0 h-full insta-gradient"
+              style={{ width: `${progress}%` }}
+            ></div>
+          </div>
+
+          <div className="flex items-center justify-between gap-6">
+            <div className="flex items-center gap-4">
+              <button onClick={togglePlay} className="text-white hover:text-[#E1306C] transition-colors">
+                {isPlaying ? <Pause size={24} fill="currentColor" /> : <Play size={24} fill="currentColor" />}
+              </button>
+              
+              <div className="flex items-center gap-2 group/volume">
+                <button onClick={toggleMute} className="text-white hover:text-[#E1306C] transition-colors">
+                  {isMuted || volume === 0 ? <VolumeX size={20} /> : <Volume2 size={20} />}
+                </button>
+                <input 
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={isMuted ? 0 : volume}
+                  onChange={handleVolumeChange}
+                  className="w-0 group-hover/volume:w-20 transition-all duration-300 accent-white h-1 cursor-pointer"
+                />
+              </div>
+            </div>
+
+            <button className="text-white/60 hover:text-white transition-colors">
+              <Maximize size={20} />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const DestinationModal: React.FC<DestinationModalProps> = ({ destination, onClose, language }) => {
   if (!destination) return null;
@@ -123,7 +310,7 @@ const DestinationModal: React.FC<DestinationModalProps> = ({ destination, onClos
             {/* Sidebar / Tips */}
             <div className="space-y-6">
               <div className="bg-[#E1306C]/5 p-8 rounded-[35px] border border-[#E1306C]/10 space-y-6">
-                <h4 className="flex items-center gap-2 font-bold text-[#E1306C] uppercase tracking-wider text-sm">
+                <h4 className="flex items-center gap-2 font-bold text-[#262626] uppercase tracking-wider text-sm">
                   <Lightbulb size={18} />
                   {UI_STRINGS.tipsLabel[language]}
                 </h4>
@@ -166,15 +353,7 @@ const DestinationModal: React.FC<DestinationModalProps> = ({ destination, onClos
                       <PlayCircle size={16} className="text-[#E1306C]" />
                       {language === 'EN' ? 'Cinematic Experience' : 'සිනමා අත්දැකීම'}
                     </h4>
-                    <div className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
-                      <iframe 
-                        src={destination.videoUrl}
-                        title={destination.name[language]}
-                        className="absolute inset-0 w-full h-full"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                        allowFullScreen
-                      ></iframe>
-                    </div>
+                    <CustomVideoPlayer url={destination.videoUrl} title={destination.name[language]} />
                   </div>
                 )}
              </div>

@@ -6,7 +6,7 @@ import * as Icons from 'lucide-react';
 
 interface CategoriesSectionProps {
   language: Language;
-  setView: (view: 'home' | 'destinations' | 'about' | 'foods') => void;
+  setView: (view: 'home' | 'destinations' | 'about' | 'foods' | 'music') => void;
 }
 
 const CategoriesSection: React.FC<CategoriesSectionProps> = ({ language, setView }) => {
@@ -34,6 +34,7 @@ const CategoriesSection: React.FC<CategoriesSectionProps> = ({ language, setView
                 key={cat.id} 
                 onClick={() => {
                    if (cat.id === 'foods') setView('foods');
+                   else if (cat.id === 'music') setView('music');
                    else setView('destinations');
                 }}
                 className="group p-10 rounded-[40px] bg-white border border-gray-100 hover:shadow-2xl transition-all text-center cursor-pointer flex flex-col items-center"

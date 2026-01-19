@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Navbar from './Navbar.tsx';
 import { Language } from '../types.ts';
@@ -7,7 +8,7 @@ interface LayoutProps {
   children: React.ReactNode;
   language: Language;
   setLanguage: (lang: Language) => void;
-  setView: (view: 'home' | 'destinations' | 'about' | 'foods') => void;
+  setView: (view: 'home' | 'destinations' | 'about' | 'foods' | 'interests' | 'music') => void;
   currentView: string;
 }
 
@@ -40,9 +41,10 @@ const Layout: React.FC<LayoutProps> = ({ children, language, setLanguage, setVie
           <div className="space-y-4">
             <h3 className="text-lg font-heritage font-bold text-[#262626] border-b border-gray-100 pb-2 uppercase tracking-widest text-xs">Explore</h3>
             <ul className="space-y-2 text-sm text-gray-600 font-semibold">
-              <li><button onClick={() => setView('about')} className="hover:text-[#E1306C] transition-colors text-left w-full">About Lanka</button></li>
-              <li><button onClick={() => setView('destinations')} className="hover:text-[#E1306C] transition-colors text-left w-full">Destinations</button></li>
               <li><button onClick={() => setView('home')} className="hover:text-[#E1306C] transition-colors text-left w-full">Home</button></li>
+              <li><button onClick={() => setView('destinations')} className="hover:text-[#E1306C] transition-colors text-left w-full">Destinations</button></li>
+              <li><button onClick={() => setView('interests')} className="hover:text-[#E1306C] transition-colors text-left w-full">Interests</button></li>
+              <li><button onClick={() => setView('about')} className="hover:text-[#E1306C] transition-colors text-left w-full">About Lanka</button></li>
               <li><a href="#" className="hover:text-[#E1306C] transition-colors">Contact Us</a></li>
             </ul>
           </div>

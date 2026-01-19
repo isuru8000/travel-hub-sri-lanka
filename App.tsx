@@ -6,12 +6,13 @@ import Hero from './components/Hero.tsx';
 import PopularHighlights from './components/PopularHighlights.tsx';
 import Destinations from './components/Destinations.tsx';
 import Foods from './components/Foods.tsx';
+import HeritageMusic from './components/HeritageMusic.tsx';
 import CategoriesSection from './components/CategoriesSection.tsx';
 import StorySection from './components/StorySection.tsx';
 import AIModal from './components/AIModal.tsx';
 import LoadingScreen from './components/LoadingScreen.tsx';
 
-type View = 'home' | 'destinations' | 'about' | 'foods';
+type View = 'home' | 'destinations' | 'about' | 'foods' | 'music' | 'interests';
 
 const App: React.FC = () => {
   const [language, setLanguage] = useState<Language>('EN');
@@ -72,6 +73,18 @@ const App: React.FC = () => {
         return (
           <div className="pt-8">
             <Foods language={language} />
+          </div>
+        );
+      case 'music':
+        return (
+          <div className="pt-8">
+            <HeritageMusic language={language} />
+          </div>
+        );
+      case 'interests':
+        return (
+          <div className="pt-8">
+            <CategoriesSection language={language} setView={setView} />
           </div>
         );
       case 'about':
