@@ -19,6 +19,7 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const suggestions = [
@@ -54,14 +55,11 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
 
   useEffect(() => {
     if (isOpen && messages.length === 0) {
-      setMessages([
-        { 
-          role: 'bot', 
-          text: language === 'EN' 
-            ? "Ayubowan! I'm Lanka Guide AI. I can help you plan your journey through our paradise. What would you like to know?" 
-            : "ආයුබෝවන්! මම ලංකා ගයිඩ් AI. අපේ පාරාදීසය හරහා ඔබේ සංචාරය සැලසුම් කිරීමට මට උදව් කළ හැකිය. ඔබට දැන ගැනීමට අවශ්‍ය කුමක්ද?" 
-        }
-      ]);
+      const initialText = language === 'EN' 
+        ? "Ayubowan! I'm Lanka Guide AI. I can help you plan your journey through our paradise. What would you like to know?" 
+        : "ආයුබෝවන්! මම ලංකා ගයිඩ් AI. අපේ පාරාදීසය හරහා ඔබේ සංචාරය සැලසුම් කිරීමට මට උදව් කළ හැකිය. ඔබට දැන ගැනීමට අවශ්‍ය කුමක්ද?";
+      
+      setMessages([{ role: 'bot', text: initialText }]);
     }
   }, [isOpen, language]);
 
@@ -72,19 +70,45 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
         behavior: 'smooth'
       });
     }
-  }, [messages, isLoading]);
+  }, [messages, isLoading, isTyping]);
+
+  const typeMessage = async (fullText: string) => {
+    setIsTyping(true);
+    let displayedText = "";
+    const characters = Array.from(fullText);
+    
+    setMessages(prev => [...prev, { role: 'bot', text: '' }]);
+
+    for (let i = 0; i < characters.length; i++) {
+      displayedText += characters[i];
+      setMessages(prev => {
+        const updated = [...prev];
+        updated[updated.length - 1] = { role: 'bot', text: displayedText };
+        return updated;
+      });
+      
+      // Slower typing speed (approx 35-45ms per char) for a more human feel
+      // and better readability of the Sinhala script.
+      const speed = fullText.length > 250 ? 30 : 45;
+      await new Promise(resolve => setTimeout(resolve, speed));
+    }
+    setIsTyping(false);
+  };
 
   const handleSend = async (customText?: string) => {
     const textToSend = customText || input;
-    if (!textToSend.trim() || isLoading) return;
+    if (!textToSend.trim() || isLoading || isTyping) return;
 
     setInput('');
     setMessages(prev => [...prev, { role: 'user', text: textToSend }]);
     setIsLoading(true);
 
     const botResponse = await getLankaGuideResponse(textToSend, language);
-    setMessages(prev => [...prev, { role: 'bot', text: botResponse || '' }]);
     setIsLoading(false);
+    
+    if (botResponse) {
+      await typeMessage(botResponse);
+    }
   };
 
   return (
@@ -103,29 +127,28 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
             <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 border-2 border-[#E1306C] rounded-full animate-pulse"></span>
           </div>
         </div>
-        {/* Glow effect on hover */}
         <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
       </button>
 
       {isOpen && (
         <div className="fixed inset-0 sm:inset-auto sm:bottom-6 sm:right-6 sm:w-[420px] sm:h-[650px] bg-white shadow-[0_30px_100px_rgba(0,0,0,0.25)] rounded-t-[40px] sm:rounded-[40px] z-[70] flex flex-col overflow-hidden animate-in slide-in-from-bottom-10 fade-in duration-500">
           
-          {/* Header - Glassmorphism Style */}
+          {/* Header */}
           <div className="relative shrink-0 p-6 insta-gradient text-white shadow-xl">
             <div className="absolute inset-0 pattern-overlay opacity-10"></div>
             <div className="relative flex justify-between items-center">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-white/20 backdrop-blur-xl rounded-2xl flex items-center justify-center border border-white/30 shadow-inner">
-                  <Bot size={28} className="text-white animate-pulse" />
+                  <Bot size={28} className={`text-white ${(isLoading || isTyping) ? 'animate-bounce' : ''}`} />
                 </div>
                 <div>
                   <h3 className="font-heritage font-bold text-xl tracking-tight leading-tight">
                     {UI_STRINGS.lankaGuideTitle[language]}
                   </h3>
                   <div className="flex items-center gap-1.5 opacity-80">
-                    <span className="w-2 h-2 bg-green-400 rounded-full"></span>
+                    <span className={`w-2 h-2 rounded-full ${(isLoading || isTyping) ? 'bg-orange-400 animate-pulse' : 'bg-green-400'}`}></span>
                     <span className="text-[10px] font-bold uppercase tracking-widest">
-                      {language === 'EN' ? 'Online Ambassador' : 'සබැඳි තානාපති'}
+                      {(isLoading || isTyping) ? (language === 'EN' ? 'Processing...' : 'සකසමින්...') : (language === 'EN' ? 'Online Ambassador' : 'සබැඳි තානාපති')}
                     </span>
                   </div>
                 </div>
@@ -156,7 +179,12 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
                     ? 'story-ring text-white rounded-br-none shadow-lg' 
                     : 'bg-white text-[#262626] border border-gray-100 rounded-bl-none shadow-md'
                 }`}>
-                  <p className="font-medium whitespace-pre-line">{m.text}</p>
+                  <p className="font-medium whitespace-pre-line">
+                    {m.text}
+                    {isTyping && i === messages.length - 1 && m.role === 'bot' && (
+                      <span className="inline-block w-1 h-4 ml-1 bg-[#E1306C] animate-pulse align-middle"></span>
+                    )}
+                  </p>
                 </div>
               </div>
             ))}
@@ -180,11 +208,9 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
             )}
           </div>
 
-          {/* Quick Suggestions & Input Area */}
+          {/* Input Area */}
           <div className="shrink-0 bg-white p-6 pt-2 border-t border-gray-100 space-y-4">
-            
-            {/* Quick Actions Scroll */}
-            {!isLoading && messages.length < 5 && (
+            {!isLoading && !isTyping && messages.length < 5 && (
               <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2 -mx-2 px-2">
                 {suggestions.map((s) => (
                   <button
@@ -199,7 +225,6 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
               </div>
             )}
 
-            {/* Main Input Field */}
             <div className="flex gap-3 items-center">
               <div className="flex-grow flex items-center bg-[#f0f2f5] rounded-3xl px-5 py-1.5 focus-within:ring-2 focus-within:ring-[#E1306C]/20 transition-all">
                 <input 
@@ -207,20 +232,21 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                  disabled={isLoading || isTyping}
                   placeholder={language === 'EN' ? "Ask me anything about Lanka..." : "ලංකාව ගැන ඕනෑම දෙයක් අසන්න..."}
-                  className="flex-grow py-3 bg-transparent focus:outline-none text-sm font-semibold text-[#262626] placeholder:text-gray-400"
+                  className="flex-grow py-3 bg-transparent focus:outline-none text-sm font-semibold text-[#262626] placeholder:text-gray-400 disabled:opacity-50"
                 />
                 <div className="flex items-center gap-2 text-gray-300">
                   <div className="w-px h-6 bg-gray-300"></div>
-                  <Sparkles size={18} className="text-[#E1306C] animate-pulse" />
+                  <Sparkles size={18} className={`${(isLoading || isTyping) ? 'animate-spin text-[#E1306C]' : 'text-gray-400'}`} />
                 </div>
               </div>
               <button 
                 onClick={() => handleSend()}
-                disabled={!input.trim() || isLoading}
+                disabled={!input.trim() || isLoading || isTyping}
                 className="w-12 h-12 shrink-0 story-ring text-white rounded-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all disabled:opacity-20 disabled:scale-100 shadow-lg"
               >
-                <Send size={20} />
+                {isLoading || isTyping ? <Loader2 size={20} className="animate-spin" /> : <Send size={20} />}
               </button>
             </div>
 
