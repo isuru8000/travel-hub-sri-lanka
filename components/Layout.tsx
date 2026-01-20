@@ -69,7 +69,7 @@ const Layout: React.FC<LayoutProps> = ({
             <div className="flex gap-4">
               <a href="#" className="p-2 border border-gray-200 rounded-full hover:story-ring hover:text-white transition-all text-[#262626]" title="Instagram"><Instagram size={20} /></a>
               <a href="#" className="p-2 border border-gray-200 rounded-full hover:bg-blue-600 hover:text-white transition-all text-[#262626]" title="Facebook"><Facebook size={20} /></a>
-              <a href="https://youtube.com/@travelhubsl" target="_blank" rel="noopener noreferrer" className="p-2 border border-gray-200 rounded-full hover:bg-red-600 hover:text-white transition-all text-[#262626]" title="YouTube"><Youtube size={20} /></a>
+              <a href="https://youtube.com/@travelhublk-123?si=g9z39WX5AvvghcfQ" target="_blank" rel="noopener noreferrer" className="p-2 border border-gray-200 rounded-full hover:bg-red-600 hover:text-white transition-all text-[#262626]" title="YouTube"><Youtube size={20} /></a>
             </div>
           </div>
         </div>

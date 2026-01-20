@@ -17,7 +17,8 @@ import {
   Quote,
   Trash2,
   Plus,
-  Lock
+  Lock,
+  FileImage
 } from 'lucide-react';
 import { User } from '../App.tsx';
 
@@ -95,6 +96,7 @@ const TravelMemories: React.FC<TravelMemoriesProps> = ({ language, user, onLogin
   const [showForm, setShowForm] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   const [formData, setFormData] = useState({
@@ -107,15 +109,35 @@ const TravelMemories: React.FC<TravelMemoriesProps> = ({ language, user, onLogin
     tags: ''
   });
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
+  const processFile = (file: File) => {
+    if (file && file.type.startsWith('image/')) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setFormData(prev => ({ ...prev, image: reader.result as string }));
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) processFile(file);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) processFile(file);
   };
 
   const removeImageFromForm = (e: React.MouseEvent) => {
@@ -364,50 +386,73 @@ const TravelMemories: React.FC<TravelMemoriesProps> = ({ language, user, onLogin
                         <textarea required rows={4} placeholder="Tell us about your experience..." value={formData.story} onChange={e => setFormData({...formData, story: e.target.value})} className="w-full px-6 py-4 bg-[#fafafa] rounded-2xl border border-gray-100 focus:outline-none focus:ring-2 focus:ring-[#E1306C]/20 resize-none" />
                       </div>
 
-                      {/* Explicit Image Upload Feature */}
+                      {/* Enhanced Image Upload Feature with Drag and Drop */}
                       <div className="space-y-4">
-                        <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 ml-2">Photo Memory (Direct Upload)</label>
+                        <div className="flex items-center justify-between">
+                          <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 ml-2">Photo Memory</label>
+                          {formData.image && (
+                             <span className="text-[10px] font-bold text-green-500 uppercase tracking-widest flex items-center gap-1">
+                               <CheckCircle2 size={12} /> Ready to Publish
+                             </span>
+                          )}
+                        </div>
                         <div className="relative group">
                           <div 
-                            className={`w-full aspect-video rounded-[2.5rem] bg-[#fafafa] border-2 border-dashed border-gray-100 flex flex-col items-center justify-center gap-4 transition-all overflow-hidden ${!formData.image ? 'hover:border-[#E1306C]/30 hover:bg-[#E1306C]/5' : ''}`}
+                            onDragOver={handleDragOver}
+                            onDragLeave={handleDragLeave}
+                            onDrop={handleDrop}
+                            className={`w-full aspect-video rounded-[3rem] bg-[#fafafa] border-4 border-dashed transition-all overflow-hidden flex flex-col items-center justify-center gap-6 cursor-pointer ${
+                              isDragging 
+                                ? 'border-[#E1306C] bg-[#E1306C]/5 scale-[0.98]' 
+                                : formData.image 
+                                  ? 'border-transparent' 
+                                  : 'border-gray-100 hover:border-[#E1306C]/30 hover:bg-[#E1306C]/5'
+                            }`}
                           >
                             {formData.image ? (
                               <div className="relative w-full h-full animate-in fade-in zoom-in duration-500">
                                 <img src={formData.image} alt="Preview" className="w-full h-full object-cover" />
-                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
+                                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-6">
                                   <button 
                                     type="button" 
                                     onClick={() => fileInputRef.current?.click()}
-                                    className="p-4 bg-white text-[#262626] rounded-full hover:scale-110 transition-transform shadow-xl"
+                                    className="w-16 h-16 bg-white text-[#262626] rounded-3xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-2xl"
                                     title="Change Photo"
                                   >
-                                    <Plus size={24} />
+                                    <Plus size={32} />
                                   </button>
                                   <button 
                                     type="button" 
                                     onClick={removeImageFromForm}
-                                    className="p-4 bg-red-500 text-white rounded-full hover:scale-110 transition-transform shadow-xl"
+                                    className="w-16 h-16 bg-red-500 text-white rounded-3xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-2xl"
                                     title="Remove Photo"
                                   >
-                                    <Trash2 size={24} />
+                                    <Trash2 size={32} />
                                   </button>
+                                </div>
+                                <div className="absolute bottom-6 left-6 right-6 p-4 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 text-white text-[10px] font-bold uppercase tracking-widest text-center">
+                                   Hover to Manage Image
                                 </div>
                               </div>
                             ) : (
-                              <div className="flex flex-col items-center gap-4 py-8">
-                                <div className="w-20 h-20 bg-white rounded-3xl shadow-sm flex items-center justify-center text-gray-300 group-hover:text-[#E1306C] transition-all group-hover:scale-110 group-hover:rotate-3">
-                                  <Upload size={32} />
+                              <div className="flex flex-col items-center gap-6 p-10 text-center">
+                                <div className={`w-28 h-28 rounded-[2rem] bg-white shadow-xl flex items-center justify-center transition-all ${isDragging ? 'scale-110 rotate-12 text-[#E1306C]' : 'text-gray-300 group-hover:text-[#E1306C] group-hover:rotate-3'}`}>
+                                  {isDragging ? <FileImage size={48} /> : <Upload size={48} />}
                                 </div>
-                                <div className="text-center space-y-1">
-                                  <p className="text-xs font-bold text-[#262626] uppercase tracking-widest">No photo selected</p>
-                                  <p className="text-[10px] text-gray-400">Click the button below to browse</p>
+                                <div className="space-y-2">
+                                  <p className="text-sm font-heritage font-bold text-[#262626] uppercase tracking-[0.2em]">
+                                    {isDragging ? 'Drop Image Now' : 'Upload your Vision'}
+                                  </p>
+                                  <p className="text-xs text-gray-400 max-w-[200px] leading-relaxed italic">
+                                    Drag and drop a photo or click the button below to browse.
+                                  </p>
                                 </div>
                                 <button 
                                   type="button"
                                   onClick={() => fileInputRef.current?.click()}
-                                  className="px-8 py-3 bg-[#262626] text-white text-[10px] font-bold uppercase tracking-[0.2em] rounded-xl hover:scale-105 transition-all shadow-lg active:scale-95"
+                                  className="px-10 py-4 bg-[#262626] text-white text-[11px] font-bold uppercase tracking-[0.2em] rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-2xl group-hover:insta-gradient"
                                 >
-                                  Select Photo
+                                  Select from Gallery
                                 </button>
                               </div>
                             )}
