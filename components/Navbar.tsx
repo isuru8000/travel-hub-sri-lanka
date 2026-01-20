@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Language } from '../types';
 import { Menu, X, Globe, Camera, LogOut, LogIn, Box } from 'lucide-react';
 import { User } from '../App.tsx';
+import WeatherWidget from './WeatherWidget.tsx';
 
 interface NavbarProps {
   language: Language;
@@ -79,6 +80,9 @@ const Navbar: React.FC<NavbarProps> = ({
           
           <div className="h-4 w-[1px] bg-gray-200"></div>
           
+          {/* Weather Pill Integrated into Utility Area */}
+          <WeatherWidget language={language} />
+
           <button 
             onClick={() => setLanguage(language === 'EN' ? 'SI' : 'EN')}
             className="flex items-center gap-2 text-xs font-bold text-[#E1306C] hover:opacity-80 transition-opacity uppercase tracking-widest"
@@ -131,6 +135,9 @@ const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         <div className="md:hidden flex items-center gap-4">
+          {/* Mobile Weather Pill (Simplified) */}
+          <WeatherWidget language={language} />
+          
           <button 
             onClick={() => setLanguage(language === 'EN' ? 'SI' : 'EN')}
             className="text-xs font-bold text-[#E1306C]"

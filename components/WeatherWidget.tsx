@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Sun, Cloud, CloudRain, CloudLightning, Wind, Droplets, Navigation, RefreshCw, ChevronDown } from 'lucide-react';
+import { Sun, Cloud, CloudRain, CloudLightning, RefreshCw, ChevronDown, Droplets, Wind as WindIcon } from 'lucide-react';
 import { Language } from '../types.ts';
 
 interface WeatherData {
@@ -51,107 +51,80 @@ const WeatherWidget: React.FC<{ language: Language }> = ({ language }) => {
   }, [selectedCity]);
 
   const getWeatherIcon = (code: number) => {
-    if (code === 0) return <Sun className="text-yellow-400" size={24} />;
-    if (code >= 1 && code <= 3) return <Cloud className="text-blue-200" size={24} />;
-    if (code >= 51 && code <= 67) return <CloudRain className="text-blue-400" size={24} />;
-    if (code >= 80 && code <= 99) return <CloudLightning className="text-purple-400" size={24} />;
-    return <Sun className="text-yellow-400" size={24} />;
-  };
-
-  const getWeatherText = (code: number, lang: Language) => {
-    if (code === 0) return lang === 'EN' ? 'Clear Sky' : 'පැහැදිලි අහස';
-    if (code >= 1 && code <= 3) return lang === 'EN' ? 'Partly Cloudy' : 'වලාකුළු සහිතයි';
-    if (code >= 51 && code <= 67) return lang === 'EN' ? 'Rainy' : 'වැසි සහිතයි';
-    if (code >= 80 && code <= 99) return lang === 'EN' ? 'Thunderstorm' : 'ගිගුරුම් සහිතයි';
-    return lang === 'EN' ? 'Clear' : 'පැහැදිලියි';
+    if (code === 0) return <Sun className="text-yellow-500" size={14} />;
+    if (code >= 1 && code <= 3) return <Cloud className="text-blue-400" size={14} />;
+    if (code >= 51 && code <= 67) return <CloudRain className="text-blue-500" size={14} />;
+    if (code >= 80 && code <= 99) return <CloudLightning className="text-purple-500" size={14} />;
+    return <Sun className="text-yellow-500" size={14} />;
   };
 
   return (
-    <div className="absolute top-6 right-6 z-30 animate-in fade-in slide-in-from-right-4 duration-1000">
-      <div className="relative">
-        <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-[2rem] p-5 shadow-2xl min-w-[220px] group transition-all hover:bg-white/15">
-          <div className="flex flex-col gap-4">
-            {/* Header / City Selector */}
-            <div className="flex items-center justify-between gap-4">
-              <button 
-                onClick={() => setShowDropdown(!showDropdown)}
-                className="flex items-center gap-2 text-white/90 hover:text-white transition-colors"
-              >
-                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
-                  <Navigation size={14} className="text-[#E1306C]" />
-                </div>
-                <div className="text-left">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-white/50 leading-none mb-1">
-                    {language === 'EN' ? 'Island Live' : 'දිවයිනේ සජීවී'}
-                  </p>
-                  <p className="text-sm font-bold flex items-center gap-1">
-                    {language === 'EN' ? selectedCity.name : selectedCity.si}
-                    <ChevronDown size={14} className={`transition-transform duration-300 ${showDropdown ? 'rotate-180' : ''}`} />
-                  </p>
-                </div>
-              </button>
-              
-              <button 
-                onClick={() => fetchWeather(selectedCity)}
-                className={`text-white/40 hover:text-white transition-all ${loading ? 'animate-spin' : ''}`}
-              >
-                <RefreshCw size={14} />
-              </button>
+    <div className="relative group/weather">
+      {/* Main Status Pill */}
+      <button 
+        onClick={() => setShowDropdown(!showDropdown)}
+        className="flex items-center gap-2.5 px-3 py-1.5 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-full transition-all active:scale-95 shadow-sm"
+      >
+        <div className="relative flex items-center justify-center">
+          {weather && getWeatherIcon(weather.code)}
+          <span className="absolute -top-1 -right-1 w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse border border-white"></span>
+        </div>
+        
+        <div className="flex items-center gap-1.5">
+          <span className="text-[11px] font-black text-[#262626] font-mono leading-none">
+            {loading ? '...' : `${weather?.temp}°C`}
+          </span>
+          <span className="hidden sm:inline-block w-px h-2.5 bg-gray-200"></span>
+          <span className="hidden sm:inline-block text-[9px] font-bold text-gray-400 uppercase tracking-widest leading-none">
+            {language === 'EN' ? selectedCity.name : selectedCity.si}
+          </span>
+          <ChevronDown size={10} className={`text-gray-300 transition-transform duration-300 ${showDropdown ? 'rotate-180' : ''}`} />
+        </div>
+      </button>
+
+      {/* Expanded Quick Info (Tooltip Style) */}
+      {!showDropdown && weather && (
+        <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 opacity-0 group-hover/weather:opacity-100 pointer-events-none transition-all duration-300 translate-y-2 group-hover/weather:translate-y-0 z-50">
+          <div className="bg-white p-3 rounded-2xl shadow-2xl border border-gray-100 flex gap-4 whitespace-nowrap">
+            <div className="flex items-center gap-1.5">
+              <Droplets size={12} className="text-blue-400" />
+              <span className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">{weather.humidity}%</span>
             </div>
-
-            {/* Main Content */}
-            {weather && (
-              <div className="flex items-center justify-between">
-                <div className="flex flex-col">
-                  <span className="text-4xl font-heritage font-bold text-white tracking-tighter">
-                    {weather.temp}°<span className="text-lg opacity-60">c</span>
-                  </span>
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">
-                    {getWeatherText(weather.code, language)}
-                  </span>
-                </div>
-                <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center shadow-inner scale-110">
-                  {getWeatherIcon(weather.code)}
-                </div>
-              </div>
-            )}
-
-            {/* Footer Stats */}
-            <div className="flex items-center gap-4 pt-3 border-t border-white/10">
-              <div className="flex items-center gap-1.5">
-                <Droplets size={12} className="text-blue-400" />
-                <span className="text-[10px] font-bold text-white/70">{weather?.humidity}%</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <Wind size={12} className="text-green-400" />
-                <span className="text-[10px] font-bold text-white/70">8 km/h</span>
-              </div>
+            <div className="flex items-center gap-1.5">
+              <WindIcon size={12} className="text-green-400" />
+              <span className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">8 km/h</span>
             </div>
           </div>
         </div>
+      )}
 
-        {/* City Dropdown */}
-        {showDropdown && (
-          <div className="absolute top-full mt-2 left-0 right-0 bg-white/95 backdrop-blur-2xl rounded-3xl shadow-2xl border border-white/50 p-2 overflow-hidden animate-in zoom-in-95 duration-200 z-40">
-            {CITIES.map((city) => (
-              <button
-                key={city.name}
-                onClick={() => {
-                  setSelectedCity(city);
-                  setShowDropdown(false);
-                }}
-                className={`w-full text-left px-4 py-3 rounded-2xl text-xs font-bold uppercase tracking-widest transition-all ${
-                  selectedCity.name === city.name 
-                    ? 'bg-[#E1306C] text-white' 
-                    : 'text-[#262626] hover:bg-gray-100'
-                }`}
-              >
-                {language === 'EN' ? city.name : city.si}
-              </button>
-            ))}
+      {/* City Selector Dropdown */}
+      {showDropdown && (
+        <div className="absolute top-full mt-2 right-0 bg-white rounded-2xl shadow-2xl border border-gray-100 p-1 min-w-[140px] z-50 animate-in zoom-in-95 duration-200">
+          <div className="px-3 py-2 border-b border-gray-50 mb-1 flex justify-between items-center">
+             <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest">Select Node</span>
+             <button onClick={() => fetchWeather(selectedCity)} className={loading ? 'animate-spin' : ''}>
+               <RefreshCw size={10} className="text-gray-300 hover:text-[#E1306C]" />
+             </button>
           </div>
-        )}
-      </div>
+          {CITIES.map((city) => (
+            <button
+              key={city.name}
+              onClick={() => {
+                setSelectedCity(city);
+                setShowDropdown(false);
+              }}
+              className={`w-full text-left px-3 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${
+                selectedCity.name === city.name 
+                  ? 'bg-[#E1306C] text-white' 
+                  : 'text-[#262626] hover:bg-gray-50'
+              }`}
+            >
+              {language === 'EN' ? city.name : city.si}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

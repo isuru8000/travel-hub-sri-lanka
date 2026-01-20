@@ -19,7 +19,6 @@ import LoadingScreen from './components/LoadingScreen.tsx';
 import TravelMemories from './components/TravelMemories.tsx';
 import Quiz from './components/Quiz.tsx';
 import VRExperience from './components/VRExperience.tsx';
-import HeritageCollection from './components/HeritageCollection.tsx';
 import { Sparkles, Compass, ShieldCheck, Star, Users, MapPin, ArrowRight } from 'lucide-react';
 
 export interface User {
@@ -148,8 +147,6 @@ const App: React.FC = () => {
             </div>
 
             <PopularHighlights language={language} setView={setView} />
-
-            <HeritageCollection language={language} />
 
             {/* Premium Quiz CTA */}
             <div className="bg-[#0a0a0a] py-40 px-4 relative overflow-hidden group">
