@@ -6,10 +6,21 @@ import * as Icons from 'lucide-react';
 
 interface CategoriesSectionProps {
   language: Language;
-  setView: (view: 'home' | 'destinations' | 'about' | 'foods' | 'music' | 'medicine' | 'tea' | 'phrases' | 'essentials' | 'festivals') => void;
+  setView: (view: any) => void;
 }
 
 const CategoriesSection: React.FC<CategoriesSectionProps> = ({ language, setView }) => {
+  // Add Quiz to categories locally or could be in constants
+  const extendedCategories = [
+    ...CATEGORIES_DATA,
+    {
+      id: "quiz",
+      icon: "Compass",
+      title: { EN: "Travel Quiz", SI: "සංචාරක ප්‍රශ්න විචාරාත්මක" },
+      description: { EN: "Discover your true island explorer soul.", SI: "ඔබේ සැබෑ දූපත් ගවේෂක ආත්මය හඳුනා ගන්න." }
+    }
+  ];
+
   return (
     <section className="py-32 bg-[#fafafa] border-y border-gray-200">
       <div className="max-w-7xl mx-auto px-4">
@@ -25,8 +36,8 @@ const CategoriesSection: React.FC<CategoriesSectionProps> = ({ language, setView
           <div className="w-24 h-1 story-ring mx-auto rounded-full" />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-12">
-          {CATEGORIES_DATA.map((cat) => {
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 lg:grid-cols-4 2xl:grid-cols-7 gap-12">
+          {extendedCategories.map((cat) => {
             // @ts-ignore
             const IconComponent = Icons[cat.icon];
             return (
@@ -40,9 +51,10 @@ const CategoriesSection: React.FC<CategoriesSectionProps> = ({ language, setView
                    else if (cat.id === 'phrases') setView('phrases');
                    else if (cat.id === 'essentials') setView('essentials');
                    else if (cat.id === 'festivals') setView('festivals');
+                   else if (cat.id === 'quiz') setView('quiz');
                    else setView('destinations');
                 }}
-                className="group p-10 rounded-[40px] bg-white border border-gray-100 hover:shadow-2xl transition-all text-center cursor-pointer flex flex-col items-center"
+                className="group p-10 rounded-[40px] bg-white border border-gray-100 hover:shadow-2xl transition-all text-center cursor-pointer flex flex-col items-center h-full"
               >
                 <div className="relative flex flex-col items-center">
                   {/* Heritage Tooltip */}

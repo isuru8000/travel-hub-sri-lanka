@@ -3,6 +3,7 @@ import React from 'react';
 import { Language } from '../types.ts';
 import { UI_STRINGS } from '../constants.tsx';
 import { ChevronRight } from 'lucide-react';
+import WeatherWidget from './WeatherWidget.tsx';
 
 interface HeroProps {
   language: Language;
@@ -21,6 +22,9 @@ const Hero: React.FC<HeroProps> = ({ language, setView }) => {
       
       {/* Texture Overlay */}
       <div className="absolute inset-0 pattern-overlay" />
+
+      {/* Real-time Weather Transparency Section */}
+      <WeatherWidget language={language} />
 
       <div className="relative max-w-4xl mx-auto text-center px-6 space-y-8">
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-heritage font-bold text-white leading-tight drop-shadow-2xl">

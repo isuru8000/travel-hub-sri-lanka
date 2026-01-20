@@ -17,6 +17,10 @@ import StorySection from './components/StorySection.tsx';
 import AIModal from './components/AIModal.tsx';
 import LoadingScreen from './components/LoadingScreen.tsx';
 import TravelMemories from './components/TravelMemories.tsx';
+import Quiz from './components/Quiz.tsx';
+import VRExperience from './components/VRExperience.tsx';
+// Fix: Added missing icon imports from lucide-react
+import { Sparkles, Compass } from 'lucide-react';
 
 export interface User {
   name: string;
@@ -24,7 +28,7 @@ export interface User {
   photo: string;
 }
 
-type View = 'home' | 'destinations' | 'about' | 'foods' | 'music' | 'interests' | 'medicine' | 'tea' | 'phrases' | 'essentials' | 'festivals' | 'memories';
+type View = 'home' | 'destinations' | 'about' | 'foods' | 'music' | 'interests' | 'medicine' | 'tea' | 'phrases' | 'essentials' | 'festivals' | 'memories' | 'quiz' | 'vr-experience';
 
 const App: React.FC = () => {
   const [language, setLanguage] = useState<Language>('EN');
@@ -153,6 +157,18 @@ const App: React.FC = () => {
             <CategoriesSection language={language} setView={setView} />
           </div>
         );
+      case 'quiz':
+        return (
+          <div className="pt-8">
+            <Quiz language={language} setView={setView} />
+          </div>
+        );
+      case 'vr-experience':
+        return (
+          <div className="pt-8">
+            <VRExperience language={language} setView={setView} />
+          </div>
+        );
       case 'about':
         return (
           <div className="pt-8">
@@ -178,6 +194,45 @@ const App: React.FC = () => {
             <Hero language={language} setView={setView} />
             <div className="relative">
               <PopularHighlights language={language} setView={setView} />
+
+              {/* Quiz Invitation CTA */}
+              <div className="bg-[#262626] py-32 px-4 relative overflow-hidden group">
+                <div className="absolute inset-0 pattern-overlay opacity-10"></div>
+                {/* Updated background image: Dark, atmospheric forest/temple vibes */}
+                <div 
+                  className="absolute right-0 top-0 w-1/2 h-full bg-cover bg-center opacity-30 transition-transform duration-[10000ms] group-hover:scale-110"
+                  style={{ backgroundImage: `url('https://images.unsplash.com/photo-1512100353917-7027ee1b277c?q=80&w=2000&auto=format&fit=crop')` }}
+                />
+                <div className="max-w-7xl mx-auto relative z-10 flex flex-col md:flex-row items-center gap-16">
+                   <div className="w-full md:w-1/2 space-y-8 text-center md:text-left">
+                     <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-white/10 text-white text-[11px] font-bold uppercase tracking-[0.5em]">
+                       {/* Fix: Added missing Sparkles icon */}
+                       <Sparkles size={14} className="text-yellow-400" />
+                       Interactive Experience
+                     </div>
+                     <h2 className="text-4xl md:text-6xl font-heritage font-bold text-white leading-tight">
+                        What Kind of <br/>
+                        <span className="insta-text-gradient italic">Explorer</span> Are You?
+                     </h2>
+                     <p className="text-gray-400 text-lg md:text-xl font-light leading-relaxed">
+                        Take our 1-minute visual journey to discover your island soul and receive a personalized itinerary for your next adventure.
+                     </p>
+                     <button 
+                       onClick={() => setView('quiz')}
+                       className="px-12 py-6 bg-white text-[#262626] font-bold rounded-2xl hover:scale-105 transition-all shadow-2xl flex items-center gap-4 mx-auto md:mx-0 group/btn"
+                     >
+                       {/* Fix: Added missing Compass icon */}
+                       <Compass size={22} className="text-[#E1306C] group-hover/btn:rotate-180 transition-transform duration-700" />
+                       <span className="uppercase tracking-[0.2em] text-xs">Start the Quiz</span>
+                     </button>
+                   </div>
+                   <div className="hidden md:block w-1/2 relative">
+                      <div className="absolute -inset-4 story-ring rounded-[3rem] blur-2xl opacity-20"></div>
+                      <img src="https://images.unsplash.com/photo-1580794749460-76f97b7180d8?auto=format&fit=crop&w=800&q=80" className="relative rounded-[3rem] shadow-2xl border-4 border-white/10" alt="Quiz" />
+                   </div>
+                </div>
+              </div>
+
               <CategoriesSection language={language} setView={setView} />
               
               <div className="bg-[#f4a261]/10 py-16 px-4">
@@ -199,21 +254,21 @@ const App: React.FC = () => {
                 <div className="max-w-7xl mx-auto">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
                     <div className="space-y-4">
-                      <div className="w-16 h-16 bg-[#E1306C]/5 rounded-full flex items-center justify-center mx-auto">
+                      <div className="w-16 h-1 bg-[#E1306C]/5 rounded-full flex items-center justify-center mx-auto">
                         <span className="text-3xl">🏛️</span>
                       </div>
                       <h3 className="text-xl font-heritage font-bold">2500+ Years</h3>
                       <p className="text-sm text-gray-500">{language === 'EN' ? 'Recorded History' : 'වාර්තාගත ඉතිහාසය'}</p>
                     </div>
                     <div className="space-y-4">
-                      <div className="w-16 h-16 bg-[#E1306C]/5 rounded-full flex items-center justify-center mx-auto">
+                      <div className="w-16 h-1 bg-[#E1306C]/5 rounded-full flex items-center justify-center mx-auto">
                         <span className="text-3xl">🏖️</span>
                       </div>
                       <h3 className="text-xl font-heritage font-bold">1300+ KM</h3>
                       <p className="text-sm text-gray-500">{language === 'EN' ? 'Coastline' : 'වෙරළ තීරය'}</p>
                     </div>
                     <div className="space-y-4">
-                      <div className="w-16 h-16 bg-[#E1306C]/5 rounded-full flex items-center justify-center mx-auto">
+                      <div className="w-16 h-1 bg-[#E1306C]/5 rounded-full flex items-center justify-center mx-auto">
                         <span className="text-3xl">🐆</span>
                       </div>
                       <h3 className="text-xl font-heritage font-bold">8 UNESCO</h3>

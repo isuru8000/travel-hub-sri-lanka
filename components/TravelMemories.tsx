@@ -1,5 +1,5 @@
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Language, Memory } from '../types.ts';
 import { 
   Camera, 
@@ -18,7 +18,7 @@ import {
   Trash2,
   Plus,
   Lock,
-  FileImage
+  AlertCircle
 } from 'lucide-react';
 import { User } from '../App.tsx';
 
@@ -96,7 +96,6 @@ const TravelMemories: React.FC<TravelMemoriesProps> = ({ language, user, onLogin
   const [showForm, setShowForm] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   const [formData, setFormData] = useState({
@@ -109,35 +108,53 @@ const TravelMemories: React.FC<TravelMemoriesProps> = ({ language, user, onLogin
     tags: ''
   });
 
-  const processFile = (file: File) => {
-    if (file && file.type.startsWith('image/')) {
+  const [validation, setValidation] = useState({
+    title: { error: '', touched: false },
+    story: { error: '', touched: false }
+  });
+
+  // Validation rules
+  const validate = (name: string, value: string) => {
+    let error = '';
+    if (name === 'title') {
+      if (value.length < 5) error = language === 'EN' ? 'Title must be at least 5 characters' : 'මාතෘකාව අවම වශයෙන් අකුරු 5ක් විය යුතුය';
+      if (value.length > 50) error = language === 'EN' ? 'Title is too long (max 50)' : 'මාතෘකාව වැඩි වැඩිය (උපරිම 50)';
+    }
+    if (name === 'story') {
+      if (value.length < 20) error = language === 'EN' ? 'Story must be at least 20 characters' : 'කතාව අවම වශයෙන් අකුරු 20ක් විය යුතුය';
+      if (value.length > 600) error = language === 'EN' ? 'Story is too long (max 600)' : 'කතාව වැඩි වැඩිය (උපරිම 600)';
+    }
+    return error;
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    
+    // Only show real-time error if already touched or long enough to potentially trigger one
+    const error = validate(name, value);
+    setValidation(prev => ({
+      ...prev,
+      [name]: { ...prev[name as keyof typeof prev], error }
+    }));
+  };
+
+  const handleBlur = (name: string) => {
+    setValidation(prev => ({
+      ...prev,
+      [name as keyof typeof prev]: { ...prev[name as keyof typeof prev], touched: true }
+    }));
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setFormData(prev => ({ ...prev, image: reader.result as string }));
       };
       reader.readAsDataURL(file);
     }
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) processFile(file);
-  };
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(true);
-  };
-
-  const handleDragLeave = () => {
-    setIsDragging(false);
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-    const file = e.dataTransfer.files?.[0];
-    if (file) processFile(file);
   };
 
   const removeImageFromForm = (e: React.MouseEvent) => {
@@ -152,9 +169,11 @@ const TravelMemories: React.FC<TravelMemoriesProps> = ({ language, user, onLogin
     }
   };
 
+  const isFormValid = !validation.title.error && !validation.story.error && formData.title && formData.story && formData.location && formData.image;
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) return;
+    if (!user || !isFormValid) return;
     setIsSubmitting(true);
     
     setTimeout(() => {
@@ -179,6 +198,10 @@ const TravelMemories: React.FC<TravelMemoriesProps> = ({ language, user, onLogin
         setIsSuccess(false);
         setShowForm(false);
         setFormData({ userName: user.name, title: '', story: '', image: '', location: '', rating: 5, tags: '' });
+        setValidation({
+          title: { error: '', touched: false },
+          story: { error: '', touched: false }
+        });
       }, 1500);
     }, 1200);
   };
@@ -372,87 +395,105 @@ const TravelMemories: React.FC<TravelMemoriesProps> = ({ language, user, onLogin
                         </div>
                         <div className="space-y-2">
                           <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 ml-2">Location</label>
-                          <input required placeholder="E.g. Sigiriya" value={formData.location} onChange={e => setFormData({...formData, location: e.target.value})} className="w-full px-6 py-4 bg-[#fafafa] rounded-2xl border border-gray-100 focus:outline-none focus:ring-2 focus:ring-[#E1306C]/20" />
+                          <input required name="location" placeholder="E.g. Sigiriya" value={formData.location} onChange={handleInputChange} className="w-full px-6 py-4 bg-[#fafafa] rounded-2xl border border-gray-100 focus:outline-none focus:ring-2 focus:ring-[#E1306C]/20" />
                         </div>
                       </div>
 
                       <div className="space-y-2">
-                        <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 ml-2">Memory Title</label>
-                        <input required placeholder="Something catchy..." value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full px-6 py-4 bg-[#fafafa] rounded-2xl border border-gray-100 focus:outline-none focus:ring-2 focus:ring-[#E1306C]/20" />
+                        <div className="flex justify-between items-center">
+                          <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 ml-2">Memory Title</label>
+                          <span className={`text-[9px] font-bold uppercase tracking-widest ${formData.title.length > 50 ? 'text-red-500' : 'text-gray-300'}`}>{formData.title.length}/50</span>
+                        </div>
+                        <input 
+                          required 
+                          name="title"
+                          placeholder="Something catchy..." 
+                          value={formData.title} 
+                          onChange={handleInputChange} 
+                          onBlur={() => handleBlur('title')}
+                          className={`w-full px-6 py-4 bg-[#fafafa] rounded-2xl border transition-all focus:outline-none focus:ring-2 focus:ring-[#E1306C]/20 ${validation.title.touched && validation.title.error ? 'border-red-300 bg-red-50/10' : 'border-gray-100'}`} 
+                        />
+                        {validation.title.touched && validation.title.error && (
+                          <div className="flex items-center gap-2 text-red-500 text-[10px] font-bold uppercase tracking-widest ml-2 animate-in slide-in-from-top-1 duration-300">
+                             <AlertCircle size={12} />
+                             {validation.title.error}
+                          </div>
+                        )}
                       </div>
 
                       <div className="space-y-2">
-                        <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 ml-2">The Story</label>
-                        <textarea required rows={4} placeholder="Tell us about your experience..." value={formData.story} onChange={e => setFormData({...formData, story: e.target.value})} className="w-full px-6 py-4 bg-[#fafafa] rounded-2xl border border-gray-100 focus:outline-none focus:ring-2 focus:ring-[#E1306C]/20 resize-none" />
+                        <div className="flex justify-between items-center">
+                          <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 ml-2">The Story</label>
+                          <span className={`text-[9px] font-bold uppercase tracking-widest ${formData.story.length > 600 ? 'text-red-500' : 'text-gray-300'}`}>{formData.story.length}/600</span>
+                        </div>
+                        <textarea 
+                          required 
+                          name="story"
+                          rows={4} 
+                          placeholder="Tell us about your experience..." 
+                          value={formData.story} 
+                          onChange={handleInputChange}
+                          onBlur={() => handleBlur('story')}
+                          className={`w-full px-6 py-4 bg-[#fafafa] rounded-2xl border transition-all focus:outline-none focus:ring-2 focus:ring-[#E1306C]/20 resize-none ${validation.story.touched && validation.story.error ? 'border-red-300 bg-red-50/10' : 'border-gray-100'}`} 
+                        />
+                        {validation.story.touched && validation.story.error && (
+                          <div className="flex items-center gap-2 text-red-500 text-[10px] font-bold uppercase tracking-widest ml-2 animate-in slide-in-from-top-1 duration-300">
+                             <AlertCircle size={12} />
+                             {validation.story.error}
+                          </div>
+                        )}
+                        <div className="w-full h-1 bg-gray-100 rounded-full overflow-hidden mt-1">
+                          <div 
+                            className={`h-full transition-all duration-300 ${formData.story.length < 20 ? 'bg-orange-400' : formData.story.length > 600 ? 'bg-red-500' : 'bg-green-500'}`} 
+                            style={{ width: `${Math.min((formData.story.length / 600) * 100, 100)}%` }}
+                          />
+                        </div>
                       </div>
 
-                      {/* Enhanced Image Upload Feature with Drag and Drop */}
+                      {/* Explicit Image Upload Feature */}
                       <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                          <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 ml-2">Photo Memory</label>
-                          {formData.image && (
-                             <span className="text-[10px] font-bold text-green-500 uppercase tracking-widest flex items-center gap-1">
-                               <CheckCircle2 size={12} /> Ready to Publish
-                             </span>
-                          )}
-                        </div>
+                        <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 ml-2">Photo Memory (Direct Upload)</label>
                         <div className="relative group">
                           <div 
-                            onDragOver={handleDragOver}
-                            onDragLeave={handleDragLeave}
-                            onDrop={handleDrop}
-                            className={`w-full aspect-video rounded-[3rem] bg-[#fafafa] border-4 border-dashed transition-all overflow-hidden flex flex-col items-center justify-center gap-6 cursor-pointer ${
-                              isDragging 
-                                ? 'border-[#E1306C] bg-[#E1306C]/5 scale-[0.98]' 
-                                : formData.image 
-                                  ? 'border-transparent' 
-                                  : 'border-gray-100 hover:border-[#E1306C]/30 hover:bg-[#E1306C]/5'
-                            }`}
+                            className={`w-full aspect-video rounded-[2.5rem] bg-[#fafafa] border-2 border-dashed border-gray-100 flex flex-col items-center justify-center gap-4 transition-all overflow-hidden ${!formData.image ? 'hover:border-[#E1306C]/30 hover:bg-[#E1306C]/5' : ''}`}
                           >
                             {formData.image ? (
                               <div className="relative w-full h-full animate-in fade-in zoom-in duration-500">
                                 <img src={formData.image} alt="Preview" className="w-full h-full object-cover" />
-                                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-6">
+                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
                                   <button 
                                     type="button" 
                                     onClick={() => fileInputRef.current?.click()}
-                                    className="w-16 h-16 bg-white text-[#262626] rounded-3xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-2xl"
+                                    className="p-4 bg-white text-[#262626] rounded-full hover:scale-110 transition-transform shadow-xl"
                                     title="Change Photo"
                                   >
-                                    <Plus size={32} />
+                                    <Plus size={24} />
                                   </button>
                                   <button 
                                     type="button" 
                                     onClick={removeImageFromForm}
-                                    className="w-16 h-16 bg-red-500 text-white rounded-3xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-2xl"
+                                    className="p-4 bg-red-500 text-white rounded-full hover:scale-110 transition-transform shadow-xl"
                                     title="Remove Photo"
                                   >
-                                    <Trash2 size={32} />
+                                    <Trash2 size={24} />
                                   </button>
-                                </div>
-                                <div className="absolute bottom-6 left-6 right-6 p-4 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 text-white text-[10px] font-bold uppercase tracking-widest text-center">
-                                   Hover to Manage Image
                                 </div>
                               </div>
                             ) : (
-                              <div className="flex flex-col items-center gap-6 p-10 text-center">
-                                <div className={`w-28 h-28 rounded-[2rem] bg-white shadow-xl flex items-center justify-center transition-all ${isDragging ? 'scale-110 rotate-12 text-[#E1306C]' : 'text-gray-300 group-hover:text-[#E1306C] group-hover:rotate-3'}`}>
-                                  {isDragging ? <FileImage size={48} /> : <Upload size={48} />}
+                              <div className="flex flex-col items-center gap-4 py-8">
+                                <div className="w-20 h-20 bg-white rounded-3xl shadow-sm flex items-center justify-center text-gray-300 group-hover:text-[#E1306C] transition-all group-hover:scale-110 group-hover:rotate-3">
+                                  <Upload size={32} />
                                 </div>
-                                <div className="space-y-2">
-                                  <p className="text-sm font-heritage font-bold text-[#262626] uppercase tracking-[0.2em]">
-                                    {isDragging ? 'Drop Image Now' : 'Upload your Vision'}
-                                  </p>
-                                  <p className="text-xs text-gray-400 max-w-[200px] leading-relaxed italic">
-                                    Drag and drop a photo or click the button below to browse.
-                                  </p>
+                                <div className="text-center space-y-1">
+                                  <p className="text-xs font-bold text-[#262626] uppercase tracking-widest">No photo selected</p>
+                                  <p className="text-[10px] text-gray-400">Click the button below to browse</p>
                                 </div>
                                 <button 
                                   type="button"
                                   onClick={() => fileInputRef.current?.click()}
-                                  className="px-10 py-4 bg-[#262626] text-white text-[11px] font-bold uppercase tracking-[0.2em] rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-2xl group-hover:insta-gradient"
+                                  className="px-8 py-3 bg-[#262626] text-white text-[10px] font-bold uppercase tracking-[0.2em] rounded-xl hover:scale-105 transition-all shadow-lg active:scale-95"
                                 >
-                                  Select from Gallery
+                                  Select Photo
                                 </button>
                               </div>
                             )}
@@ -483,9 +524,15 @@ const TravelMemories: React.FC<TravelMemoriesProps> = ({ language, user, onLogin
                       </div>
                     </div>
 
-                    <button disabled={isSubmitting} type="submit" className="w-full py-6 bg-[#262626] text-white font-bold rounded-2xl shadow-2xl flex items-center justify-center gap-4 transition-all hover:bg-black active:scale-95 disabled:opacity-50">
+                    <button 
+                      disabled={isSubmitting || !isFormValid} 
+                      type="submit" 
+                      className="w-full py-6 bg-[#262626] text-white font-bold rounded-2xl shadow-2xl flex items-center justify-center gap-4 transition-all hover:bg-black active:scale-95 disabled:opacity-30 disabled:grayscale disabled:cursor-not-allowed"
+                    >
                       {isSubmitting ? <div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin"></div> : <Send size={20} />}
-                      <span className="uppercase tracking-[0.3em] text-xs">Publish to Mosaic</span>
+                      <span className="uppercase tracking-[0.3em] text-xs">
+                        {!isFormValid && !isSubmitting ? (language === 'EN' ? 'Complete Form' : 'කරුණාකර සම්පූර්ණ කරන්න') : (language === 'EN' ? 'Publish to Mosaic' : 'ප්‍රසිද්ධ කරන්න')}
+                      </span>
                     </button>
                   </form>
                 )}

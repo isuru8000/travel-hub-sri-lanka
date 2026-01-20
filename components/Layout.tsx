@@ -9,7 +9,7 @@ interface LayoutProps {
   children: React.ReactNode;
   language: Language;
   setLanguage: (lang: Language) => void;
-  setView: (view: 'home' | 'destinations' | 'about' | 'foods' | 'interests' | 'music' | 'memories') => void;
+  setView: (view: any) => void;
   currentView: string;
   user: User | null;
   onLogin: () => void;
@@ -59,6 +59,7 @@ const Layout: React.FC<LayoutProps> = ({
             <ul className="space-y-2 text-sm text-gray-600 font-semibold">
               <li><button onClick={() => setView('home')} className="hover:text-[#E1306C] transition-colors text-left w-full">Home</button></li>
               <li><button onClick={() => setView('destinations')} className="hover:text-[#E1306C] transition-colors text-left w-full">Destinations</button></li>
+              <li><button onClick={() => setView('vr-experience')} className="hover:text-[#E1306C] transition-colors text-left w-full">VR Experience</button></li>
               <li><button onClick={() => setView('memories')} className="hover:text-[#E1306C] transition-colors text-left w-full">Travel Memories</button></li>
               <li><button onClick={() => setView('about')} className="hover:text-[#E1306C] transition-colors text-left w-full">About Lanka</button></li>
             </ul>

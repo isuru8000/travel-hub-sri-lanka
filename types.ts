@@ -96,3 +96,24 @@ export interface Festival {
 export interface Translation {
   [key: string]: { EN: string; SI: string };
 }
+
+export interface QuizQuestion {
+  id: string;
+  question: { EN: string; SI: string };
+  options: QuizOption[];
+}
+
+export interface QuizOption {
+  id: string;
+  text: { EN: string; SI: string };
+  image: string;
+  profileScore: 'ancient' | 'mountains' | 'beach' | 'wildlife';
+}
+
+export interface ExplorerProfile {
+  id: string;
+  name: { EN: string; SI: string };
+  description: { EN: string; SI: string };
+  image: string;
+  recommendations: string[]; // Destination IDs
+}
