@@ -50,11 +50,11 @@ const Navbar: React.FC<NavbarProps> = ({
   ];
 
   return (
-    <div className={`fixed left-0 right-0 z-[70] transition-all duration-1000 flex justify-center ${scrolled ? 'top-4' : 'top-0'}`}>
-      <nav className={`transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] relative flex items-center justify-between px-6 md:px-10 ${
+    <div className={`fixed left-0 right-0 z-[70] transition-all duration-1000 flex justify-center ${scrolled ? 'top-4' : 'top-6'}`}>
+      <nav className={`transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] relative flex items-center justify-between px-6 md:px-10 w-[95%] md:w-[85%] max-w-7xl py-3.5 bg-white/90 backdrop-blur-[50px] rounded-[2.5rem] border border-white/40 ${
         scrolled 
-          ? 'w-[95%] md:w-[85%] max-w-7xl py-3.5 bg-white/95 backdrop-blur-[40px] rounded-[2.5rem] shadow-[0_25px_80px_rgba(0,0,0,0.18)] border border-gray-100' 
-          : 'w-full py-10 bg-gradient-to-b from-black/80 via-black/30 to-transparent'
+          ? 'shadow-[0_25px_80px_rgba(0,0,0,0.12)] scale-100' 
+          : 'shadow-[0_15px_50px_rgba(0,0,0,0.08)] scale-[1.02]'
       }`}>
         
         {/* Branding - Left Anchor */}
@@ -63,28 +63,24 @@ const Navbar: React.FC<NavbarProps> = ({
           className="flex items-center gap-4 group relative z-10"
         >
           <div className="relative">
-            <div className="absolute -inset-2 bg-[#E1306C]/40 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            <div className={`relative w-11 h-11 story-ring rounded-[14px] p-[2.5px] transition-transform duration-500 group-hover:scale-110 ${scrolled ? 'shadow-lg' : 'shadow-2xl'}`}>
+            <div className="absolute -inset-2 bg-[#E1306C]/30 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div className="relative w-11 h-11 story-ring rounded-[14px] p-[2.5px] shadow-lg transition-transform duration-500 group-hover:scale-110">
               <div className="bg-white w-full h-full rounded-[12px] flex items-center justify-center">
                 <span className="insta-text-gradient font-heritage font-black text-2xl">L</span>
               </div>
             </div>
           </div>
           <div className="hidden sm:flex flex-col items-start leading-none gap-0.5">
-            <span className={`font-heritage font-black text-[14px] uppercase tracking-[0.25em] transition-colors duration-500 ${
-              scrolled ? 'text-[#050505]' : 'text-white drop-shadow-lg'
-            }`}>
+            <span className="font-heritage font-black text-[14px] uppercase tracking-[0.25em] text-[#0a0a0a]">
               Travel Hub
             </span>
-            <span className={`font-black text-[8px] uppercase tracking-[0.6em] transition-colors duration-500 ${
-              scrolled ? 'text-gray-400' : 'text-white/70'
-            }`}>
+            <span className="font-black text-[8px] uppercase tracking-[0.6em] text-gray-400">
               Sri Lanka
             </span>
           </div>
         </button>
 
-        {/* Navigation Spine - ABSOLUTE CENTER (High Visibility) */}
+        {/* Navigation Spine - ABSOLUTE CENTER (High Visibility White Theme) */}
         <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-12 lg:gap-16">
           {navLinks.map((link) => (
             <button 
@@ -94,8 +90,8 @@ const Navbar: React.FC<NavbarProps> = ({
             >
               <span className={`text-[11px] font-black uppercase tracking-[0.55em] transition-all duration-500 ${
                 currentView === link.id 
-                  ? (scrolled ? 'text-[#050505]' : 'text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)]') 
-                  : (scrolled ? 'text-gray-400 hover:text-[#050505]' : 'text-white/40 hover:text-white')
+                  ? 'text-[#0a0a0a]' 
+                  : 'text-gray-400 hover:text-[#0a0a0a]'
               }`}>
                 {link.label}
               </span>
@@ -119,13 +115,9 @@ const Navbar: React.FC<NavbarProps> = ({
         <div className="hidden md:flex items-center gap-8 lg:gap-10 relative z-10">
           <button 
             onClick={() => setLanguage(language === 'EN' ? 'SI' : 'EN')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all text-[11px] font-black uppercase tracking-widest ${
-              scrolled 
-                ? 'hover:bg-black/5 text-[#050505]' 
-                : 'hover:bg-white/10 text-white drop-shadow-md'
-            }`}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl transition-all text-[11px] font-black uppercase tracking-widest hover:bg-black/5 text-[#0a0a0a]"
           >
-            <Globe size={15} className="opacity-70" />
+            <Globe size={15} className="opacity-40" />
             {language}
           </button>
 
@@ -133,16 +125,12 @@ const Navbar: React.FC<NavbarProps> = ({
             <div className="relative">
               <button 
                 onClick={() => setShowUserMenu(!showUserMenu)}
-                className={`flex items-center gap-3 pl-1 pr-4 py-1.5 rounded-full transition-all shadow-md ${
-                  scrolled ? 'bg-black/5 border border-gray-100' : 'bg-white/10 border border-white/20'
-                }`}
+                className="flex items-center gap-3 pl-1 pr-4 py-1.5 rounded-full transition-all shadow-md bg-black/5 border border-gray-100"
               >
                 <div className="w-8 h-8 rounded-full border-2 border-white shadow-lg overflow-hidden">
                   <img src={user.photo} alt={user.name} className="w-full h-full object-cover" />
                 </div>
-                <span className={`text-[10px] font-black uppercase tracking-widest ${
-                  scrolled ? 'text-[#050505]' : 'text-white'
-                }`}>
+                <span className="text-[10px] font-black uppercase tracking-widest text-[#0a0a0a]">
                   {user.name.split(' ')[0]}
                 </span>
               </button>
@@ -150,7 +138,7 @@ const Navbar: React.FC<NavbarProps> = ({
               {showUserMenu && (
                 <div className="absolute right-0 mt-5 w-60 bg-white rounded-[2rem] shadow-[0_40px_100px_rgba(0,0,0,0.18)] border border-gray-100 py-4 animate-in fade-in slide-in-from-top-4 duration-500 z-[80]">
                   <div className="px-8 py-3 border-b border-gray-50 mb-2">
-                    <p className="text-[11px] font-black text-[#050505] uppercase tracking-wider">{user.name}</p>
+                    <p className="text-[11px] font-black text-[#0a0a0a] uppercase tracking-wider">{user.name}</p>
                     <p className="text-[9px] text-gray-400 font-bold tracking-tight truncate uppercase">{user.email}</p>
                   </div>
                   <button 
@@ -166,11 +154,7 @@ const Navbar: React.FC<NavbarProps> = ({
           ) : (
             <button 
               onClick={onLogin}
-              className={`group relative flex items-center gap-3 px-8 py-3.5 rounded-full text-[10px] font-black uppercase tracking-[0.45em] transition-all active:scale-95 overflow-hidden shadow-2xl ${
-                scrolled 
-                  ? 'bg-[#050505] text-white' 
-                  : 'bg-white text-[#050505]'
-              }`}
+              className="group relative flex items-center gap-3 px-8 py-3.5 rounded-full text-[10px] font-black uppercase tracking-[0.45em] transition-all active:scale-95 overflow-hidden shadow-xl bg-[#0a0a0a] text-white hover:bg-black"
             >
               Portal
               <ChevronRight size={16} className="group-hover:translate-x-1.5 transition-transform" />
@@ -181,17 +165,15 @@ const Navbar: React.FC<NavbarProps> = ({
         {/* Mobile Toggle */}
         <button 
           onClick={() => setIsOpen(!isOpen)} 
-          className={`md:hidden w-11 h-11 flex items-center justify-center rounded-xl transition-all duration-300 shadow-xl ${
-            scrolled ? 'bg-[#050505] text-white' : 'bg-white text-[#050505]'
-          }`}
+          className="md:hidden w-11 h-11 flex items-center justify-center rounded-xl transition-all duration-300 shadow-xl bg-[#0a0a0a] text-white"
         >
           {isOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </nav>
 
-      {/* Full-Screen Mobile Archive Menu */}
+      {/* Full-Screen Mobile Archive Menu (White Mode) */}
       {isOpen && (
-        <div className="fixed inset-0 bg-[#050505]/98 backdrop-blur-[60px] z-[60] flex flex-col items-center justify-between p-12 pt-40 animate-in fade-in zoom-in-95 duration-500">
+        <div className="fixed inset-0 bg-white/98 backdrop-blur-[60px] z-[60] flex flex-col items-center justify-between p-12 pt-40 animate-in fade-in zoom-in-95 duration-500">
           <div className="flex flex-col items-center gap-14 w-full">
             {navLinks.map((link, i) => (
               <button 
@@ -201,7 +183,7 @@ const Navbar: React.FC<NavbarProps> = ({
                 style={{ animationDelay: `${i * 100}ms` }}
               >
                 <span className={`text-6xl font-heritage font-black transition-all duration-500 ${
-                  currentView === link.id ? 'insta-text-gradient scale-110' : 'text-white/20 hover:text-white'
+                  currentView === link.id ? 'insta-text-gradient scale-110' : 'text-gray-200 hover:text-[#0a0a0a]'
                 }`}>
                   {link.label}
                 </span>
@@ -215,7 +197,7 @@ const Navbar: React.FC<NavbarProps> = ({
           <div className="w-full max-w-sm space-y-6 pb-10">
             <button 
               onClick={() => setLanguage(language === 'EN' ? 'SI' : 'EN')}
-              className="w-full py-5 border border-white/10 rounded-2xl text-[11px] font-black uppercase tracking-[0.4em] text-white flex items-center justify-center gap-4"
+              className="w-full py-5 border border-gray-100 rounded-2xl text-[11px] font-black uppercase tracking-[0.4em] text-[#0a0a0a] flex items-center justify-center gap-4 bg-gray-50"
             >
               <Globe size={18} className="text-[#E1306C]" />
               {language === 'EN' ? 'Archive Region' : 'ප්‍රාදේශීයකරණය'}
@@ -223,7 +205,7 @@ const Navbar: React.FC<NavbarProps> = ({
             
             <button 
               onClick={onLogin}
-              className="w-full py-7 bg-white text-[#050505] rounded-2xl text-[11px] font-black uppercase tracking-[0.4em] shadow-2xl"
+              className="w-full py-7 bg-[#0a0a0a] text-white rounded-2xl text-[11px] font-black uppercase tracking-[0.4em] shadow-2xl"
             >
               {user ? user.name.split(' ')[0] : 'Open Portal'}
             </button>

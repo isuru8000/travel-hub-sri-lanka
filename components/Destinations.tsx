@@ -92,30 +92,30 @@ const Destinations: React.FC<DestinationsProps> = ({ language }) => {
   };
 
   return (
-    <section id="destinations" className="min-h-screen pb-32 bg-[#fafafa]">
-      {/* Refined More Compact Header Section */}
+    <section id="destinations" className="min-h-screen pb-32 bg-white">
+      {/* Radiant Destinations Header */}
       <div className="relative h-[45vh] flex items-center justify-center overflow-hidden">
         <div 
-          className="absolute inset-0 bg-cover bg-center" 
+          className="absolute inset-0 bg-cover bg-center opacity-30" 
           style={{ backgroundImage: `url('https://images.unsplash.com/photo-1580794749460-76f97b7180d8?q=80&w=2000&auto=format&fit=crop')` }}
         />
-        <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
-        <div className="absolute inset-0 pattern-overlay opacity-10"></div>
+        <div className="absolute inset-0 bg-white/80 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 pattern-overlay opacity-5"></div>
 
         <div className="relative z-10 max-w-4xl mx-auto text-center px-6 space-y-6">
-          <div className="space-y-2 animate-in fade-in slide-in-from-top-4 duration-700">
-            <h2 className="text-4xl md:text-6xl font-heritage font-bold text-white tracking-tight">
+          <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-700">
+            <h2 className="text-4xl md:text-7xl font-heritage font-black text-[#0a0a0a] tracking-tight uppercase">
               {UI_STRINGS.exploreDestinations[language]}
             </h2>
-            <p className="text-white/70 font-light text-base md:text-lg italic">
-              {language === 'EN' ? "Search for a portal to ancient Lanka" : "පැරණි ලංකාවට පිවිසුමක් සොයන්න"}
+            <p className="text-gray-400 font-bold text-[10px] uppercase tracking-[0.5em]">
+              {language === 'EN' ? "SEARCH FOR A PORTAL TO ANCIENT LANKA" : "පැරණි ලංකාවට පිවිසුමක් සොයන්න"}
             </p>
           </div>
 
-          {/* Compact Small Search Bar */}
+          {/* Search Bar */}
           <div className="max-w-2xl mx-auto space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
             <div className="relative group">
-              <div className="absolute inset-y-0 left-6 flex items-center text-gray-400 group-focus-within:text-[#E1306C] transition-colors">
+              <div className="absolute inset-y-0 left-6 flex items-center text-gray-300 group-focus-within:text-[#E1306C] transition-colors">
                 <Search size={20} />
               </div>
               <input 
@@ -123,37 +123,25 @@ const Destinations: React.FC<DestinationsProps> = ({ language }) => {
                 placeholder={UI_STRINGS.searchPlaceholder[language]}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-14 pr-14 py-4 bg-white/95 backdrop-blur-xl border border-white/20 rounded-2xl shadow-xl focus:outline-none focus:ring-4 focus:ring-[#E1306C]/10 text-base font-medium transition-all"
+                className="w-full pl-14 pr-14 py-5 bg-white border border-gray-100 rounded-[2rem] shadow-sm focus:outline-none focus:ring-4 focus:ring-[#E1306C]/10 text-base font-medium transition-all"
               />
               {search && (
                 <button 
                   onClick={() => setSearch('')}
-                  className="absolute inset-y-0 right-6 flex items-center text-gray-400 hover:text-red-500 transition-colors"
+                  className="absolute inset-y-0 right-6 flex items-center text-gray-300 hover:text-red-500 transition-colors"
                 >
                   <X size={18} />
                 </button>
               )}
-            </div>
-
-            <div className="flex flex-wrap items-center justify-center gap-3">
-              {popularSearches.map((s, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setSearch(s[language])}
-                  className="text-[9px] font-black uppercase tracking-widest px-4 py-1.5 bg-white/10 hover:bg-[#E1306C] border border-white/20 rounded-full transition-all text-white backdrop-blur-md"
-                >
-                  {s[language]}
-                </button>
-              ))}
             </div>
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 -mt-12 relative z-20 space-y-8">
-        {/* Compact Category Bar */}
+        {/* Category Controls */}
         <div className="flex flex-col md:flex-row items-center gap-6">
-          <div className="flex flex-wrap items-center justify-center gap-2 bg-white/80 backdrop-blur-xl p-2 rounded-[2rem] shadow-xl border border-white/40">
+          <div className="flex flex-wrap items-center justify-center gap-2 bg-white/90 backdrop-blur-xl p-2 rounded-[2.5rem] shadow-lg border border-gray-50">
             {categories.map(cat => {
               const Icon = cat.icon;
               const isActive = categoryFilter === cat.id;
@@ -161,10 +149,10 @@ const Destinations: React.FC<DestinationsProps> = ({ language }) => {
                 <button
                   key={cat.id}
                   onClick={() => setCategoryFilter(cat.id)}
-                  className={`flex items-center gap-2 px-5 py-2.5 rounded-full transition-all text-[11px] font-black uppercase tracking-widest ${
+                  className={`flex items-center gap-2 px-6 py-3 rounded-full transition-all text-[10px] font-black uppercase tracking-widest ${
                     isActive 
-                      ? 'bg-[#262626] text-white shadow-lg scale-105' 
-                      : 'text-gray-500 hover:bg-gray-100'
+                      ? 'bg-[#0a0a0a] text-white shadow-xl scale-105' 
+                      : 'text-gray-400 hover:bg-gray-50 hover:text-[#0a0a0a]'
                   }`}
                 >
                   <Icon size={14} />
@@ -179,7 +167,7 @@ const Destinations: React.FC<DestinationsProps> = ({ language }) => {
               <select 
                 value={locationFilter}
                 onChange={(e) => setLocationFilter(e.target.value)}
-                className="w-full appearance-none px-6 py-3.5 bg-white border border-gray-100 rounded-2xl text-[11px] font-black uppercase tracking-widest focus:ring-4 focus:ring-[#E1306C]/10 outline-none cursor-pointer shadow-md transition-all hover:border-[#E1306C]/30 text-[#262626]"
+                className="w-full appearance-none px-6 py-4 bg-white border border-gray-100 rounded-2xl text-[10px] font-black uppercase tracking-widest focus:ring-4 focus:ring-[#E1306C]/10 outline-none cursor-pointer shadow-sm transition-all hover:border-[#E1306C]/30 text-[#0a0a0a]"
               >
                 <option value="all">{UI_STRINGS.allRegions[language]}</option>
                 {locations.filter(l => l !== 'all').map(loc => (
@@ -192,101 +180,88 @@ const Destinations: React.FC<DestinationsProps> = ({ language }) => {
             {(categoryFilter !== 'all' || locationFilter !== 'all' || search) && (
               <button 
                 onClick={resetFilters}
-                className="p-3.5 bg-white border border-gray-100 rounded-2xl text-[#E1306C] shadow-md hover:bg-red-50 transition-colors"
+                className="p-4 bg-white border border-gray-100 rounded-2xl text-[#E1306C] shadow-sm hover:bg-red-50 transition-colors"
                 title="Reset Filters"
               >
-                <RotateCcw size={16} />
+                <RotateCcw size={18} />
               </button>
             )}
           </div>
         </div>
 
-        {/* Results Info */}
-        <div className="flex items-center justify-between px-6 py-4 bg-white/40 rounded-2xl border border-white/20">
-           <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-              <p className="text-[10px] font-black uppercase tracking-widest text-gray-500">
-                {filteredDestinations.length} Portals Found
-              </p>
-           </div>
-           <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-             Archive Map System v1.2
-           </p>
-        </div>
-
-        {/* Grid Display */}
+        {/* Portals Grid */}
         {filteredDestinations.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {paginatedDestinations.map((dest) => (
               <div 
                 key={dest.id}
                 onClick={() => setSelectedDestination(dest)}
-                className="group cursor-pointer bg-white rounded-[2.5rem] overflow-hidden shadow-lg border border-gray-100 flex flex-col hover:-translate-y-2 hover:shadow-2xl transition-all duration-500"
+                className="group cursor-pointer bg-white rounded-[3.5rem] overflow-hidden shadow-sm border border-gray-100 flex flex-col hover:-translate-y-3 hover:shadow-2xl transition-all duration-700"
               >
-                <div className="relative h-72 overflow-hidden">
+                <div className="relative h-80 overflow-hidden">
                   <img 
                     src={dest.image} 
                     alt={dest.name[language]} 
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2000ms]"
                   />
-                  <div className="absolute top-6 left-6 px-4 py-1.5 bg-black/40 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-widest rounded-full border border-white/20">
+                  <div className="absolute top-8 left-8 px-5 py-2 bg-white/90 backdrop-blur-md text-[#0a0a0a] text-[9px] font-black uppercase tracking-widest rounded-full border border-white/50 shadow-xl">
                     {dest.category}
                   </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white border border-white/40">
-                      <Compass size={24} className="group-hover:rotate-45 transition-transform" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-white/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <div className="w-16 h-16 rounded-3xl bg-white/20 backdrop-blur-xl flex items-center justify-center text-white border border-white/40 shadow-2xl">
+                      <Compass size={32} className="group-hover:rotate-45 transition-transform" />
                     </div>
                   </div>
                 </div>
 
-                <div className="p-8 space-y-4">
-                  <div className="space-y-1">
-                    <p className="text-[9px] font-black text-[#E1306C] uppercase tracking-widest">{dest.location}</p>
-                    <h3 className="text-2xl font-heritage font-bold text-[#262626] group-hover:insta-text-gradient transition-all">
+                <div className="p-10 space-y-5">
+                  <div className="space-y-2">
+                    <p className="text-[10px] font-black text-[#E1306C] uppercase tracking-[0.4em]">{dest.location}</p>
+                    <h3 className="text-3xl font-heritage font-black text-[#0a0a0a] group-hover:insta-text-gradient transition-all uppercase leading-tight">
                       {dest.name[language]}
                     </h3>
                   </div>
-                  <p className="text-sm text-gray-500 leading-relaxed font-light line-clamp-2 italic">
-                    "{dest.shortStory[language]}"
+                  <p className="text-base text-gray-400 leading-relaxed font-bold uppercase tracking-widest text-[11px]">
+                    {dest.shortStory[language]}
                   </p>
-                  <div className="pt-4 border-t border-gray-50 flex items-center justify-between">
-                    <span className="text-[9px] font-bold text-gray-300 uppercase tracking-widest">Digital Twin Active</span>
-                    <ArrowRight size={18} className="text-[#E1306C] group-hover:translate-x-2 transition-transform" />
+                  <div className="pt-6 border-t border-gray-50 flex items-center justify-between">
+                    <span className="text-[9px] font-black text-gray-200 uppercase tracking-[0.5em]">ENTRY PORTAL ACTIVE</span>
+                    <ArrowRight size={20} className="text-[#E1306C] group-hover:translate-x-3 transition-transform" />
                   </div>
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <div className="py-32 text-center space-y-6 bg-white rounded-[3rem] shadow-xl border border-gray-100">
-            <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto text-gray-300">
-              <Search size={32} />
+          <div className="py-40 text-center space-y-6 bg-white rounded-[4rem] shadow-sm border border-gray-100">
+            <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto text-gray-200">
+              <Search size={40} />
             </div>
-            <div className="space-y-2">
-              <h3 className="text-2xl font-heritage font-bold text-[#262626]">No records found</h3>
-              <p className="text-gray-400 text-sm italic max-w-xs mx-auto">Perhaps try a different keyword or check your spelling?</p>
+            <div className="space-y-4">
+              <h3 className="text-3xl font-heritage font-black text-[#0a0a0a] uppercase tracking-tight">Archives empty</h3>
+              <p className="text-gray-400 text-[10px] font-black uppercase tracking-[0.4em] max-w-xs mx-auto">No records found for the current query node.</p>
             </div>
           </div>
         )}
 
-        {/* Compact Pagination */}
+        {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex justify-center items-center gap-4 pt-12">
+          <div className="flex justify-center items-center gap-6 pt-16">
             <button 
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className="p-3 rounded-xl border border-gray-100 bg-white text-gray-300 hover:text-[#E1306C] disabled:opacity-20 transition-all shadow-sm"
+              className="w-14 h-14 rounded-2xl border border-gray-100 bg-white text-gray-300 hover:text-[#E1306C] disabled:opacity-20 transition-all shadow-sm flex items-center justify-center"
             >
-              <ChevronLeft size={20} />
+              <ChevronLeft size={24} />
             </button>
-            <div className="flex gap-2">
+            <div className="flex gap-3">
               {Array.from({ length: totalPages }).map((_, i) => (
                 <button
                   key={i}
                   onClick={() => handlePageChange(i + 1)}
-                  className={`w-10 h-10 rounded-xl text-xs font-black transition-all shadow-sm ${
+                  className={`w-14 h-14 rounded-2xl text-[11px] font-black transition-all shadow-sm ${
                     currentPage === i + 1 
-                      ? 'bg-[#262626] text-white' 
+                      ? 'bg-[#0a0a0a] text-white scale-110 shadow-xl' 
                       : 'bg-white border border-gray-100 text-gray-400 hover:border-[#E1306C]'
                   }`}
                 >
@@ -297,9 +272,9 @@ const Destinations: React.FC<DestinationsProps> = ({ language }) => {
             <button 
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="p-3 rounded-xl border border-gray-100 bg-white text-gray-300 hover:text-[#E1306C] disabled:opacity-20 transition-all shadow-sm"
+              className="w-14 h-14 rounded-2xl border border-gray-100 bg-white text-gray-300 hover:text-[#E1306C] disabled:opacity-20 transition-all shadow-sm flex items-center justify-center"
             >
-              <ChevronRight size={20} />
+              <ChevronRight size={24} />
             </button>
           </div>
         )}

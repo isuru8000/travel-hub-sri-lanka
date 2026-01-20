@@ -27,7 +27,7 @@ const Layout: React.FC<LayoutProps> = ({
   onLogout
 }) => {
   return (
-    <div className="min-h-screen flex flex-col relative bg-[#fafafa]">
+    <div className="min-h-screen flex flex-col relative bg-white">
       <Navbar 
         language={language} 
         setLanguage={setLanguage} 
@@ -38,45 +38,44 @@ const Layout: React.FC<LayoutProps> = ({
         onLogout={onLogout}
       />
       
-      <main className="flex-grow pt-16">
+      <main className="flex-grow">
         {children}
       </main>
 
-      <footer className="bg-white border-t border-gray-100 text-[#262626] pt-16 pb-8 px-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
-          <div className="space-y-4">
-            <div className="flex flex-col items-start leading-none mb-4">
-              <h2 className="text-2xl font-heritage font-bold insta-text-gradient">Travel Hub</h2>
-              <span className="text-sm font-heritage font-medium text-gray-400 lowercase tracking-widest mt-1">sri lanka</span>
+      <footer className="bg-white border-t border-gray-100 text-[#0a0a0a] pt-24 pb-12 px-6">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-16 lg:gap-24">
+          <div className="space-y-6">
+            <div className="flex flex-col items-start leading-none">
+              <h2 className="text-3xl font-heritage font-black insta-text-gradient tracking-tight">Travel Hub</h2>
+              <span className="text-[10px] font-black text-gray-300 uppercase tracking-[0.5em] mt-2 pl-0.5">sri lanka</span>
             </div>
-            <p className="text-sm text-gray-500 leading-relaxed font-medium italic">
+            <p className="text-base text-gray-500 leading-relaxed font-medium italic">
               Where ancient memories meet modern journeys. We promote the heritage and beauty of our pearl in the Indian Ocean.
             </p>
           </div>
 
-          <div className="space-y-4">
-            <h3 className="text-lg font-heritage font-bold text-[#262626] border-b border-gray-50 pb-2 uppercase tracking-widest text-xs">Explore</h3>
-            <ul className="space-y-2 text-sm text-gray-500 font-semibold">
-              <li><button onClick={() => setView('home')} className="hover:text-[#E1306C] transition-colors text-left w-full">Home</button></li>
-              <li><button onClick={() => setView('destinations')} className="hover:text-[#E1306C] transition-colors text-left w-full">Destinations</button></li>
-              <li><button onClick={() => setView('vr-experience')} className="hover:text-[#E1306C] transition-colors text-left w-full">VR Experience</button></li>
-              <li><button onClick={() => setView('memories')} className="hover:text-[#E1306C] transition-colors text-left w-full">Travel Memories</button></li>
-              <li><button onClick={() => setView('about')} className="hover:text-[#E1306C] transition-colors text-left w-full">About Lanka</button></li>
+          <div className="space-y-8">
+            <h3 className="text-[10px] font-black text-[#0a0a0a] uppercase tracking-[0.4em] border-b border-gray-50 pb-4">Archives</h3>
+            <ul className="space-y-4 text-sm text-gray-400 font-bold uppercase tracking-widest">
+              <li><button onClick={() => setView('home')} className="hover:text-[#E1306C] transition-colors text-left w-full">Home Archive</button></li>
+              <li><button onClick={() => setView('destinations')} className="hover:text-[#E1306C] transition-colors text-left w-full">Reality Portals</button></li>
+              <li><button onClick={() => setView('vr-showcase')} className="hover:text-[#E1306C] transition-colors text-left w-full">3D Spatial Hub</button></li>
+              <li><button onClick={() => setView('memories')} className="hover:text-[#E1306C] transition-colors text-left w-full">Public Journal</button></li>
             </ul>
           </div>
 
-          <div className="space-y-4">
-            <h3 className="text-lg font-heritage font-bold text-[#262626] border-b border-gray-50 pb-2 uppercase tracking-widest text-xs">Follow Us</h3>
-            <div className="flex gap-4">
-              <a href="#" className="p-2 border border-gray-100 rounded-full hover:story-ring hover:text-white transition-all text-gray-400" title="Instagram"><Instagram size={20} /></a>
-              <a href="#" className="p-2 border border-gray-100 rounded-full hover:bg-blue-600 hover:text-white transition-all text-gray-400" title="Facebook"><Facebook size={20} /></a>
-              <a href="https://youtube.com/@travelhublk-123?si=g9z39WX5AvvghcfQ" target="_blank" rel="noopener noreferrer" className="p-2 border border-gray-100 rounded-full hover:bg-red-600 hover:text-white transition-all text-gray-400" title="YouTube"><Youtube size={20} /></a>
+          <div className="space-y-8">
+            <h3 className="text-[10px] font-black text-[#0a0a0a] uppercase tracking-[0.4em] border-b border-gray-50 pb-4">Transmission</h3>
+            <div className="flex gap-5">
+              <a href="#" className="w-12 h-12 border border-gray-100 rounded-2xl flex items-center justify-center hover:story-ring hover:text-white transition-all text-gray-400" title="Instagram"><Instagram size={20} /></a>
+              <a href="#" className="w-12 h-12 border border-gray-100 rounded-2xl flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all text-gray-400" title="Facebook"><Facebook size={20} /></a>
+              <a href="https://youtube.com/@travelhublk-123" target="_blank" rel="noopener noreferrer" className="w-12 h-12 border border-gray-100 rounded-2xl flex items-center justify-center hover:bg-red-600 hover:text-white transition-all text-gray-400" title="YouTube"><Youtube size={20} /></a>
             </div>
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-gray-50 text-center text-[10px] font-bold text-gray-300 uppercase tracking-widest">
-          <p>Travel Hub Sri Lanka © 2026. Ancient Soul, Modern Style.</p>
+        <div className="max-w-7xl mx-auto mt-24 pt-10 border-t border-gray-50 text-center text-[9px] font-black text-gray-200 uppercase tracking-[0.6em]">
+          <p>Travel Hub Sri Lanka • Heritage Archive Protocol v2.4 • 2026</p>
         </div>
       </footer>
     </div>
