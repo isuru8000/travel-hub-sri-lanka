@@ -25,6 +25,19 @@ export interface Food {
   tasteProfile: { EN: string; SI: string };
 }
 
+export interface Memory {
+  id: string;
+  userName: string;
+  location: string;
+  title: string;
+  story: string;
+  image: string;
+  likes: number;
+  date: string;
+  rating: number;
+  tags: string[];
+}
+
 export interface HeritageMusic {
   id: string;
   type: 'instrument' | 'song';
@@ -34,6 +47,50 @@ export interface HeritageMusic {
   origin: { EN: string; SI: string };
   significance: { EN: string; SI: string };
   sampleLyrics?: { EN: string; SI: string };
+}
+
+export interface TraditionalMedicine {
+  id: string;
+  type: 'herb' | 'treatment';
+  name: { EN: string; SI: string };
+  description: { EN: string; SI: string };
+  image: string;
+  benefits: { EN: string; SI: string };
+  usage: { EN: string; SI: string };
+}
+
+export interface TeaExperience {
+  id: string;
+  name: { EN: string; SI: string };
+  description: { EN: string; SI: string };
+  image: string;
+  type: 'variety' | 'process' | 'location';
+  fact: { EN: string; SI: string };
+}
+
+export interface Phrase {
+  id: string;
+  english: string;
+  sinhala: string;
+  transliteration: string;
+  category: 'greeting' | 'dining' | 'emergency' | 'shopping';
+}
+
+export interface TravelEssential {
+  id: string;
+  title: { EN: string; SI: string };
+  description: { EN: string; SI: string };
+  icon: string;
+  tips: { EN: string; SI: string }[];
+}
+
+export interface Festival {
+  id: string;
+  name: { EN: string; SI: string };
+  date: { EN: string; SI: string };
+  description: { EN: string; SI: string };
+  image: string;
+  significance: { EN: string; SI: string };
 }
 
 export interface Translation {

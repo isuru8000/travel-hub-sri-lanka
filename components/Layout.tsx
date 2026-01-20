@@ -2,17 +2,30 @@
 import React from 'react';
 import Navbar from './Navbar.tsx';
 import { Language } from '../types.ts';
-import { Facebook, Instagram, Twitter, Youtube, MapPin, Mail, Phone } from 'lucide-react';
+import { Facebook, Instagram, Youtube, MapPin, Mail, Phone } from 'lucide-react';
+import { User } from '../App.tsx';
 
 interface LayoutProps {
   children: React.ReactNode;
   language: Language;
   setLanguage: (lang: Language) => void;
-  setView: (view: 'home' | 'destinations' | 'about' | 'foods' | 'interests' | 'music') => void;
+  setView: (view: 'home' | 'destinations' | 'about' | 'foods' | 'interests' | 'music' | 'memories') => void;
   currentView: string;
+  user: User | null;
+  onLogin: () => void;
+  onLogout: () => void;
 }
 
-const Layout: React.FC<LayoutProps> = ({ children, language, setLanguage, setView, currentView }) => {
+const Layout: React.FC<LayoutProps> = ({ 
+  children, 
+  language, 
+  setLanguage, 
+  setView, 
+  currentView,
+  user,
+  onLogin,
+  onLogout
+}) => {
   return (
     <div className="min-h-screen flex flex-col relative bg-[#fafafa]">
       <Navbar 
@@ -20,6 +33,9 @@ const Layout: React.FC<LayoutProps> = ({ children, language, setLanguage, setVie
         setLanguage={setLanguage} 
         setView={setView} 
         currentView={currentView}
+        user={user}
+        onLogin={onLogin}
+        onLogout={onLogout}
       />
       
       <main className="flex-grow pt-16">
@@ -27,7 +43,7 @@ const Layout: React.FC<LayoutProps> = ({ children, language, setLanguage, setVie
       </main>
 
       <footer className="bg-white border-t border-gray-200 text-[#262626] pt-16 pb-8 px-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
           <div className="space-y-4">
             <div className="flex flex-col items-start leading-none mb-4">
               <h2 className="text-2xl font-heritage font-bold insta-text-gradient">Travel Hub</h2>
@@ -43,18 +59,8 @@ const Layout: React.FC<LayoutProps> = ({ children, language, setLanguage, setVie
             <ul className="space-y-2 text-sm text-gray-600 font-semibold">
               <li><button onClick={() => setView('home')} className="hover:text-[#E1306C] transition-colors text-left w-full">Home</button></li>
               <li><button onClick={() => setView('destinations')} className="hover:text-[#E1306C] transition-colors text-left w-full">Destinations</button></li>
-              <li><button onClick={() => setView('interests')} className="hover:text-[#E1306C] transition-colors text-left w-full">Interests</button></li>
+              <li><button onClick={() => setView('memories')} className="hover:text-[#E1306C] transition-colors text-left w-full">Travel Memories</button></li>
               <li><button onClick={() => setView('about')} className="hover:text-[#E1306C] transition-colors text-left w-full">About Lanka</button></li>
-              <li><a href="#" className="hover:text-[#E1306C] transition-colors">Contact Us</a></li>
-            </ul>
-          </div>
-
-          <div className="space-y-4">
-            <h3 className="text-lg font-heritage font-bold text-[#262626] border-b border-gray-100 pb-2 uppercase tracking-widest text-xs">Contact</h3>
-            <ul className="space-y-3 text-sm text-gray-600 font-semibold">
-              <li className="flex items-center gap-2"><MapPin size={16} className="text-[#E1306C]" /> Colombo 07, Sri Lanka</li>
-              <li className="flex items-center gap-2"><Phone size={16} className="text-[#E1306C]" /> +94 11 234 5678</li>
-              <li className="flex items-center gap-2"><Mail size={16} className="text-[#E1306C]" /> info@travelhubsl.com</li>
             </ul>
           </div>
 

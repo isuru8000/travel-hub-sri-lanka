@@ -42,6 +42,14 @@
         -ms-overflow-style: none;  /* IE and Edge */
         scrollbar-width: none;  /* Firefox */
       }
+
+      @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-12px); }
+      }
+      .animate-float {
+        animation: float 4s ease-in-out infinite;
+      }
     </style>
   <script type="importmap">
 {

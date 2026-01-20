@@ -15,7 +15,7 @@ const Hero: React.FC<HeroProps> = ({ language, setView }) => {
       {/* Background with multiple layers for a heritage feel */}
       <div 
         className="absolute inset-0 bg-cover bg-center transition-transform duration-10000 hover:scale-110 opacity-70" 
-        style={{ backgroundImage: `url('https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=1920&q=80')` }}
+        style={{ backgroundImage: `url('https://plus.unsplash.com/premium_photo-1661962429671-2f12afb5ec77?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')` }}
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
       

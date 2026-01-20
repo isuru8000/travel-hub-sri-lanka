@@ -7,16 +7,29 @@ import PopularHighlights from './components/PopularHighlights.tsx';
 import Destinations from './components/Destinations.tsx';
 import Foods from './components/Foods.tsx';
 import HeritageMusic from './components/HeritageMusic.tsx';
+import TraditionalMedicine from './components/TraditionalMedicine.tsx';
+import TeaCulture from './components/TeaCulture.tsx';
+import Phrasebook from './components/Phrasebook.tsx';
+import TravelEssentials from './components/TravelEssentials.tsx';
+import Festivals from './components/Festivals.tsx';
 import CategoriesSection from './components/CategoriesSection.tsx';
 import StorySection from './components/StorySection.tsx';
 import AIModal from './components/AIModal.tsx';
 import LoadingScreen from './components/LoadingScreen.tsx';
+import TravelMemories from './components/TravelMemories.tsx';
 
-type View = 'home' | 'destinations' | 'about' | 'foods' | 'music' | 'interests';
+export interface User {
+  name: string;
+  email: string;
+  photo: string;
+}
+
+type View = 'home' | 'destinations' | 'about' | 'foods' | 'music' | 'interests' | 'medicine' | 'tea' | 'phrases' | 'essentials' | 'festivals' | 'memories';
 
 const App: React.FC = () => {
   const [language, setLanguage] = useState<Language>('EN');
   const [view, setView] = useState<View>('home');
+  const [user, setUser] = useState<User | null>(null);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
 
   useEffect(() => {
@@ -61,6 +74,19 @@ const App: React.FC = () => {
     return <LoadingScreen />;
   }
 
+  const handleLogin = () => {
+    // Simulate Google Sign In
+    setUser({
+      name: "Saman Kumara",
+      email: "saman.k@gmail.com",
+      photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80"
+    });
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+  };
+
   const renderContent = () => {
     switch (view) {
       case 'destinations':
@@ -79,6 +105,46 @@ const App: React.FC = () => {
         return (
           <div className="pt-8">
             <HeritageMusic language={language} />
+          </div>
+        );
+      case 'medicine':
+        return (
+          <div className="pt-8">
+            <TraditionalMedicine language={language} />
+          </div>
+        );
+      case 'tea':
+        return (
+          <div className="pt-8">
+            <TeaCulture language={language} />
+          </div>
+        );
+      case 'phrases':
+        return (
+          <div className="pt-8">
+            <Phrasebook language={language} />
+          </div>
+        );
+      case 'essentials':
+        return (
+          <div className="pt-8">
+            <TravelEssentials language={language} />
+          </div>
+        );
+      case 'festivals':
+        return (
+          <div className="pt-8">
+            <Festivals language={language} />
+          </div>
+        );
+      case 'memories':
+        return (
+          <div className="pt-8">
+            <TravelMemories 
+              language={language} 
+              user={user} 
+              onLogin={handleLogin}
+            />
           </div>
         );
       case 'interests':
@@ -168,6 +234,9 @@ const App: React.FC = () => {
       setLanguage={setLanguage} 
       setView={(v: any) => setView(v)} 
       currentView={view}
+      user={user}
+      onLogin={handleLogin}
+      onLogout={handleLogout}
     >
       {renderContent()}
       <AIModal language={language} />

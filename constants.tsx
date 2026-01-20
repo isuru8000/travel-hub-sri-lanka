@@ -1,5 +1,5 @@
 
-import { Destination, Food, HeritageMusic, Translation } from './types.ts';
+import { Destination, Food, HeritageMusic, TraditionalMedicine, TeaExperience, Phrase, TravelEssential, Festival, Translation } from './types.ts';
 
 export const UI_STRINGS: Translation = {
   heroTitle: {
@@ -82,26 +82,360 @@ export const CATEGORIES_DATA = [
   {
     id: "hiking",
     icon: "Mountain",
-    title: { EN: "Hiking", SI: "කඳු නැගීම" },
-    description: { EN: "Trek through misty peaks and lush green tea trails.", SI: "මීදුමෙන් වැසුණු කඳු මුදුන් සහ හරිත තේ වතු හරහා සංචාරය කරන්න." }
+    title: { EN: "Hiking", SI: "කඳු තරණය" },
+    description: { EN: "Scale misty peaks and trek through lush green trails.", SI: "මීදුමෙන් වැසුණු කඳු මුදුන් සහ හරිත මාවත් ඔස්සේ ඇවිද යන්න." }
   },
   {
-    id: "medicine",
-    icon: "Leaf",
-    title: { EN: "Traditional Medicine", SI: "දේශීය වෛද්‍ය විද්‍යාව" },
-    description: { EN: "Heal your soul with ancient Hela Wedakama & Ayurveda.", SI: "පැරණි හෙළ වෙදකම සහ ආයුර්වේදයෙන් සුවපත් වන්න." }
+    id: "essentials",
+    icon: "Backpack",
+    title: { EN: "Travel Guide", SI: "සංචාරක උපදෙස්" },
+    description: { EN: "Practical info on Visa, Currency, and getting around.", SI: "වීසා, මුදල් සහ ගමනාගමනය පිළිබඳ ප්‍රායෝගික තොරතුරු." }
   },
   {
-    id: "foods",
-    icon: "Utensils",
-    title: { EN: "Traditional Foods", SI: "දේශීය ආහාර" },
-    description: { EN: "Savor the spices of authentic Sri Lankan cuisine.", SI: "සැබෑ ශ්‍රී ලාංකීය ආහාර වේලක රසය විඳගන්න." }
+    id: "festivals",
+    icon: "PartyPopper",
+    title: { EN: "Festivals", SI: "සංස්කෘතික උත්සව" },
+    description: { EN: "Experience the vibrant Peraheras and traditions.", SI: "විචිත්‍රවත් පෙරහැර සහ සම්ප්‍රදායන් අත්විඳින්න." }
   },
   {
-    id: "music",
-    icon: "Music",
-    title: { EN: "Heritage Music", SI: "සංගීතය සහ නර්තනය" },
-    description: { EN: "Experience the rhythmic beats of traditional drums.", SI: "පාරම්පරික බෙර වාදනයේ රිද්මය අත්විඳින්න." }
+    id: "tea",
+    icon: "Sprout",
+    title: { EN: "Tea Trails", SI: "තේ සංස්කෘතිය" },
+    description: { EN: "Explore the journey from leaf to cup in the misty hills.", SI: "මීදුමෙන් වැසුණු කඳුකරයේ තේ දල්ලේ සිට කෝප්පය දක්වා ගමන." }
+  },
+  {
+    id: "phrases",
+    icon: "MessageSquare",
+    title: { EN: "Local Language", SI: "දේශීය භාෂාව" },
+    description: { EN: "Learn basic Sinhala to connect with the locals.", SI: "දේශීය ජනතාව සමඟ සන්නිවේදනය කිරීමට සිංහල භාෂාව ඉගෙන ගන්න." }
+  }
+];
+
+export const TRAVEL_ESSENTIALS_DATA: TravelEssential[] = [
+  {
+    id: "visa",
+    title: { EN: "Visa & Entry", SI: "වීසා සහ ඇතුළුවීම" },
+    icon: "Passport",
+    description: { EN: "Most travelers need an ETA (Electronic Travel Authorization) before arriving in Sri Lanka.", SI: "බොහෝ සංචාරකයින් ශ්‍රී ලංකාවට පැමිණීමට පෙර ETA (ඉලෙක්ට්‍රොනික සංචාරක අවසරය) ලබාගත යුතුය." },
+    tips: [
+      { EN: "Apply online at eta.gov.lk before you fly.", SI: "පියාසර කිරීමට පෙර eta.gov.lk හරහා අන්තර්ජාලයෙන් අයදුම් කරන්න." },
+      { EN: "Keep a printed copy of your ETA and return flight.", SI: "ඔබේ ETA සහ ආපසු පියාසර කිරීමේ ටිකට් පතේ මුද්‍රිත පිටපතක් ළඟ තබා ගන්න." }
+    ]
+  },
+  {
+    id: "currency",
+    title: { EN: "Money & Currency", SI: "මුදල් සහ විනිමය" },
+    icon: "Wallet",
+    description: { EN: "The official currency is the Sri Lankan Rupee (LKR). Cash is king in rural areas.", SI: "නිල මුදල් ඒකකය ශ්‍රී ලංකා රුපියල (LKR) වේ. ගම්බද ප්‍රදේශවල මුදල් භාවිතය වඩාත් සුදුසුය." },
+    tips: [
+      { EN: "Use ATMs at the airport or in major cities.", SI: "ගුවන් තොටුපලේ හෝ ප්‍රධාන නගරවල ඇති ATM යන්ත්‍ර භාවිතා කරන්න." },
+      { EN: "Notify your bank before travel to avoid card blocks.", SI: "කාඩ්පත් අවහිර වීම වළක්වා ගැනීමට සංචාරයට පෙර ඔබේ බැංකුව දැනුවත් කරන්න." }
+    ]
+  },
+  {
+    id: "transport",
+    title: { EN: "Getting Around", SI: "ගමනාගමනය" },
+    icon: "Train",
+    description: { EN: "From scenic trains to nimble Tuk-Tuks, transport is an adventure itself.", SI: "අලංකාර දුම්රිය සංචාරවල සිට කුඩා ත්‍රිරෝද රථ දක්වා, ගමනාගමනය ද එක්තරා වික්‍රමයකි." },
+    tips: [
+      { EN: "Book train tickets in advance, especially for Kandy-Ella.", SI: "විශේෂයෙන්ම මහනුවර-ඇල්ල දුම්රිය ප්‍රවේශ පත්‍ර කලින් වෙන් කරවා ගන්න." },
+      { EN: "Use 'PickMe' or 'Uber' for fair Tuk-Tuk prices in cities.", SI: "නගරවල සාධාරණ ත්‍රිරෝද රථ මිල ගණන් සඳහා 'PickMe' හෝ 'Uber' භාවිතා කරන්න." }
+    ]
+  },
+  {
+    id: "connectivity",
+    title: { EN: "Connectivity", SI: "සන්නිවේදනය" },
+    icon: "Wifi",
+    description: { EN: "Mobile data is affordable and coverage is generally good across the island.", SI: "ජංගම දත්ත මිල අඩු මෙන්ම දිවයින පුරා ආවරණය සාමාන්‍යයෙන් යහපත් මවතී." },
+    tips: [
+      { EN: "Buy a Dialog or Mobitel SIM card at the airport arrival lounge.", SI: "ගුවන් තොටුපලේ පැමිණීමේ පර්යන්තයෙන් Dialog හෝ Mobitel SIM පතක් මිලදී ගන්න." },
+      { EN: "Download offline Google Maps for remote mountain areas.", SI: "ඈත කඳුකර ප්‍රදේශ සඳහා offline Google Maps බාගත කර තබා ගන්න." }
+    ]
+  }
+];
+
+export const FESTIVALS_DATA: Festival[] = [
+  {
+    id: "perahera",
+    name: { EN: "Kandy Esala Perahera", SI: "මහනුවර ඇසළ පෙරහැර" },
+    date: { EN: "July / August", SI: "ජූලි / අගෝස්තු" },
+    description: { EN: "The most grand festival in Sri Lanka featuring decorated elephants and traditional dancers.", SI: "සැරසූ අලි ඇතුන් සහ පාරම්පරික නර්තන ශිල්පීන්ගෙන් සමන්විත ශ්‍රී ලංකාවේ උත්කර්ෂවත්ම උත්සවයයි." },
+    image: "https://images.unsplash.com/photo-1603515865223-9993309a4d8c?auto=format&fit=crop&w=800&q=80",
+    significance: { EN: "Held to pay homage to the Sacred Tooth Relic of Lord Buddha.", SI: "බුදුරජාණන් වහන්සේගේ ශ්‍රී දන්ත ධාතූන් වහන්සේට ගෞරව දැක්වීම සඳහා පවත්වනු ලැබේ." }
+  },
+  {
+    id: "vesak",
+    name: { EN: "Vesak Festival", SI: "වෙසක් උත්සවය" },
+    date: { EN: "May (Full Moon Day)", SI: "මැයි (පසළොස්වක පොහොය දින)" },
+    description: { EN: "The island lights up with beautiful lanterns and 'Pandols' celebrating Buddha's life.", SI: "බුදුරජාණන් වහන්සේගේ ජීවිතය සමරමින් දිවයින පුරා අලංකාර වෙසක් කූඩු සහ තොරණවලින් ආලෝකමත් වේ." },
+    image: "https://images.unsplash.com/photo-1546708973-b339540b5162?auto=format&fit=crop&w=800&q=80",
+    significance: { EN: "Commemorates the birth, enlightenment, and passing of Lord Buddha.", SI: "බුදුරජාණන් වහන්සේගේ ඉපදීම, බුදුවීම සහ පිරිනිවන් පෑම සිහිපත් කරයි." }
+  },
+  {
+    id: "newyear",
+    name: { EN: "Sinhala & Tamil New Year", SI: "සිංහල සහ දෙමළ අලුත් අවුරුද්ද" },
+    date: { EN: "April 13th & 14th", SI: "අප්‍රේල් 13 සහ 14" },
+    description: { EN: "A harvest festival marked by traditional games, sweets (Kevum, Kokis), and family gatherings.", SI: "පාරම්පරික ක්‍රීඩා, කැවිලි පෙවිලි සහ පවුලේ එකමුතුවෙන් සැමරෙන අස්වනු නෙලීමේ උත්සවයකි." },
+    image: "https://images.unsplash.com/photo-1598514982205-f36b96d1e8d4?auto=format&fit=crop&w=800&q=80",
+    significance: { EN: "Celebrates the transition of the Sun to Aries and the end of the harvest.", SI: "සූර්යයා මීන රාශියෙන් මේෂ රාශියට සංක්‍රමණය වීම සහ අස්වනු නෙලීමේ අවසානය සමරයි." }
+  },
+  {
+    id: "thaipongal",
+    name: { EN: "Thai Pongal", SI: "තෛපොංගල්" },
+    date: { EN: "January", SI: "ජනවාරි" },
+    description: { EN: "A Tamil harvest festival dedicated to the Sun God, Surya. Families cook 'Pongal' rice in new clay pots.", SI: "සූර්ය දිව්‍ය රාජයා උදෙසා පවත්වනු ලබන දෙමළ අස්වනු නෙලීමේ උත්සවයකි. පවුල් එකතු වී අලුත් මැටි වළඳක 'පොංගල්' බත් පිසීම මෙහි සිරිතයි." },
+    image: "https://images.unsplash.com/photo-1563811809228-3e4e6f9877b0?auto=format&fit=crop&w=800&q=80",
+    significance: { EN: "Expressing gratitude to nature and the sun for a bountiful harvest.", SI: "සාර්ථක අස්වැන්නක් ලබා දීම වෙනුවෙන් සොබාදහමට සහ හිරුට කෘතඥතාව පළ කිරීම." }
+  },
+  {
+    id: "deepavali",
+    name: { EN: "Deepavali", SI: "දීපාවලි" },
+    date: { EN: "October / November", SI: "ඔක්තෝබර් / නොවැම්බර්" },
+    description: { EN: "The Hindu Festival of Lights, where homes are adorned with lamps and colorful Kolam floor art.", SI: "හින්දු භක්තිකයන්ගේ ආලෝකයේ උත්සවයයි. නිවෙස් පහන්වලින් සහ අලංකාර කෝලම් රටාවලින් හැඩගන්වනු ලැබේ." },
+    image: "https://images.unsplash.com/photo-1588666309990-d68f08e3d4a6?auto=format&fit=crop&w=800&q=80",
+    significance: { EN: "Symbolizes the spiritual victory of light over darkness and good over evil.", SI: "අඳුර පරදා ආලෝකයත්, අයහපත පරදා යහපතත් ජය ගැනීම මෙයින් සංකේතවත් වේ." }
+  },
+  {
+    id: "poson",
+    name: { EN: "Poson Poya", SI: "පොසොන් පොහොය" },
+    date: { EN: "June", SI: "ජූනි" },
+    description: { EN: "Celebrated centered around Mihintale, commemorating the introduction of Buddhism to Sri Lanka by Arahat Mahinda.", SI: "මහින්දාගමනය සිහිපත් කරමින් මිහින්තලය කේන්ද්‍ර කරගෙන පවත්වනු ලබන ඉතා වැදගත් ආගමික උත්සවයකි." },
+    image: "https://images.unsplash.com/photo-1578503117502-3162799f9392?auto=format&fit=crop&w=800&q=80",
+    significance: { EN: "Marks the arrival of Buddhism and the transformation of Sri Lankan culture.", SI: "ශ්‍රී ලංකාවට බුදුදහම ලැබීම සහ ලාංකීය සංස්කෘතියේ නව පෙරළියක් ඇති වීම සිහිපත් කරයි." }
+  },
+  {
+    id: "nallur",
+    name: { EN: "Nallur Festival", SI: "නල්ලූර් මංගල්‍යය" },
+    date: { EN: "August / September", SI: "අගෝස්තු / සැප්තැම්බර්" },
+    description: { EN: "A 25-day grand festival at the Nallur Kandaswamy Kovil in Jaffna, showcasing incredible Tamil heritage.", SI: "යාපනයේ නල්ලූර් කන්දසාමි කෝවිලේ පැවැත්වෙන දින 25ක උත්කර්ෂවත් උත්සවයකි. දෙමළ සංස්කෘතියේ අභිමානය මෙහිදී විදහා දැක්වේ." },
+    image: "https://plus.unsplash.com/premium_photo-1680883415362-238794b19dde?auto=format&fit=crop&w=800&q=80",
+    significance: { EN: "The longest festival in Sri Lanka, honoring Lord Murugan with discipline and devotion.", SI: "මුරුගන් දෙවිඳුන්ට ගෞරවය දැක්වීම සඳහා පවත්වනු ලබන ශ්‍රී ලංකාවේ දීර්ඝතම උත්සවයයි." }
+  },
+  {
+    id: "kataragama",
+    name: { EN: "Kataragama Esala Festival", SI: "කතරගම ඇසළ මංගල්‍යය" },
+    date: { EN: "July / August", SI: "ජූලි / අගෝස්තු" },
+    description: { EN: "A unique multicultural festival where Buddhists, Hindus, and Muslims gather for fire-walking and water-cutting ceremonies.", SI: "බෞද්ධ, හින්දු සහ මුස්ලිම් බැතිමතුන් එක්ව පවත්වනු ලබන, ගිනි පෑගීම සහ දිය කැපීමේ චාරිත්‍රවලින් සමන්විත සුවිශේෂී උත්සවයකි." },
+    image: "https://images.unsplash.com/photo-1546708973-b339540b5162?auto=format&fit=crop&w=800&q=80",
+    significance: { EN: "Honors the God Kataragama (Skanda-Murugan) and celebrates spiritual harmony.", SI: "කතරගම දෙවියන්ට උපහාර දැක්වීම සහ ආගමික සහජීවනය මෙයින් නිරූපණය වේ." }
+  },
+  {
+    id: "christmas",
+    name: { EN: "Christmas in Negombo", SI: "මීගමුවේ නත්තල් උත්සවය" },
+    date: { EN: "December", SI: "දෙසැම්බර්" },
+    description: { EN: "Negombo, known as 'Little Rome', celebrates Christmas with grand church masses, street carols, and coastal fireworks.", SI: "නත්තල් සමයේදී 'පුංචි රෝමය' ලෙස හැඳින්වෙන මීගමුව අලංකාර දේවස්ථාන සැරසිලි සහ විචිත්‍රවත් වීදි සංදර්ශනවලින් පිරී යයි." },
+    image: "https://images.unsplash.com/photo-1544161515-4af6b1d8e1c3?auto=format&fit=crop&w=800&q=80",
+    significance: { EN: "A time of peace, joy, and the vibrant display of Sri Lanka's Christian heritage.", SI: "සාමය සහ ප්‍රීතිය බෙදා හදා ගනිමින් ලාංකීය කිතුනු උරුමය විදහා දක්වන කාලයකි." }
+  },
+  {
+    id: "mahashivratri",
+    name: { EN: "Mahashivratri", SI: "මහා ශිවරාත්‍රී" },
+    date: { EN: "February / March", SI: "පෙබරවාරි / මාර්තු" },
+    description: { EN: "The 'Great Night of Shiva' is celebrated with overnight vigils, fasting, and prayers at ancient Hindu Kovils.", SI: "ශිව දෙවියන් උදෙසා පවත්වනු ලබන රාත්‍රී කාලය පුරා පැවැත්වෙන විශේෂ වන්දනා සහ පූජා කර්මයන්ගෙන් සමන්විත උත්සවයකි." },
+    image: "https://images.unsplash.com/photo-1621393614326-2f9ed389ce02?auto=format&fit=crop&w=800&q=80",
+    significance: { EN: "Symbolizes the overcoming of darkness and ignorance in life and the world.", SI: "ජීවිතයේ සහ ලෝකයේ පවතින නොදැනුවත්කම සහ අඳුර දුරු කිරීම මෙයින් සංකේතවත් වේ." }
+  },
+  {
+    id: "madhu",
+    name: { EN: "Madhu Church Festival", SI: "මඩු මංගල්‍යය" },
+    date: { EN: "August", SI: "අගෝස්තු" },
+    description: { EN: "One of the most sacred Catholic shrines in the northern region, attracting thousands of pilgrims to the deep jungles of Mannar.", SI: "මන්නාරමේ ඝන වනාන්තරය මැද පිහිටි ඉතාමත් පූජනීය මඩු පල්ලියට වන්දනාකරුවන් දහස් ගණනක් පැමිණෙන උත්සවයකි." },
+    image: "https://images.unsplash.com/photo-1610486745145-6a56b77c3a0b?auto=format&fit=crop&w=800&q=80",
+    significance: { EN: "A symbol of protection and unity, bringing together various ethnic groups through faith.", SI: "ආරක්ෂාවේ සහ එකමුතුකමේ සංකේතයක් වන අතර, ඇදහිල්ල තුළින් විවිධ ජනකොටස් එක් කරයි." }
+  }
+];
+
+export const TEA_DATA: TeaExperience[] = [
+  {
+    id: "black-tea",
+    name: { EN: "Ceylon Black Tea", SI: "ලංකා කළු තේ" },
+    description: { EN: "The world-famous full-bodied tea known for its crisp, citrusy aroma.", SI: "මුළු ලොවම දන්නා ලාංකීය අනන්‍යතාවය විදහා දක්වන කළු තේ." },
+    image: "https://images.unsplash.com/photo-1544787210-2213d84ad96b?auto=format&fit=crop&w=800&q=80",
+    type: 'variety',
+    fact: { EN: "Sri Lanka is the world's 4th largest tea producer.", SI: "ශ්‍රී ලංකාව ලොව සිව්වන විශාලතම තේ නිෂ්පාදකයා වේ." }
+  },
+  {
+    id: "silver-tips",
+    name: { EN: "Silver Tips (White Tea)", SI: "රිදී බිසෝ (සුදු තේ)" },
+    description: { EN: "The most expensive variety, hand-picked and sun-dried for a delicate, subtle flavor.", SI: "ඉතාමත් සියුම් රසයකින් යුත්, අතින් නෙලා හිරු රශ්මියෙන් වේලා ගන්නා වටිනා තේ වර්ගයකි." },
+    image: "https://images.unsplash.com/photo-1594631252845-29fc45865157?auto=format&fit=crop&w=800&q=80",
+    type: 'variety',
+    fact: { EN: "Contains high levels of antioxidants.", SI: "ප්‍රතිඔක්සිකාරක ඉතා ඉහළ මට්ටමක පවතී." }
+  },
+  {
+    id: "withering",
+    name: { EN: "The Withering Process", SI: "තේ දලු මැලවීම" },
+    description: { EN: "Freshly plucked leaves are spread on troughs to reduce moisture content.", SI: "නැවුම් ලෙස නෙලාගත් තේ දලු ජල ප්‍රමාණය අඩු කිරීම සඳහා මැලවීමට ඉඩ හරිනු ලැබේ." },
+    image: "https://images.unsplash.com/photo-1580221376840-a151b5c2d3a3?auto=format&fit=crop&w=800&q=80",
+    type: 'process',
+    fact: { EN: "Moisture is reduced by 50-60%.", SI: "ජල ප්‍රමාණය 50-60% දක්වා අඩු කරයි." }
+  },
+  {
+    id: "nuwara-eliya",
+    name: { EN: "Nuwara Eliya Estates", SI: "නුවරඑළිය තේ වතු" },
+    description: { EN: "The 'Champagne of Teas' comes from this high-altitude region.", SI: "උසින් වැඩිම කලාපයේ නිපදවන 'තේ වල ෂැම්පේන්' ලෙස හැඳින්වෙන තේ මෙහි නිපදවේ." },
+    image: "https://images.unsplash.com/photo-1558446791-ac5fec3caddf?auto=format&fit=crop&w=800&q=80",
+    type: 'location',
+    fact: { EN: "Altitude: Above 6,000 feet.", SI: "මුහුදු මට්ටමේ සිට අඩි 6,000 කට වඩා වැඩිය." }
+  },
+  {
+    id: "dimbula",
+    name: { EN: "Dimbula Region", SI: "දිඹුල කලාපය" },
+    description: { EN: "Produced during the first quarter of the year, offering a refreshing, clean taste.", SI: "වසරේ පළමු මාස හතර තුළ නිපදවන පිරිසිදු රසයකින් යුත් තේ වර්ගයකි." },
+    image: "https://images.unsplash.com/photo-1566893298691-bfd8e0e62e10?auto=format&fit=crop&w=800&q=80",
+    type: 'location',
+    fact: { EN: "Known for its golden hue.", SI: "රන්වන් පැහැය සඳහා ප්‍රසිද්ධය." }
+  },
+  {
+    id: "uva",
+    name: { EN: "Uva Highlands", SI: "ඌව උස්බිම්" },
+    description: { EN: "Unique climate during the 'Cachar' season creates a distinct, pungent flavor.", SI: "විශේෂිත දේශගුණික තත්ත්වයන් යටතේ නිපදවන සුවිශේෂී තද රසයකින් යුත් තේ වර්ගයකි." },
+    image: "https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=800&q=80",
+    type: 'location',
+    fact: { EN: "Loved by European markets.", SI: "යුරෝපීය වෙළඳපොලේ වැඩි ඉල්ලුමක් පවතී." }
+  },
+  {
+    id: "fermentation",
+    name: { EN: "Oxidation (Fermentation)", SI: "ඔක්සිකරණය" },
+    description: { EN: "The step that defines whether a tea will be black, green, or oolong.", SI: "තේ කොළය කළු, කොළ හෝ ඌලොන්ග් වන්නේදැයි තීරණය කරන පියවරයි." },
+    image: "https://images.unsplash.com/photo-1594631252845-29fc45865157?auto=format&fit=crop&w=800&q=80",
+    type: 'process',
+    fact: { EN: "Temperature control is critical here.", SI: "මෙහිදී උෂ්ණත්වය පාලනය කිරීම ඉතා වැදගත් වේ." }
+  },
+  {
+    id: "rolling",
+    name: { EN: "Rolling the Leaf", SI: "දලු පෙරලීම" },
+    description: { EN: "Breaking the cells to release natural juices for oxidation.", SI: "ඔක්සිකරණය සඳහා ස්වභාවික යුෂ මුදා හැරීමට සෛල බිඳ දැමීම." },
+    image: "https://images.unsplash.com/photo-1514483127413-f72f273478c3?auto=format&fit=crop&w=800&q=80",
+    type: 'process',
+    fact: { EN: "Done using heavy machinery or hand.", SI: "යන්ත්‍ර සූත්‍ර හෝ අතින් සිදු කරනු ලැබේ." }
+  },
+  {
+    id: "green-tea",
+    name: { EN: "Ceylon Green Tea", SI: "ලංකා කොළ තේ" },
+    description: { EN: "Processed to prevent oxidation, retaining a nutty, malty profile.", SI: "ඔක්සිකරණය වැලැක්වීම සඳහා සකස් කරන ලද ගුණදායක තේ වර්ගයකි." },
+    image: "https://images.unsplash.com/photo-1546708973-b339540b5162?auto=format&fit=crop&w=800&q=80",
+    type: 'variety',
+    fact: { EN: "Rich in vitamins.", SI: "විටමින් බහුල වේ." }
+  },
+  {
+    id: "low-grown",
+    name: { EN: "Low-Grown Varieties", SI: "පහතරට තේ" },
+    description: { EN: "Grown in warmer regions, producing a strong, dark infusion used for blends.", SI: "උණුසුම් ප්‍රදේශවල වැවෙන, තද වර්ණයෙන් යුත් ප්‍රබල තේ වර්ගයකි." },
+    image: "https://images.unsplash.com/photo-1627662168280-456073809214?auto=format&fit=crop&w=800&q=80",
+    type: 'location',
+    fact: { EN: "Mainly exported to the Middle East.", SI: "ප්‍රධාන වශයෙන් මැද පෙරදිගට අපනයනය කරයි." }
+  }
+];
+
+export const PHRASEBOOK_DATA: Phrase[] = [
+  { id: '1', english: "Hello / May you live long", sinhala: "ආයුබෝවන්", transliteration: "Ayubowan", category: 'greeting' },
+  { id: '2', english: "Thank you", sinhala: "ස්තූතියි", transliteration: "Stutiyi", category: 'greeting' },
+  { id: '3', english: "Yes", sinhala: "ඔව්", transliteration: "Ow", category: 'greeting' },
+  { id: '4', english: "No", sinhala: "නැත", transliteration: "Nætha", category: 'greeting' },
+  { id: '5', english: "How are you?", sinhala: "කොහොමද සැප දුක්?", transliteration: "Kohomadha sæpa dhuka?", category: 'greeting' },
+  { id: '6', english: "Water", sinhala: "වතුර", transliteration: "Vathura", category: 'dining' },
+  { id: '7', english: "Food", sinhala: "කෑම", transliteration: "Kǣma", category: 'dining' },
+  { id: '8', english: "Very tasty", sinhala: "හරිම රසයි", transliteration: "Harima rasayi", category: 'dining' },
+  { id: '9', english: "Not spicy please", sinhala: "සැර නැතුව දෙන්න", transliteration: "Særa næthuva dhenna", category: 'dining' },
+  { id: '10', english: "The bill, please", sinhala: "බිල දෙන්න", transliteration: "Bila dhenna", category: 'dining' },
+  { id: '11', english: "Where is the bathroom?", sinhala: "වැසිකිළිය කොහේද?", transliteration: "Væsikiliya kohēdha?", category: 'emergency' },
+  { id: '12', english: "Help!", sinhala: "උදව් කරන්න!", transliteration: "Udhavu karanna!", category: 'emergency' },
+  { id: '13', english: "Call a doctor", sinhala: "දොස්තර කෙනෙක්ට කතා කරන්න", transliteration: "Dosthara kenekta kathā karanna", category: 'emergency' },
+  { id: '14', english: "How much is this?", sinhala: "මේක කීයද?", transliteration: "Mēka kīyadha?", category: 'shopping' },
+  { id: '15', english: "Too expensive", sinhala: "ගොඩක් ගණන්", transliteration: "Godak ganan", category: 'shopping' },
+];
+
+export const MEDICINE_DATA: TraditionalMedicine[] = [
+  {
+    id: "kohomba",
+    type: 'herb',
+    name: { EN: "Kohomba (Neem)", SI: "කොහොඹ" },
+    description: { EN: "Known as the 'Village Pharmacy', Neem is revered for its potent antibacterial and antifungal properties.", SI: "මෙය දේශීය වෛද්‍ය විද්‍යාවේදී විෂබීජ නාශකයක් ලෙස ඉතාමත් වැදගත් ශාකයකි." },
+    image: "https://images.unsplash.com/photo-1615485290382-441e4d0c9cb5?auto=format&fit=crop&w=800&q=80",
+    benefits: { EN: "Treats skin conditions and detoxifies the blood.", SI: "චර්ම රෝග සමනය කරන අතර රුධිරය පිරිසිදු කරයි." },
+    usage: { EN: "Oil, leaf paste, or decoctions.", SI: "තෙල්, කොළ මැල්ලුම හෝ කසාය ලෙස." }
+  },
+  {
+    id: "gotukola",
+    type: 'herb',
+    name: { EN: "Gotu Kola (Pennywort)", SI: "ගොටුකොළ" },
+    description: { EN: "The 'Herb of Longevity', widely consumed in Sri Lanka for its brain-boosting and rejuvenating qualities.", SI: "මතක ශක්තිය වර්ධනය කිරීමට සහ සිරුර ප්‍රබෝධමත් කිරීමට උපකාරී වන ඖෂධීය පලා වර්ගයකි." },
+    image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80",
+    benefits: { EN: "Enhances memory, reduces anxiety, and aids skin healing.", SI: "මතක ශක්තිය වැඩිකරන අතර මානසික ආතතිය අඩු කරයි." },
+    usage: { EN: "Daily salad (Sambol) or herbal tea.", SI: "සම්බෝලයක් ලෙස හෝ ඖෂධීය පානයක් ලෙස." }
+  },
+  {
+    id: "kurundu",
+    type: 'herb',
+    name: { EN: "Kurundu (Cinnamon)", SI: "කුරුඳු" },
+    description: { EN: "True Ceylon Cinnamon is not just a spice but a powerful medicine used for centuries to balance metabolism.", SI: "නියම ලංකා කුරුඳු යනු කුළුබඩුවක් පමණක් නොව ශරීරයේ පරිවෘත්තීය ක්‍රියා පාලනය කරන ඖෂධයකි." },
+    image: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&w=800&q=80",
+    benefits: { EN: "Lowers blood sugar and has anti-inflammatory properties.", SI: "රුධිරයේ සීනි මට්ටම පාලනය කරන අතර ප්‍රදාහය සමනය කරයි." },
+    usage: { EN: "Brewed in tea or used as an essential oil.", SI: "තේ සමඟ හෝ අත්‍යවශ්‍ය තෙල් වර්ගයක් ලෙස." }
+  },
+  {
+    id: "inguru",
+    type: 'herb',
+    name: { EN: "Inguru (Ginger)", SI: "ඉඟුරු" },
+    description: { EN: "A staple in Hela Wedakama, used to ignite the 'Agni' (digestive fire) and combat respiratory issues.", SI: "ජීරණ පද්ධතියේ ක්‍රියාකාරිත්වය සහ ශ්වසන රෝග සඳහා භාවිතා වන අත්‍යවශ්‍ය ඖෂධයකි." },
+    image: "https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=800&q=80",
+    benefits: { EN: "Relieves nausea, indigestion, and common colds.", SI: "අජීර්ණය, වමනය සහ සෙම්ප්‍රතිශ්‍යාව සුව කරයි." },
+    usage: { EN: "Fresh juice mixed with honey or dried powder.", SI: "මීපැණි සමඟ මිශ්‍ර කළ යුෂ හෝ වියළි කුඩු ලෙස." }
+  },
+  {
+    id: "kaha",
+    type: 'herb',
+    name: { EN: "Kaha (Turmeric)", SI: "කහ" },
+    description: { EN: "The golden healer, essential for its anti-septic and immune-boosting capabilities in ancient Lanka.", SI: "විෂබීජ නාශකයක් ලෙස සහ ප්‍රතිශක්තිකරණය වර්ධනය කිරීමට පැරණි ලංකාවේ සිට භාවිතා වේ." },
+    image: "https://images.unsplash.com/photo-1615485500704-8e990f9900f7?auto=format&fit=crop&w=800&q=80",
+    benefits: { EN: "Powerful anti-inflammatory and natural antiseptic.", SI: "ප්‍රබල ප්‍රතිප්‍රදාහ නාශකයක් සහ ස්වභාවික විෂබීජ නාශකයකි." },
+    usage: { EN: "Mixed with warm milk or applied as a paste.", SI: "උණුසුම් කිරි සමඟ හෝ ආලේපනයක් ලෙස." }
+  },
+  {
+    id: "shirodhara",
+    type: 'treatment',
+    name: { EN: "Shirodhara", SI: "ශිරෝධාරා" },
+    description: { EN: "A divine treatment where warm herbal oil is poured in a continuous stream over the 'third eye' on the forehead.", SI: "නළල මැදට ඖෂධීය තෙල් ධාරාවක් වත් කරමින් සිදුකරන ඉතාමත් සන්සුන් ප්‍රතිකාරයකි." },
+    image: "https://images.unsplash.com/photo-1544161515-4af6b1d8e1c3?auto=format&fit=crop&w=800&q=80",
+    benefits: { EN: "Relieves stress, insomnia, and migraines.", SI: "මානසික ආතතිය, නින්ද නොයාම සහ ඉරුවාරදය සුව කරයි." },
+    usage: { EN: "A specialized therapy session lasting 45-60 minutes.", SI: "විනාඩි 45-60 දක්වා පවත්වන විශේෂිත ප්‍රතිකාරයකි." }
+  },
+  {
+    id: "pinda-sweda",
+    type: 'treatment',
+    name: { EN: "Pinda Sweda", SI: "පිණ්ඩ ස්වේද" },
+    description: { EN: "A dynamic therapy using warm boluses filled with herbal rice or powders to massage the body.", SI: "ඖෂධීය බත් හෝ කුඩු පුරවන ලද පොට්ටනි මගින් සිරුර තැවීම සහ පිරිමැදීම සිදුකරන ප්‍රතිකාරයකි." },
+    image: "https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=800&q=80",
+    benefits: { EN: "Eases joint pain, muscle stiffness, and improves circulation.", SI: "සන්ධි වේදනා, මාංශ පේශි තද ගතිය අඩු කරන අතර රුධිර ගමනාගමනය වැඩි කරයි." },
+    usage: { EN: "Full body massage with herbal fomentation.", SI: "සිරුර පුරා සිදුකරන ඖෂධීය තැවීම් ප්‍රතිකාරයකි." }
+  },
+  {
+    id: "hela-wedakama",
+    type: 'treatment',
+    name: { EN: "Hela Wedakama", SI: "හෙළ වෙදකම" },
+    description: { EN: "The indigenous medical system of Sri Lanka, predating Ayurveda, focusing on spiritual and physical harmony.", SI: "ආයුර්වේදයටත් පෙර ලංකාවේ පැවති, ආධ්‍යාත්මික සහ ශාරීරික සමතුලිතතාවය පදනම් කරගත් වෛද්‍ය ක්‍රමයකි." },
+    image: "https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?auto=format&fit=crop&w=800&q=80",
+    benefits: { EN: "Holistic healing of deep-rooted ailments.", SI: "දීර්ඝකාලීන රෝග මූලිකවම සුව කිරීම සිදුකරයි." },
+    usage: { EN: "Individualized lifestyle and herbal prescriptions.", SI: "පුද්ගලයාට සරිලන ජීවන රටා සහ ඖෂධ ලබා දේ." }
+  },
+  {
+    id: "vashpa-kuti",
+    type: 'treatment',
+    name: { EN: "Vashpa Kuti (Steam Bath)", SI: "වාෂ්ප කුටි" },
+    description: { EN: "An ancient herbal steam bath where the patient sits in a wooden chamber filled with medicinal vapors.", SI: "ඖෂධීය වාෂ්පයෙන් පිරුණු ලී කුටියක් තුළ හිඳිමින් සිදුකරන ස්වභාවික ප්‍රතිකාරයකි." },
+    image: "https://images.unsplash.com/photo-1531983412531-1f49a365ffed?auto=format&fit=crop&w=800&q=80",
+    benefits: { EN: "Opens pores, detoxifies the skin, and relieves respiratory congestion.", SI: "සිරුරේ විෂ ඉවත් කරන අතර ශ්වසන අපහසුතා මගහරවයි." },
+    usage: { EN: "15-20 minute steam therapy session.", SI: "විනාඩි 15-20 ක කාලයක් පවත්වන වාෂ්ප ප්‍රතිකාරයකි." }
+  },
+  {
+    id: "abhyanga",
+    type: 'treatment',
+    name: { EN: "Abhyanga Massage", SI: "අභ්‍යංග සම්බාහනය" },
+    description: { EN: "A synchronized whole-body massage with specific medicated oils tailored to the body type.", SI: "සිරුරේ ස්වභාවයට අනුව තෝරාගත් ඖෂධීය තෙල් මගින් සිදුකරන සම්පූර්ණ සිරුරේ සම්බාහනයකි." },
+    image: "https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=800&q=80",
+    benefits: { EN: "Improves skin health, reduces fatigue, and calms the nervous system.", SI: "සමේ සෞඛ්‍යය වර්ධනය කරන අතර ස්නායු පද්ධතිය සන්සුන් කරයි." },
+    usage: { EN: "Daily or weekly oil application ritual.", SI: "දිනපතා හෝ සතිපතා සිදුකරන තෙල් ආලේපන චාරිත්‍රයකි." }
   }
 ];
 
@@ -304,7 +638,7 @@ export const HERITAGE_MUSIC_DATA: HeritageMusic[] = [
     significance: { EN: "Showcases the bravery and environmental knowledge of forest-dwellers.", SI: "වනවාසීන්ගේ නිර්භීතකම සහ සොබාදහම පිළිබඳ දැනුම මෙයින් පැහැදිලි වේ." },
     sampleLyrics: {
       EN: "O swarm of bees in the golden hive,\nIn peace we come to keep you alive,\nWith smoke and chant our luck we derive,\nOn cliffside heights where we arrive.",
-      SI: "දුම්බර කන්දේ බඹරුන් බැඳි වාරේ\nපැණි නෙලන්නට එන්නමු අපි පාරේ\nදෙවියන් බුදුන්ගේ පිහිටයි හැම වාරේ\nබඹරුන් නොකෝප වී ඉන්න අපේ වාරේ"
+      SI: "දුම්මල මල් වල සුවඳ විහිදෙන්නේ\nයක් බෙර රාවය හාත්පස පැතිරෙන්නේ\nරෝගී සිතට සහනය ලඟා කරන්නේ\nශාන්ති කර්මයේ ආනුභාවය පෙන්වන්නේ"
     }
   },
   {
@@ -339,7 +673,7 @@ export const HERITAGE_MUSIC_DATA: HeritageMusic[] = [
     name: { EN: "Kavi Vannam (Descriptive Songs)", SI: "වන්නම්" },
     description: { EN: "Descriptive songs from the Kandyan dance tradition, each depicting a specific animal or legendary concept through song and motion.", SI: "උඩරට නර්තන සම්ප්‍රදායට අයත්, සතුන් හෝ වෙනත් විශේෂිත සංකල්ප වර්ණනා කරමින් ගැයෙන ගීතමය කවි වේ." },
     image: "https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=800&q=80",
-    origin: { EN: "Kandyan Royal Courts", SI: "උඩරට රාජ සභාව" },
+    origin: { EN: "Kandyan Royal Courts", SI: "රාජ සභා ඇසුරෙන්" },
     significance: { EN: "A bridge between classical poetry, music, and physical performance.", SI: "ශාස්ත්‍රීය කවිය, සංගීතය සහ නර්තනය අතර පවතින සබඳතාවය මෙයින් විදහා දක්වයි." },
     sampleLyrics: {
       EN: "Behold the elephant, majestic and slow,\nWith a rhythm that only the ancient ones know,\nThrough jungle paths where the wild rivers flow,\nA dance of the gods in the temple's glow.",
@@ -392,7 +726,7 @@ export const DESTINATIONS: Destination[] = [
     id: "polonnaruwa",
     name: { EN: "Ancient City of Polonnaruwa", SI: "පොළොන්නරුව පුරාණ නගරය" },
     category: "ancient",
-    image: "https://images.unsplash.com/photo-1596483572314-87612669e46a?auto=format&fit=crop&w=1200&q=80",
+    image: "https://images.unsplash.com/photo-1656339952847-a360aee9273b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fHBvbG9ubmFydXdhfGVufDB8fDB8fHww auto=format&fit=crop&w=1200&q=80",
     gallery: [
       "https://images.unsplash.com/photo-1621393614326-2f9ed389ce02?auto=format&fit=crop&w=800&q=80",
       "https://images.unsplash.com/photo-1721992499083-637b6ee0c7ba?auto=format&fit=crop&w=800&q=80"
@@ -442,7 +776,7 @@ export const DESTINATIONS: Destination[] = [
     id: "adams-peak",
     name: { EN: "Adam’s Peak (Sri Padaya)", SI: "ශ්‍රී පාදය" },
     category: "mountains",
-    image: "https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=1200&q=80",
+    image: "https://images.unsplash.com/photo-1705730312722-095ca8123d48?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGZvcmVzdCUyMHNyaSUyMGxhbmthfGVufDB8fDB8fHww auto=format&fit=crop&w=1200&q=80",
     gallery: [
       "https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=800&q=80",
       "https://images.unsplash.com/photo-1566893298691-bfd8e0e62e10?auto=format&fit=crop&w=800&q=80"
@@ -686,5 +1020,29 @@ export const DESTINATIONS: Destination[] = [
       { EN: "Book train tickets from Kandy to Ella well in advance for the scenic journey.", SI: "මහනුවර සිට ඇල්ල දක්වා දුම්රිය සංචාරය සඳහා කලින් ප්‍රවේශ පත්‍ර වෙන්කර ගන්න." }
     ],
     location: "Badulla District"
+  },
+  {
+    id: "pidurangala",
+    name: { EN: "Pidurangala Rock", SI: "පිදුරංගල ගල" },
+    category: "mountains",
+    image: "https://images.unsplash.com/photo-1612862862126-865765df2ded?auto=format&fit=crop&w=1200&q=80",
+    gallery: [
+      "https://images.unsplash.com/photo-1580794749460-76f97b7180d8?auto=format&fit=crop&w=800&q=80"
+    ],
+    videoUrl: "https://www.youtube.com/embed/2X8pWp9E80I",
+    history: {
+      EN: "Pidurangala Rock is located a few kilometers north of Sigiriya. It was a Buddhist monastery that rose to prominence during the reign of King Kashyapa. While less famous than its neighbor, it offers the best panoramic view of Sigiriya Lion Rock itself.",
+      SI: "සීගිරියට උතුරින් පිහිටි පිදුරංගල කාශ්‍යප රජුගේ කාලයේදී ඉතා දියුණු බෞද්ධ ආරාමයක් ලෙස පැවතිණි. සීගිරි පර්වතයේ අලංකාර දසුනක් නැරඹීමට හොඳම ස්ථානය මෙයයි."
+    },
+    shortStory: {
+      EN: "The ultimate hiker's alternative with a panoramic view of the Lion Rock.",
+      SI: "සීගිරිය සිංහගිරියේ සම්පූර්ණ දසුනක් නැරඹිය හැකි වික්‍රමාන්විත කඳු තරණයකි."
+    },
+    bestTime: { EN: "December to April", SI: "දෙසැම්බර් සිට අප්‍රේල් දක්වා" },
+    tips: [
+      { EN: "Climb for sunrise or sunset for the most magical views.", SI: "වඩාත් අලංකාර දසුන් නැරඹීමට හිරු උදාව හෝ හිරු බැසයන වේලාවේ තරණය කරන්න." },
+      { EN: "The final section involves a bit of scrambling over rocks, so wear good shoes.", SI: "අවසාන කොටස ගල් අතරින් තරණය කිරීමට ඇති බැවින් හොඳ පාවහන් පළඳින්න." }
+    ],
+    location: "Matale District"
   }
 ];

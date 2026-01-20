@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Sparkles, X, Send, Compass, Loader2, Map, Utensils, History, Info } from 'lucide-react';
+import { Sparkles, X, Send, Compass, Loader2, Map, Utensils, History, Info, Square } from 'lucide-react';
 import { Language } from '../types.ts';
 import { UI_STRINGS } from '../constants.tsx';
 import { getLankaGuideResponse } from '../services/gemini.ts';
@@ -21,6 +21,8 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const hasGreeted = useRef(false);
+  const stopTypingRef = useRef(false);
 
   const suggestions = [
     { 
@@ -53,55 +55,92 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
     }
   ];
 
-  useEffect(() => {
-    if (isOpen && messages.length === 0) {
-      const initialText = language === 'EN' 
-        ? "Ayubowan! I'm your Lanka Guide AI. I'm here to illuminate your journey through our paradise. How can I assist you today?" 
-        : "ආයුබෝවන්! මම ඔබේ ලංකා ගයිඩ් AI. අපේ පාරාදීසය හරහා ඔබේ ගමන ආලෝකවත් කිරීමට මම මෙහි සිටිමි. මම ඔබට අද උදව් කරන්නේ කෙසේද?";
-      
-      setMessages([{ role: 'bot', text: initialText }]);
-    }
-  }, [isOpen, language]);
+  const stopAI = () => {
+    stopTypingRef.current = true;
+    setIsLoading(false);
+    setIsTyping(false);
+  };
 
+  // Robust typing animation engine
+  const typeMessage = async (fullText: string) => {
+    if (!fullText) return;
+    setIsTyping(true);
+    stopTypingRef.current = false;
+    
+    // Initialize an empty bot message
+    setMessages(prev => [...prev, { role: 'bot', text: '' }]);
+
+    const chars = Array.from(fullText);
+    let accumulated = "";
+
+    for (let i = 0; i < chars.length; i++) {
+      // Check for stop signal
+      if (stopTypingRef.current) break;
+
+      accumulated += chars[i];
+      
+      setMessages(prev => {
+        const newMessages = [...prev];
+        if (newMessages.length > 0) {
+          newMessages[newMessages.length - 1] = { 
+            role: 'bot', 
+            text: accumulated 
+          };
+        }
+        return newMessages;
+      });
+
+      // Variable speed for natural feel
+      const isWhitespace = /\s/.test(chars[i]);
+      const delay = isWhitespace ? 40 : (fullText.length > 200 ? 10 : 25);
+      await new Promise(resolve => setTimeout(resolve, delay + Math.random() * 10));
+    }
+    
+    setIsTyping(false);
+  };
+
+  // Trigger initial greeting when modal opens
+  useEffect(() => {
+    if (isOpen && !hasGreeted.current && messages.length === 0) {
+      hasGreeted.current = true;
+      const initialText = language === 'EN' 
+        ? "Ayubowan! I'm your Lanka Guide AI. 🌟 I'm here to illuminate your journey through our paradise. I can help you discover ancient ruins, recommend authentic spices, or even help with cultural etiquette. How can I assist your Sri Lankan adventure today?" 
+        : "ආයුබෝවන්! මම ඔබේ ලංකා ගයිඩ් AI. 🌟 අපේ පාරාදීසය හරහා ඔබේ ගමන ආලෝකවත් කිරීමට මම මෙහි සිටිමි. පුරාණ නටබුන් සොයා ගැනීමට, දේශීය ආහාර නිර්දේශ කිරීමට හෝ සංස්කෘතික සිරිත් විරිත් පිළිබඳව ඔබට උපකාර කිරීමට මට හැකිය. අද මම ඔබට උදව් කරන්නේ කෙසේද?";
+      
+      const timer = setTimeout(() => {
+        typeMessage(initialText);
+      }, 800);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, language, messages.length]);
+
+  // Handle auto-scrolling
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTo({
         top: scrollRef.current.scrollHeight,
-        behavior: 'smooth'
+        behavior: isTyping ? 'auto' : 'smooth'
       });
     }
   }, [messages, isLoading, isTyping]);
-
-  const typeMessage = async (fullText: string) => {
-    setIsTyping(true);
-    let displayedText = "";
-    const characters = Array.from(fullText);
-    
-    setMessages(prev => [...prev, { role: 'bot', text: '' }]);
-
-    for (let i = 0; i < characters.length; i++) {
-      displayedText += characters[i];
-      setMessages(prev => {
-        const updated = [...prev];
-        updated[updated.length - 1] = { role: 'bot', text: displayedText };
-        return updated;
-      });
-      
-      const speed = fullText.length > 250 ? 30 : 45;
-      await new Promise(resolve => setTimeout(resolve, speed));
-    }
-    setIsTyping(false);
-  };
 
   const handleSend = async (customText?: string) => {
     const textToSend = customText || input;
     if (!textToSend.trim() || isLoading || isTyping) return;
 
     setInput('');
+    stopTypingRef.current = false;
     setMessages(prev => [...prev, { role: 'user', text: textToSend }]);
     setIsLoading(true);
 
     const botResponse = await getLankaGuideResponse(textToSend, language);
+    
+    // Check if user stopped while waiting for API
+    if (stopTypingRef.current) {
+      setIsLoading(false);
+      return;
+    }
+
     setIsLoading(false);
     
     if (botResponse) {
@@ -111,30 +150,35 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
 
   return (
     <>
-      {/* Floating Trigger Button */}
-      <button 
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 p-4 story-ring text-white rounded-full shadow-[0_15px_45px_rgba(225,48,108,0.5)] z-40 hover:scale-110 active:scale-95 transition-all flex items-center gap-3 group overflow-hidden"
-      >
-        <div className="relative z-10 flex items-center gap-3">
-          <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 whitespace-nowrap font-bold text-sm tracking-widest uppercase pl-1">
-            {UI_STRINGS.lankaGuideTitle[language]}
-          </span>
-          <div className="relative">
-            <Sparkles size={24} className="group-hover:rotate-12 transition-transform duration-300" />
-            <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-white border-2 border-[#E1306C] rounded-full animate-pulse flex items-center justify-center">
-              <span className="w-1.5 h-1.5 bg-[#E1306C] rounded-full"></span>
+      <div className="fixed bottom-6 right-6 z-40 group/ai">
+        {/* Radar/Ping visibility pulse */}
+        <div className="absolute inset-0 bg-green-500 rounded-full animate-ping opacity-20 scale-125 group-hover/ai:opacity-0 transition-opacity"></div>
+        <div className="absolute inset-0 bg-green-400 rounded-full animate-ping opacity-10 scale-150 delay-700 group-hover/ai:opacity-0 transition-opacity"></div>
+        
+        <button 
+          onClick={() => setIsOpen(true)}
+          className="relative p-5 bg-green-600 text-white rounded-full shadow-[0_15px_45px_rgba(22,163,74,0.5)] hover:scale-110 active:scale-95 transition-all flex items-center gap-3 animate-float hover:animate-none group overflow-hidden border-2 border-white/20"
+        >
+          <div className="relative z-10 flex items-center gap-3">
+            <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 whitespace-nowrap font-bold text-sm tracking-widest uppercase pl-1">
+              {UI_STRINGS.lankaGuideTitle[language]}
             </span>
+            <div className="relative">
+              <Sparkles size={26} className="animate-[spin_8s_linear_infinite] group-hover:animate-none" />
+              <span className="absolute -top-1 -right-1 w-4 h-4 bg-white border-2 border-green-600 rounded-full animate-pulse flex items-center justify-center">
+                <span className="w-1.5 h-1.5 bg-green-600 rounded-full"></span>
+              </span>
+            </div>
           </div>
-        </div>
-        <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-      </button>
+          <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        </button>
+      </div>
 
       {isOpen && (
         <div className="fixed inset-0 sm:inset-auto sm:bottom-6 sm:right-6 sm:w-[420px] sm:h-[650px] bg-white shadow-[0_30px_100px_rgba(0,0,0,0.25)] rounded-t-[40px] sm:rounded-[40px] z-[70] flex flex-col overflow-hidden animate-in slide-in-from-bottom-10 fade-in duration-500">
           
           {/* Header */}
-          <div className="relative shrink-0 p-6 insta-gradient text-white shadow-xl">
+          <div className="relative shrink-0 p-6 bg-gradient-to-br from-green-600 to-green-800 text-white shadow-xl">
             <div className="absolute inset-0 pattern-overlay opacity-10"></div>
             <div className="relative flex justify-between items-center">
               <div className="flex items-center gap-4">
@@ -168,10 +212,10 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
             className="flex-grow p-6 overflow-y-auto space-y-6 bg-[#fafafa] scroll-smooth no-scrollbar"
           >
             {messages.map((m, i) => (
-              <div key={i} className={`flex flex-col ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
+              <div key={i} className={`flex flex-col animate-in slide-in-from-bottom-2 duration-300 fill-mode-forwards ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
                 {m.role === 'bot' && (
                   <div className="flex items-center gap-1.5 mb-1.5 ml-1">
-                    <Sparkles size={10} className="text-[#E1306C]" />
+                    <Sparkles size={10} className="text-green-600" />
                     <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">
                       Lanka Guide AI
                     </span>
@@ -182,29 +226,29 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
                     ? 'story-ring text-white rounded-br-none shadow-lg' 
                     : 'bg-white text-[#262626] border border-gray-100 rounded-bl-none shadow-md'
                 }`}>
-                  <p className="font-medium whitespace-pre-line">
+                  <div className="font-medium whitespace-pre-line inline">
                     {m.text}
                     {isTyping && i === messages.length - 1 && m.role === 'bot' && (
-                      <span className="inline-block w-1.5 h-4 ml-1.5 bg-[#E1306C] animate-pulse align-middle rounded-full"></span>
+                      <span className="inline-block w-2.5 h-4 ml-1.5 bg-green-600 animate-pulse align-middle rounded-full shadow-[0_0_10px_rgba(22,163,74,0.4)]"></span>
                     )}
-                  </p>
+                  </div>
                 </div>
               </div>
             ))}
             
             {isLoading && (
-              <div className="flex flex-col items-start animate-in fade-in slide-in-from-left-2">
+              <div className="flex flex-col items-start animate-in fade-in slide-in-from-left-2 duration-300">
                 <div className="flex items-center gap-1.5 mb-1.5 ml-1">
-                  <Compass size={10} className="text-[#E1306C] animate-spin" />
+                  <Compass size={10} className="text-green-600 animate-spin" />
                   <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">
                     AI Exploring
                   </span>
                 </div>
                 <div className="bg-white p-5 rounded-[2rem] rounded-bl-none shadow-md border border-gray-100 flex items-center gap-4">
                   <div className="flex gap-1.5">
-                    <div className="w-2 h-2 rounded-full story-ring animate-bounce [animation-delay:-0.3s]"></div>
-                    <div className="w-2 h-2 rounded-full story-ring animate-bounce [animation-delay:-0.15s]"></div>
-                    <div className="w-2 h-2 rounded-full story-ring animate-bounce"></div>
+                    <div className="w-2 h-2 rounded-full bg-green-600 animate-bounce [animation-delay:-0.3s]"></div>
+                    <div className="w-2 h-2 rounded-full bg-green-600 animate-bounce [animation-delay:-0.15s]"></div>
+                    <div className="w-2 h-2 rounded-full bg-green-600 animate-bounce"></div>
                   </div>
                   <span className="text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em]">
                     {language === 'EN' ? 'Navigating History...' : 'ඉතිහාසය ගවේෂණය කරමින්...'}
@@ -216,15 +260,15 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
 
           {/* Input Area */}
           <div className="shrink-0 bg-white p-6 pt-2 border-t border-gray-100 space-y-4">
-            {!isLoading && !isTyping && messages.length < 5 && (
+            {!isLoading && !isTyping && messages.length < 8 && (
               <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2 -mx-2 px-2">
                 {suggestions.map((s) => (
                   <button
                     key={s.id}
                     onClick={() => handleSend(s[language])}
-                    className="shrink-0 flex items-center gap-2 px-4 py-2 bg-[#fafafa] border border-gray-200 rounded-full text-[11px] font-bold text-[#262626] hover:border-[#E1306C] hover:text-[#E1306C] hover:bg-[#E1306C]/5 transition-all whitespace-nowrap"
+                    className="shrink-0 flex items-center gap-2 px-4 py-2 bg-[#fafafa] border border-gray-200 rounded-full text-[11px] font-bold text-[#262626] hover:border-green-600 hover:text-green-600 hover:bg-green-50 transition-all whitespace-nowrap"
                   >
-                    <span className="text-[#E1306C]">{s.icon}</span>
+                    <span className="text-green-600">{s.icon}</span>
                     {s.label[language]}
                   </button>
                 ))}
@@ -232,7 +276,7 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
             )}
 
             <div className="flex gap-3 items-center">
-              <div className="flex-grow flex items-center bg-[#f0f2f5] rounded-3xl px-5 py-1.5 focus-within:ring-2 focus-within:ring-[#E1306C]/20 transition-all">
+              <div className="flex-grow flex items-center bg-[#f0f2f5] rounded-3xl px-5 py-1.5 focus-within:ring-2 focus-within:ring-green-600/20 transition-all">
                 <input 
                   type="text" 
                   value={input}
@@ -244,16 +288,27 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
                 />
                 <div className="flex items-center gap-2 text-gray-300">
                   <div className="w-px h-6 bg-gray-300"></div>
-                  <Sparkles size={18} className={`${(isLoading || isTyping) ? 'animate-pulse text-[#E1306C]' : 'text-gray-400'}`} />
+                  <Sparkles size={18} className={`${(isLoading || isTyping) ? 'animate-pulse text-green-600' : 'text-gray-400'}`} />
                 </div>
               </div>
-              <button 
-                onClick={() => handleSend()}
-                disabled={!input.trim() || isLoading || isTyping}
-                className="w-12 h-12 shrink-0 story-ring text-white rounded-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all disabled:opacity-20 disabled:scale-100 shadow-lg"
-              >
-                {isLoading || isTyping ? <Loader2 size={20} className="animate-spin" /> : <Send size={20} />}
-              </button>
+              
+              {isLoading || isTyping ? (
+                <button 
+                  onClick={stopAI}
+                  className="w-12 h-12 shrink-0 bg-red-500 text-white rounded-2xl flex items-center justify-center hover:bg-red-600 hover:scale-105 active:scale-95 transition-all shadow-lg"
+                  title={language === 'EN' ? "Stop Generating" : "නතර කරන්න"}
+                >
+                  <Square size={20} fill="currentColor" />
+                </button>
+              ) : (
+                <button 
+                  onClick={() => handleSend()}
+                  disabled={!input.trim()}
+                  className="w-12 h-12 shrink-0 bg-green-600 text-white rounded-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all disabled:opacity-20 disabled:scale-100 shadow-lg"
+                >
+                  <Send size={20} />
+                </button>
+              )}
             </div>
 
             <p className="text-[9px] text-center text-gray-400 font-bold uppercase tracking-widest">

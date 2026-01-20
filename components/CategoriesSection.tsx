@@ -6,7 +6,7 @@ import * as Icons from 'lucide-react';
 
 interface CategoriesSectionProps {
   language: Language;
-  setView: (view: 'home' | 'destinations' | 'about' | 'foods' | 'music') => void;
+  setView: (view: 'home' | 'destinations' | 'about' | 'foods' | 'music' | 'medicine' | 'tea' | 'phrases' | 'essentials' | 'festivals') => void;
 }
 
 const CategoriesSection: React.FC<CategoriesSectionProps> = ({ language, setView }) => {
@@ -25,7 +25,7 @@ const CategoriesSection: React.FC<CategoriesSectionProps> = ({ language, setView
           <div className="w-24 h-1 story-ring mx-auto rounded-full" />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-12">
           {CATEGORIES_DATA.map((cat) => {
             // @ts-ignore
             const IconComponent = Icons[cat.icon];
@@ -35,16 +35,37 @@ const CategoriesSection: React.FC<CategoriesSectionProps> = ({ language, setView
                 onClick={() => {
                    if (cat.id === 'foods') setView('foods');
                    else if (cat.id === 'music') setView('music');
+                   else if (cat.id === 'medicine') setView('medicine');
+                   else if (cat.id === 'tea') setView('tea');
+                   else if (cat.id === 'phrases') setView('phrases');
+                   else if (cat.id === 'essentials') setView('essentials');
+                   else if (cat.id === 'festivals') setView('festivals');
                    else setView('destinations');
                 }}
                 className="group p-10 rounded-[40px] bg-white border border-gray-100 hover:shadow-2xl transition-all text-center cursor-pointer flex flex-col items-center"
               >
-                <div className="w-24 h-24 story-ring rounded-full p-[4px] mb-8">
-                   <div className="bg-white w-full h-full rounded-full flex items-center justify-center text-[#262626] group-hover:insta-gradient group-hover:text-white transition-all">
-                      {IconComponent && <IconComponent size={40} />}
-                   </div>
+                <div className="relative flex flex-col items-center">
+                  {/* Heritage Tooltip */}
+                  <div className="absolute -top-14 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-20 translate-y-4 group-hover:translate-y-0 scale-90 group-hover:scale-100">
+                    <div className="story-ring p-[1px] rounded-full shadow-[0_10px_30px_rgba(225,48,108,0.2)]">
+                      <div className="bg-white px-5 py-2 rounded-full whitespace-nowrap">
+                        <span className="insta-text-gradient font-heritage font-bold text-[10px] uppercase tracking-[0.2em]">
+                          {cat.title[language]}
+                        </span>
+                      </div>
+                    </div>
+                    {/* Tooltip Arrow */}
+                    <div className="w-3 h-3 bg-white border-r border-b border-gray-100 rotate-45 mx-auto -mt-1.5 shadow-sm"></div>
+                  </div>
+
+                  <div className="w-24 h-24 story-ring rounded-full p-[4px] mb-8 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6">
+                    <div className="bg-white w-full h-full rounded-full flex items-center justify-center text-[#262626] group-hover:insta-gradient group-hover:text-white transition-all duration-300">
+                        {IconComponent && <IconComponent size={40} />}
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-2xl font-heritage font-bold text-[#262626] mb-4 group-hover:text-[#E1306C] transition-colors">
+
+                <h3 className="text-2xl font-heritage font-bold text-[#262626] mb-4 group-hover:insta-text-gradient transition-all duration-300">
                   {cat.title[language]}
                 </h3>
                 <p className="text-sm text-gray-500 leading-relaxed font-light">
