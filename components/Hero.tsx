@@ -2,7 +2,7 @@
 import React from 'react';
 import { Language } from '../types.ts';
 import { UI_STRINGS } from '../constants.tsx';
-import { Compass, ArrowRight } from 'lucide-react';
+import { Compass, Database, Hash } from 'lucide-react';
 
 interface HeroProps {
   language: Language;
@@ -11,30 +11,44 @@ interface HeroProps {
 
 const Hero: React.FC<HeroProps> = ({ language, setView }) => {
   return (
-    <div className="relative h-[85vh] md:h-[95vh] flex items-center justify-center overflow-hidden bg-[#0a0a0a]">
-      {/* Background with responsive layout */}
+    <div className="relative h-screen flex items-center justify-center overflow-hidden bg-[#020202]">
+      {/* Background with higher definition and deeper contrast */}
       <div 
-        className="absolute inset-0 bg-cover bg-center opacity-70 md:opacity-85 transition-opacity duration-1000 pointer-events-none" 
+        className="absolute inset-0 bg-cover bg-center opacity-70 md:opacity-90 transition-opacity duration-1000 pointer-events-none" 
         style={{ 
           backgroundImage: `url('https://images.unsplash.com/photo-1488215545351-57e673dc3789?q=80&w=2400&auto=format&fit=crop')`
         }}
       />
       
-      {/* Deep Overlay Gradients - Now with pointer-events-none to prevent blocking clicks */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/40 pointer-events-none" />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent opacity-100 pointer-events-none" />
+      {/* Absolute Dark Gradients for Maximum Legibility */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/40 to-black/80 pointer-events-none" />
+      <div className="absolute inset-0 bg-[#020202]/40 backdrop-blur-[1px] pointer-events-none" />
       
-      {/* Heritage Pattern Overlay */}
-      <div className="absolute inset-0 pattern-overlay opacity-5 pointer-events-none" />
+      {/* Archive Meta-Data Overlays */}
+      <div className="absolute top-40 left-12 hidden lg:flex flex-col gap-4 opacity-30">
+        <div className="flex items-center gap-3 text-white text-[9px] font-black uppercase tracking-[0.5em]">
+          <Database size={14} />
+          SL-REF: 001/HERITAGE
+        </div>
+        <div className="h-px w-32 bg-white/20" />
+      </div>
 
-      <div className="relative z-20 max-w-5xl mx-auto text-center px-6 space-y-10 md:space-y-12">
-        <div className="space-y-4 md:space-y-6 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-          <div className="inline-flex items-center gap-3 px-4 py-1 rounded-full bg-white/5 backdrop-blur-md border border-white/10 text-white/60 text-[10px] font-black uppercase tracking-[0.4em] mb-4">
-            <span className="w-1.5 h-1.5 bg-[#E1306C] rounded-full animate-pulse"></span>
-            {language === 'EN' ? 'Island Heritage' : 'දිවයිනේ උරුමය'}
+      <div className="absolute top-40 right-12 hidden lg:flex flex-col items-end gap-4 opacity-30">
+        <div className="flex items-center gap-3 text-white text-[9px] font-black uppercase tracking-[0.5em]">
+          CLASSIFICATION: ANCIENT
+          <Hash size={14} />
+        </div>
+        <div className="h-px w-32 bg-white/20" />
+      </div>
+
+      <div className="relative z-20 max-w-7xl mx-auto text-center px-8 space-y-16">
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-12 duration-1000">
+          <div className="inline-flex items-center gap-5 px-8 py-3 rounded-2xl bg-white/5 backdrop-blur-3xl border border-white/20 text-white text-[11px] font-black uppercase tracking-[0.6em] mb-6 shadow-2xl">
+            <span className="w-2.5 h-2.5 bg-[#E1306C] rounded-full animate-pulse shadow-[0_0_15px_#E1306C]"></span>
+            {language === 'EN' ? 'The Heritage Archive' : 'සංරක්ෂණාගාරය'}
           </div>
           
-          <h1 className="text-5xl md:text-8xl lg:text-9xl font-heritage font-bold leading-[1.1] drop-shadow-2xl tracking-tight animate-gradient-text-slow">
+          <h1 className="text-7xl md:text-[11rem] font-heritage font-black leading-[0.85] tracking-tighter animate-gradient-text-slow drop-shadow-[0_15px_50px_rgba(0,0,0,0.9)]">
             {language === 'EN' ? (
               <>
                 <span className="block">Discover True Beauty</span>
@@ -48,44 +62,43 @@ const Hero: React.FC<HeroProps> = ({ language, setView }) => {
             )}
           </h1>
           
-          <p className="text-lg md:text-2xl text-white/90 font-light max-w-2xl mx-auto drop-shadow-xl italic leading-relaxed">
+          <p className="text-2xl md:text-4xl text-white font-black max-w-4xl mx-auto italic leading-relaxed opacity-100 drop-shadow-[0_5px_15px_rgba(0,0,0,0.8)]">
             {language === 'EN' 
-              ? "Journey through time, from sacred ruins to sun-drenched shores." 
-              : "ශුද්ධ වූ නටබුන් වල සිට හිරු රශ්මියෙන් නැහැවුණු වෙරළ තීරයන් දක්වා කාලය හරහා ගමනක්."}
+              ? "Cataloguing the sacred memories of a 2,500-year-old civilization." 
+              : "වසර 2,500 ක ශිෂ්ටාචාරයක පූජනීය මතකයන් පෙළගැස්ම."}
           </p>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-6 animate-in fade-in zoom-in-95 duration-1000 delay-300">
-          {/* Enhanced High-Visibility "Vibrant Pulse" Button */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-10 pt-12 animate-in fade-in zoom-in-95 duration-1000 delay-300">
           <button 
             onClick={() => setView('destinations')}
-            className="group relative flex items-center gap-6 px-14 py-7 insta-gradient rounded-[2.5rem] shadow-[0_20px_60px_rgba(225,48,108,0.4)] transition-all duration-500 hover:scale-110 active:scale-95 hover:shadow-[0_30px_80px_rgba(225,48,108,0.6)]"
+            className="group relative flex items-center gap-12 px-20 py-10 insta-gradient rounded-[3.5rem] shadow-[0_30px_100px_rgba(225,48,108,0.6)] transition-all duration-700 hover:scale-110 active:scale-95 hover:shadow-[0_50px_120px_rgba(225,48,108,0.8)]"
           >
-            {/* White Border Overlay for Extra Definition */}
-            <div className="absolute inset-0 rounded-[2.5rem] border-2 border-white/30 group-hover:border-white/50 transition-colors"></div>
+            {/* Ultra High-Def Border */}
+            <div className="absolute inset-0 rounded-[3.5rem] border-[3px] border-white/40 group-hover:border-white/80 transition-colors"></div>
             
             <div className="flex flex-col items-start text-left leading-none">
-              <span className="text-[10px] font-black text-white/60 uppercase tracking-[0.3em] mb-1">Begin Journey</span>
-              <span className="text-base font-black text-white uppercase tracking-[0.15em] drop-shadow-sm">
+              <span className="text-[12px] font-black text-white/80 uppercase tracking-[0.5em] mb-2">Sync Reality</span>
+              <span className="text-2xl font-black text-white uppercase tracking-[0.1em] drop-shadow-lg">
                 {UI_STRINGS.exploreDestinations[language]}
               </span>
             </div>
             
-            <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center text-[#E1306C] transition-transform duration-700 group-hover:rotate-[360deg] shadow-2xl">
-              <Compass size={28} className="text-[#E1306C]" />
+            <div className="w-20 h-20 rounded-[1.5rem] bg-white flex items-center justify-center text-[#E1306C] transition-all duration-1000 group-hover:rotate-[360deg] shadow-2xl">
+              <Compass size={40} className="text-[#E1306C]" />
             </div>
           </button>
         </div>
       </div>
 
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 opacity-40 hover:opacity-100 transition-opacity pointer-events-none">
-        <span className="text-[9px] font-black text-white uppercase tracking-[0.4em]">Scroll</span>
-        <div className="w-px h-16 bg-gradient-to-b from-white to-transparent" />
+      {/* Cinematic Archive Scroll Indicator */}
+      <div className="absolute bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center gap-6 opacity-60 hover:opacity-100 transition-opacity pointer-events-none">
+        <span className="text-[11px] font-black text-white uppercase tracking-[0.8em] drop-shadow-md">Scan Archives</span>
+        <div className="w-[3px] h-24 bg-gradient-to-b from-[#E1306C] via-white/50 to-transparent rounded-full shadow-[0_0_15px_rgba(225,48,108,0.3)]" />
       </div>
 
-      {/* Enhanced Bottom Mask - pointer-events-none is crucial here */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent pointer-events-none" />
+      {/* Grounding Gradient */}
+      <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-[#020202] via-[#020202]/80 to-transparent pointer-events-none" />
     </div>
   );
 };
