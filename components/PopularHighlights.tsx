@@ -2,12 +2,12 @@
 import React, { useState } from 'react';
 import { Language, Destination } from '../types.ts';
 import { DESTINATIONS, UI_STRINGS } from '../constants.tsx';
-import { MapPin, History, ArrowRight, Sparkles, Compass } from 'lucide-react';
+import { MapPin, History, Sparkles, Compass, ArrowRight } from 'lucide-react';
 import DestinationModal from './DestinationModal.tsx';
 
 interface PopularHighlightsProps {
   language: Language;
-  setView: (view: 'home' | 'destinations' | 'about' | 'foods') => void;
+  setView: (view: any) => void;
 }
 
 const PopularHighlights: React.FC<PopularHighlightsProps> = ({ language, setView }) => {
@@ -16,11 +16,11 @@ const PopularHighlights: React.FC<PopularHighlightsProps> = ({ language, setView
   const highlights = DESTINATIONS.filter(d => popularIds.includes(d.id));
 
   return (
-    <section className="py-32 bg-[#fafafa] overflow-hidden">
+    <section className="py-32 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4">
         {/* Header Section */}
         <div className="text-center mb-40 space-y-8 relative">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-12 opacity-[0.03]">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-12 opacity-[0.03] text-black">
              <Compass size={200} />
           </div>
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#E1306C]/10 border border-[#E1306C]/20 text-[#E1306C] text-[10px] font-bold uppercase tracking-[0.4em] mb-2">
@@ -45,15 +45,14 @@ const PopularHighlights: React.FC<PopularHighlightsProps> = ({ language, setView
                 index % 2 === 1 ? 'lg:flex-row-reverse' : ''
               }`}
             >
-              {/* Image Container with Editorial Styling */}
+              {/* Image Container */}
               <div 
                 onClick={() => setSelectedDest(dest)}
                 className="w-full lg:w-3/5 group relative cursor-pointer"
               >
-                {/* Background Shadow Element */}
                 <div className={`absolute -inset-4 rounded-[60px] bg-white opacity-50 shadow-2xl transition-transform duration-700 group-hover:scale-105 ${index % 2 === 1 ? '-rotate-1' : 'rotate-1'}`}></div>
                 
-                <div className="relative story-ring rounded-[55px] p-[6px] shadow-[0_40px_100px_rgba(0,0,0,0.15)] overflow-hidden transition-all duration-700 hover:shadow-[0_60px_120px_rgba(0,0,0,0.2)]">
+                <div className="relative story-ring rounded-[55px] p-[6px] shadow-[0_40px_100px_rgba(0,0,0,0.1)] overflow-hidden transition-all duration-700 hover:shadow-[0_60px_120px_rgba(0,0,0,0.15)]">
                    <div className="relative aspect-[4/5] sm:aspect-video lg:aspect-[1.2/1] rounded-[50px] overflow-hidden bg-gray-100">
                     <img 
                       src={dest.image} 
@@ -61,15 +60,12 @@ const PopularHighlights: React.FC<PopularHighlightsProps> = ({ language, setView
                       className="w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-110"
                     />
                     
-                    {/* Floating Glassmorphic Overlay */}
                     <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                     
-                    {/* Heritage Numeral */}
                     <div className="absolute top-0 right-0 w-32 h-32 story-ring rounded-bl-[80px] flex items-center justify-center opacity-95 group-hover:w-36 group-hover:h-36 transition-all duration-500">
                       <div className="text-white font-heritage font-bold text-4xl mb-4 ml-4">0{index + 1}</div>
                     </div>
 
-                    {/* View Details Label */}
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-8 group-hover:translate-y-0">
                       <span className="bg-white/90 backdrop-blur-xl text-[#262626] px-12 py-5 rounded-full text-sm font-bold shadow-2xl tracking-[0.2em] uppercase border border-white/50">
                          {language === 'EN' ? 'Dive Into Story' : 'කතාව බලන්න'}
@@ -77,9 +73,6 @@ const PopularHighlights: React.FC<PopularHighlightsProps> = ({ language, setView
                     </div>
                   </div>
                 </div>
-
-                {/* Decorative Pattern behind image */}
-                <div className={`absolute -bottom-8 ${index % 2 === 0 ? '-right-8' : '-left-8'} w-48 h-48 pattern-overlay opacity-10 pointer-events-none`}></div>
               </div>
 
               {/* Content Description */}
@@ -101,8 +94,7 @@ const PopularHighlights: React.FC<PopularHighlightsProps> = ({ language, setView
                 </div>
 
                 <div className="space-y-10 relative">
-                  {/* Decorative Heritage Mark */}
-                  <div className="absolute -top-10 -right-4 opacity-[0.05] pointer-events-none rotate-12">
+                  <div className="absolute -top-10 -right-4 opacity-[0.05] pointer-events-none rotate-12 text-black">
                      <History size={150} />
                   </div>
                   
@@ -110,22 +102,24 @@ const PopularHighlights: React.FC<PopularHighlightsProps> = ({ language, setView
                     <h4 className="flex items-center gap-3 font-bold text-gray-400 uppercase tracking-[0.4em] text-[10px]">
                       {UI_STRINGS.historyLabel[language]}
                     </h4>
-                    <p className="text-gray-500 leading-relaxed font-light text-xl md:text-2xl line-clamp-5">
+                    <p className="text-gray-500 leading-relaxed font-light text-xl md:text-2xl line-clamp-5 italic">
                       {dest.history[language]}
                     </p>
                   </div>
 
+                  {/* Redesigned High-Visibility Highlight Button */}
                   <button 
-                    onClick={() => setSelectedDest(dest)}
-                    className="flex items-center gap-6 font-heritage font-bold text-3xl uppercase tracking-wider group/btn hover:scale-105 transition-all origin-left group"
+                    onClick={() => setView('destinations')}
+                    className="group relative flex items-center gap-4 px-8 py-4 insta-gradient rounded-2xl shadow-xl transition-all duration-500 hover:scale-110 active:scale-95 hover:shadow-[0_20px_40px_rgba(225,48,108,0.4)]"
                   >
-                    <span className="insta-text-gradient group-hover:tracking-widest transition-all duration-500">
-                      {language === 'EN' ? 'Explore' : 'බලන්න'}
-                    </span>
-                    <div className="w-16 h-16 rounded-full story-ring p-[2px] shadow-2xl group-hover:rotate-[360deg] transition-all duration-1000">
-                       <div className="bg-white w-full h-full rounded-full flex items-center justify-center">
-                          <ArrowRight size={28} className="text-[#E1306C]" />
-                       </div>
+                    <div className="flex flex-col items-start text-left leading-none">
+                       <span className="text-[8px] font-black text-white/70 uppercase tracking-[0.3em] mb-1">Archive Entry</span>
+                       <span className="text-sm font-black text-white uppercase tracking-[0.1em]">
+                          {language === 'EN' ? 'Explore Portal' : 'පිවිසුම බලන්න'}
+                       </span>
+                    </div>
+                    <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-[#E1306C] shadow-lg group-hover:rotate-12 transition-transform">
+                      <ArrowRight size={20} />
                     </div>
                   </button>
                 </div>
@@ -134,7 +128,7 @@ const PopularHighlights: React.FC<PopularHighlightsProps> = ({ language, setView
           ))}
         </div>
         
-        {/* Modern Call to action */}
+        {/* Call to action */}
         <div className="mt-64 relative">
            <div className="absolute inset-0 story-ring rounded-[80px] blur-3xl opacity-20 animate-pulse"></div>
            <div className="relative p-20 md:p-32 bg-white rounded-[80px] text-center space-y-12 shadow-2xl border border-gray-100 overflow-hidden group">
@@ -149,9 +143,12 @@ const PopularHighlights: React.FC<PopularHighlightsProps> = ({ language, setView
               </div>
               <button 
                 onClick={() => setView('destinations')}
-                className="relative z-10 px-16 py-6 story-ring text-white rounded-full hover:scale-110 transition-all font-bold shadow-[0_20px_50px_rgba(225,48,108,0.3)] text-lg uppercase tracking-[0.3em]"
+                className="relative z-10 px-16 py-6 insta-gradient text-white rounded-full hover:scale-110 transition-all font-black shadow-[0_20px_60px_rgba(225,48,108,0.4)] text-lg uppercase tracking-[0.3em] group border-2 border-white/20"
               >
-                {UI_STRINGS.exploreDestinations[language]}
+                <span className="flex items-center gap-4">
+                  {UI_STRINGS.exploreDestinations[language]}
+                  <ArrowRight size={24} className="group-hover:translate-x-2 transition-transform" />
+                </span>
               </button>
            </div>
         </div>

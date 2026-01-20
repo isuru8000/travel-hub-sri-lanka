@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Language } from '../types';
-import { Menu, X, Globe, Camera, LogOut, LogIn, Box } from 'lucide-react';
+import { Menu, X, Globe, Camera, LogOut, LogIn, Box, Layers } from 'lucide-react';
 import { User } from '../App.tsx';
 import WeatherWidget from './WeatherWidget.tsx';
 
@@ -64,11 +64,12 @@ const Navbar: React.FC<NavbarProps> = ({
             {language === 'EN' ? 'Destinations' : 'ගමනාන්ත'}
           </button>
           <button 
-            onClick={() => handleNav('vr-experience')} 
-            className={`flex items-center gap-2 text-sm font-bold transition-colors ${currentView === 'vr-experience' ? 'insta-text-gradient' : 'text-[#262626] hover:text-[#E1306C]'}`}
+            onClick={() => handleNav('vr-showcase')} 
+            className={`relative flex items-center gap-2 text-sm font-bold transition-colors ${currentView === 'vr-showcase' ? 'insta-text-gradient' : 'text-[#262626] hover:text-[#E1306C]'}`}
           >
-            <Box size={16} className={currentView === 'vr-experience' ? 'text-[#E1306C]' : ''} />
-            {language === 'EN' ? 'VR Experience' : 'VR අත්දැකීම'}
+            <Layers size={16} className={currentView === 'vr-showcase' ? 'text-[#E1306C]' : ''} />
+            {language === 'EN' ? '3D Spaces' : 'ත්‍රිමාණ අවකාශ'}
+            <span className="absolute -top-3 -right-6 px-1.5 py-0.5 bg-[#E1306C] text-white text-[8px] rounded-md animate-pulse">Beta</span>
           </button>
           <button 
             onClick={() => handleNav('memories')} 
@@ -80,7 +81,6 @@ const Navbar: React.FC<NavbarProps> = ({
           
           <div className="h-4 w-[1px] bg-gray-200"></div>
           
-          {/* Weather Pill Integrated into Utility Area */}
           <WeatherWidget language={language} />
 
           <button 
@@ -135,7 +135,6 @@ const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         <div className="md:hidden flex items-center gap-4">
-          {/* Mobile Weather Pill (Simplified) */}
           <WeatherWidget language={language} />
           
           <button 
@@ -150,12 +149,11 @@ const Navbar: React.FC<NavbarProps> = ({
         </div>
       </div>
 
-      {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden bg-white border-b border-gray-100 py-4 px-4 space-y-4">
           <button onClick={() => handleNav('home')} className="block w-full text-left py-2 text-sm font-bold">{language === 'EN' ? 'Home' : 'මුල් පිටුව'}</button>
           <button onClick={() => handleNav('destinations')} className="block w-full text-left py-2 text-sm font-bold">{language === 'EN' ? 'Destinations' : 'ගමනාන්ත'}</button>
-          <button onClick={() => handleNav('vr-experience')} className="block w-full text-left py-2 text-sm font-bold">{language === 'EN' ? 'VR Experience' : 'VR අත්දැකීම'}</button>
+          <button onClick={() => handleNav('vr-showcase')} className="block w-full text-left py-2 text-sm font-bold">{language === 'EN' ? '3D Spaces (Coming Soon)' : 'ත්‍රිමාණ අවකාශ (ළඟදීම)'}</button>
           <button onClick={() => handleNav('memories')} className="block w-full text-left py-2 text-sm font-bold">{language === 'EN' ? 'Memories' : 'මතකයන්'}</button>
           <button onClick={() => handleNav('about')} className="block w-full text-left py-2 text-sm font-bold">{language === 'EN' ? 'About' : 'අපි ගැන'}</button>
           {!user && (

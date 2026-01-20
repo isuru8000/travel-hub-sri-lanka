@@ -19,6 +19,7 @@ import LoadingScreen from './components/LoadingScreen.tsx';
 import TravelMemories from './components/TravelMemories.tsx';
 import Quiz from './components/Quiz.tsx';
 import VRExperience from './components/VRExperience.tsx';
+import VRShowcase from './components/VRShowcase.tsx';
 import { Sparkles, Compass, ShieldCheck, Star, Users, MapPin, ArrowRight } from 'lucide-react';
 
 export interface User {
@@ -27,7 +28,7 @@ export interface User {
   photo: string;
 }
 
-type View = 'home' | 'destinations' | 'about' | 'foods' | 'music' | 'interests' | 'medicine' | 'tea' | 'phrases' | 'essentials' | 'festivals' | 'memories' | 'quiz' | 'vr-experience';
+type View = 'home' | 'destinations' | 'about' | 'foods' | 'music' | 'interests' | 'medicine' | 'tea' | 'phrases' | 'essentials' | 'festivals' | 'memories' | 'quiz' | 'vr-experience' | 'vr-showcase';
 
 const App: React.FC = () => {
   const [language, setLanguage] = useState<Language>('EN');
@@ -114,16 +115,18 @@ const App: React.FC = () => {
         return <div className="pt-8"><Quiz language={language} setView={setView} /></div>;
       case 'vr-experience':
         return <div className="pt-8"><VRExperience language={language} setView={setView} /></div>;
+      case 'vr-showcase':
+        return <VRShowcase language={language} setView={setView} />;
       case 'about':
         return (
           <div className="pt-8">
-            <StorySection language={language} />
+            <StorySection language={language} setView={setView} />
             <section className="py-20 px-4 bg-white">
               <div className="max-w-7xl mx-auto text-center space-y-8">
                 <h2 className="text-3xl font-heritage font-bold text-[#262626]">
                   {language === 'EN' ? "Our Vision" : "අපගේ දැක්ම"}
                 </h2>
-                <p className="max-w-2xl mx-auto text-gray-600 leading-relaxed italic">
+                <p className="max-w-2xl mx-auto text-gray-500 leading-relaxed italic">
                   "Travel Hub Sri Lanka was founded to bridge the gap between our island's glorious past and its vibrant future."
                 </p>
               </div>
@@ -136,61 +139,61 @@ const App: React.FC = () => {
           <>
             <Hero language={language} setView={setView} />
             
-            {/* Trust Banner - Premium Logo Strip */}
-            <div className="py-12 bg-white border-b border-gray-50 overflow-hidden">
+            {/* Trust Banner - Premium Logo Strip (Light) */}
+            <div className="py-12 bg-white border-b border-gray-100 overflow-hidden">
                <div className="max-w-7xl mx-auto px-6 flex flex-wrap justify-center md:justify-between items-center gap-12 opacity-30 grayscale contrast-125">
-                  <span className="text-lg font-heritage font-black italic tracking-tighter uppercase">Condé Nast Traveler</span>
-                  <span className="text-lg font-heritage font-black italic tracking-tighter uppercase">National Geographic</span>
-                  <span className="text-lg font-heritage font-black italic tracking-tighter uppercase">The New York Times</span>
-                  <span className="text-lg font-heritage font-black italic tracking-tighter uppercase">Lonely Planet</span>
+                  <span className="text-lg font-heritage font-black italic tracking-tighter uppercase text-[#262626]">Condé Nast Traveler</span>
+                  <span className="text-lg font-heritage font-black italic tracking-tighter uppercase text-[#262626]">National Geographic</span>
+                  <span className="text-lg font-heritage font-black italic tracking-tighter uppercase text-[#262626]">The New York Times</span>
+                  <span className="text-lg font-heritage font-black italic tracking-tighter uppercase text-[#262626]">Lonely Planet</span>
                </div>
             </div>
 
             <PopularHighlights language={language} setView={setView} />
 
-            {/* Premium Quiz CTA */}
-            <div className="bg-[#0a0a0a] py-40 px-4 relative overflow-hidden group">
+            {/* Premium Quiz CTA (Light High Contrast) */}
+            <div className="bg-[#fafafa] py-40 px-4 relative overflow-hidden group border-y border-gray-100">
               <div className="absolute inset-0 pattern-overlay opacity-5"></div>
               <div 
-                className="absolute right-0 top-0 w-full md:w-3/4 h-full bg-cover bg-center opacity-20 transition-transform duration-[15000ms] group-hover:scale-105"
+                className="absolute right-0 top-0 w-full md:w-3/4 h-full bg-cover bg-center opacity-[0.03] transition-transform duration-[15000ms] group-hover:scale-105"
                 style={{ backgroundImage: `url('https://images.unsplash.com/photo-1512100353917-7027ee1b277c?q=80&w=2000&auto=format&fit=crop')` }}
               />
               <div className="max-w-7xl mx-auto relative z-10 flex flex-col md:flex-row items-center gap-20">
                  <div className="w-full md:w-1/2 space-y-10 text-center md:text-left">
-                   <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-white/5 border border-white/10 text-white text-[10px] font-black uppercase tracking-[0.5em]">
+                   <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-black/5 border border-black/10 text-[#262626] text-[10px] font-black uppercase tracking-[0.5em]">
                      <Sparkles size={14} className="text-[#E1306C]" />
                      Bespoke Curation
                    </div>
-                   <h2 className="text-5xl md:text-8xl font-heritage font-bold text-white leading-[0.9] tracking-tight">
+                   <h2 className="text-5xl md:text-8xl font-heritage font-bold text-[#262626] leading-[0.9] tracking-tight">
                       Find Your <br/>
                       <span className="insta-text-gradient italic">Island Soul.</span>
                    </h2>
-                   <p className="text-gray-500 text-xl font-light leading-relaxed max-w-lg italic">
+                   <p className="text-gray-400 text-xl font-light leading-relaxed max-w-lg italic">
                       "Our 1-minute visual archetype engine reveals the journey you were destined to take."
                    </p>
                    <button 
                      onClick={() => setView('quiz')}
-                     className="px-14 py-7 bg-white text-[#262626] font-bold rounded-[2.5rem] hover:scale-105 active:scale-95 transition-all shadow-2xl flex items-center gap-4 mx-auto md:mx-0 group/btn overflow-hidden relative"
+                     className="px-14 py-7 bg-[#262626] text-white font-bold rounded-[2.5rem] hover:scale-105 active:scale-95 transition-all shadow-2xl flex items-center gap-4 mx-auto md:mx-0 group/btn overflow-hidden relative"
                    >
-                     <div className="absolute inset-0 bg-black/5 opacity-0 group-hover/btn:opacity-100 transition-opacity"></div>
+                     <div className="absolute inset-0 bg-white/5 opacity-0 group-hover/btn:opacity-100 transition-opacity"></div>
                      <Compass size={24} className="text-[#E1306C] group-hover/btn:rotate-180 transition-transform duration-1000" />
                      <span className="uppercase tracking-[0.3em] text-[10px]">Begin Archetype Test</span>
                    </button>
                  </div>
                  <div className="hidden lg:block w-1/2 relative">
-                    <div className="absolute -inset-10 story-ring rounded-[5rem] blur-[100px] opacity-20 animate-pulse"></div>
-                    <div className="relative rounded-[4rem] overflow-hidden shadow-2xl border border-white/10 rotate-2 group-hover:rotate-0 transition-transform duration-700">
-                       <img src="https://images.unsplash.com/photo-1580794749460-76f97b7180d8?auto=format&fit=crop&w=1200&q=80" className="w-full grayscale group-hover:grayscale-0 transition-all duration-1000" alt="Quiz" />
+                    <div className="absolute -inset-10 story-ring rounded-[5rem] blur-[100px] opacity-10 animate-pulse"></div>
+                    <div className="relative rounded-[4rem] overflow-hidden shadow-2xl border border-gray-100 rotate-2 group-hover:rotate-0 transition-transform duration-700">
+                       <img src="https://images.unsplash.com/photo-1580794749460-76f97b7180d8?auto=format&fit=crop&w=1200&q=80" className="w-full grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-1000" alt="Quiz" />
                     </div>
                  </div>
               </div>
             </div>
 
-            {/* Travel Designer / Concierge Section */}
+            {/* Travel Designer / Concierge Section (Light) */}
             <section className="py-40 bg-white">
               <div className="max-w-7xl mx-auto px-6">
                 <div className="bg-[#fafafa] rounded-[4rem] p-12 md:p-24 shadow-sm border border-gray-100 relative overflow-hidden">
-                  <div className="absolute top-0 right-0 p-20 opacity-[0.02] pointer-events-none rotate-12">
+                  <div className="absolute top-0 right-0 p-20 opacity-[0.02] pointer-events-none rotate-12 text-[#262626]">
                      <Users size={300} />
                   </div>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center relative z-10">
@@ -208,10 +211,10 @@ const App: React.FC = () => {
                           : "අප යනු හුදු වෙබ් අඩවියක් පමණක් නොවේ, දිවයිනේ ප්‍රභූ අත්දැකීම් සඳහා ඔබේ දොරටුවයි. අපගේ AI සහ දේශීය විශේෂඥයින් සදාකාලික මතකයක් එක් කරන සංචාරයන් නිර්මාණය කරයි."}
                       </p>
                       <button 
-                         onClick={() => setView('about')}
+                         onClick={() => setView('destinations')}
                          className="flex items-center gap-4 text-[#262626] font-bold uppercase tracking-[0.3em] text-[10px] hover:text-[#E1306C] transition-colors group"
                       >
-                         Learn Our Heritage
+                         View All Destinations
                          <div className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center group-hover:border-[#E1306C] transition-colors">
                             <ArrowRight size={16} />
                          </div>
@@ -220,18 +223,18 @@ const App: React.FC = () => {
                     <div className="grid grid-cols-2 gap-6">
                        <div className="space-y-6">
                           <div className="p-8 bg-white rounded-3xl shadow-sm border border-gray-50 space-y-4">
-                             <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-orange-500"><MapPin size={20} /></div>
+                             <div className="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500"><MapPin size={20} /></div>
                              <p className="text-xs font-black uppercase tracking-widest text-[#262626]">Site Mapping</p>
                              <p className="text-[10px] text-gray-400 leading-relaxed font-bold">250+ Surveyed Locations</p>
                           </div>
                           <div className="p-8 bg-white rounded-3xl shadow-sm border border-gray-50 space-y-4">
-                             <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500"><Star size={20} /></div>
+                             <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500"><Star size={20} /></div>
                              <p className="text-xs font-black uppercase tracking-widest text-[#262626]">Quality Score</p>
                              <p className="text-[10px] text-gray-400 leading-relaxed font-bold">4.9/5 Guest Average</p>
                           </div>
                        </div>
                        <div className="pt-12 space-y-6">
-                          <div className="p-8 bg-[#262626] rounded-3xl shadow-2xl space-y-4 text-white">
+                          <div className="p-8 bg-[#262626] text-white rounded-3xl shadow-2xl space-y-4">
                              <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-white"><ShieldCheck size={20} /></div>
                              <p className="text-xs font-black uppercase tracking-widest">Verified</p>
                              <p className="text-[10px] text-white/40 leading-relaxed font-bold">Lanka Tourism Board Certified</p>
@@ -245,24 +248,24 @@ const App: React.FC = () => {
 
             <CategoriesSection language={language} setView={setView} />
             
-            <StorySection language={language} />
+            <StorySection language={language} setView={setView} />
             
             <section className="py-40 px-4 bg-[#fafafa]">
               <div className="max-w-7xl mx-auto">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-24">
-                  <div className="text-center space-y-6">
-                    <div className="w-20 h-20 bg-white shadow-xl rounded-[2rem] flex items-center justify-center mx-auto text-4xl">🏛️</div>
-                    <h3 className="text-3xl font-heritage font-bold">2500+ Years</h3>
+                  <div className="text-center space-y-6 group">
+                    <div className="w-20 h-20 bg-white shadow-xl rounded-[2rem] flex items-center justify-center mx-auto text-4xl border border-gray-50 group-hover:scale-110 transition-transform">🏛️</div>
+                    <h3 className="text-3xl font-heritage font-bold text-[#262626]">2500+ Years</h3>
                     <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{language === 'EN' ? 'Recorded History' : 'වාර්තාගත ඉතිහාසය'}</p>
                   </div>
-                  <div className="text-center space-y-6">
-                    <div className="w-20 h-20 bg-white shadow-xl rounded-[2rem] flex items-center justify-center mx-auto text-4xl">🏖️</div>
-                    <h3 className="text-3xl font-heritage font-bold">1300+ KM</h3>
+                  <div className="text-center space-y-6 group">
+                    <div className="w-20 h-20 bg-white shadow-xl rounded-[2rem] flex items-center justify-center mx-auto text-4xl border border-gray-50 group-hover:scale-110 transition-transform">🏖️</div>
+                    <h3 className="text-3xl font-heritage font-bold text-[#262626]">1300+ KM</h3>
                     <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{language === 'EN' ? 'Coastline' : 'වෙරළ තීරය'}</p>
                   </div>
-                  <div className="text-center space-y-6">
-                    <div className="w-20 h-20 bg-white shadow-xl rounded-[2rem] flex items-center justify-center mx-auto text-4xl">🐆</div>
-                    <h3 className="text-3xl font-heritage font-bold">8 UNESCO</h3>
+                  <div className="text-center space-y-6 group">
+                    <div className="w-20 h-20 bg-white shadow-xl rounded-[2rem] flex items-center justify-center mx-auto text-4xl border border-gray-50 group-hover:scale-110 transition-transform">🐆</div>
+                    <h3 className="text-3xl font-heritage font-bold text-[#262626]">8 UNESCO</h3>
                     <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{language === 'EN' ? 'World Heritage Sites' : 'ලෝක උරුම ස්ථාන'}</p>
                   </div>
                 </div>

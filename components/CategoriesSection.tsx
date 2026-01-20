@@ -22,18 +22,18 @@ const CategoriesSection: React.FC<CategoriesSectionProps> = ({ language, setView
   ];
 
   return (
-    <section className="py-32 bg-[#fafafa] border-y border-gray-200">
+    <section className="py-32 bg-white border-y border-gray-100">
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center space-y-6 mb-24">
           <h2 className="text-4xl md:text-5xl font-heritage font-bold text-[#262626]">
             {UI_STRINGS.exploreInterests[language]}
           </h2>
-          <p className="text-gray-500 max-w-2xl mx-auto text-base md:text-lg font-light leading-relaxed">
+          <p className="text-gray-500 max-w-2xl mx-auto text-base md:text-lg font-light leading-relaxed italic">
             {language === 'EN' 
               ? "Discover the soul of our nation through unique experiences tailored to your spirit." 
               : "ඔබේ රුචිකත්වයට සරිලන පරිදි සකස් කරන ලද සුවිශේෂී අත්දැකීම් තුළින් අපේ ජාතියේ ආත්මය හඳුනා ගන්න."}
           </p>
-          <div className="w-24 h-1 story-ring mx-auto rounded-full" />
+          <div className="w-24 h-1 story-ring mx-auto rounded-full shadow-[0_0_15px_rgba(225,48,108,0.1)]" />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 lg:grid-cols-4 2xl:grid-cols-7 gap-12">
@@ -54,28 +54,27 @@ const CategoriesSection: React.FC<CategoriesSectionProps> = ({ language, setView
                    else if (cat.id === 'quiz') setView('quiz');
                    else setView('destinations');
                 }}
-                className="group p-10 rounded-[40px] bg-white border border-gray-100 hover:shadow-2xl transition-all text-center cursor-pointer flex flex-col items-center h-full"
+                className="group p-10 rounded-[40px] bg-white border border-gray-100 hover:shadow-[0_20px_60px_rgba(0,0,0,0.08)] transition-all text-center cursor-pointer flex flex-col items-center h-full"
               >
                 <div className="relative flex flex-col items-center">
                   {/* Premium Heritage Tooltip */}
                   <div className="absolute -top-16 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none z-30 translate-y-2 group-hover:translate-y-0 scale-95 group-hover:scale-100">
                     <div className="relative">
-                      <div className="story-ring p-[1.5px] rounded-2xl shadow-[0_20px_40px_rgba(225,48,108,0.25)]">
-                        <div className="bg-white/90 backdrop-blur-xl px-6 py-2.5 rounded-[14px] whitespace-nowrap border border-white/50">
+                      <div className="story-ring p-[1.5px] rounded-2xl shadow-[0_20px_40px_rgba(225,48,108,0.2)]">
+                        <div className="bg-white px-6 py-2.5 rounded-[14px] whitespace-nowrap border border-white/50">
                           <span className="insta-text-gradient font-heritage font-bold text-[11px] uppercase tracking-[0.25em]">
                             {cat.title[language]}
                           </span>
                         </div>
                       </div>
-                      {/* Tooltip Arrow with Blur compatibility */}
-                      <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white rotate-45 border-r border-b border-gray-100/50 shadow-sm z-10"></div>
+                      {/* Tooltip Arrow */}
+                      <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white rotate-45 z-10"></div>
                     </div>
                   </div>
 
                   {/* Icon Container */}
                   <div className="w-24 h-24 story-ring rounded-full p-[4px] mb-8 transition-all duration-700 group-hover:scale-110 group-hover:rotate-6 group-hover:shadow-[0_15px_30px_rgba(225,48,108,0.2)]">
-                    <div className="bg-white w-full h-full rounded-full flex items-center justify-center text-[#262626] group-hover:insta-gradient group-hover:text-white transition-all duration-500 overflow-hidden relative">
-                        <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+                    <div className="bg-white w-full h-full rounded-full flex items-center justify-center text-[#262626] group-hover:insta-gradient group-hover:text-white transition-all duration-500 overflow-hidden relative shadow-inner">
                         {IconComponent && <IconComponent size={40} strokeWidth={1.5} className="relative z-10" />}
                     </div>
                   </div>
@@ -84,7 +83,7 @@ const CategoriesSection: React.FC<CategoriesSectionProps> = ({ language, setView
                 <h3 className="text-2xl font-heritage font-bold text-[#262626] mb-4 group-hover:insta-text-gradient transition-all duration-500">
                   {cat.title[language]}
                 </h3>
-                <p className="text-sm text-gray-500 leading-relaxed font-light line-clamp-3">
+                <p className="text-sm text-gray-400 leading-relaxed font-light line-clamp-3 italic">
                   {cat.description[language]}
                 </p>
                 

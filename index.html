@@ -25,6 +25,21 @@
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
       }
+      
+      @keyframes gradient-shift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+      
+      .animate-gradient-text-slow {
+        background: linear-gradient(270deg, #fdf497, #fd5949, #d6249f, #285AEB, #22c55e);
+        background-size: 400% 400%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: gradient-shift 15s ease infinite;
+      }
+
       .story-ring {
         padding: 3px;
         background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);

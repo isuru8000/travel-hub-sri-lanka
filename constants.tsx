@@ -3,7 +3,7 @@ import { Destination, Food, HeritageMusic, TraditionalMedicine, TeaExperience, P
 
 export const UI_STRINGS: Translation = {
   heroTitle: {
-    EN: "Discover the True Beauty of Sri Lanka",
+    EN: "Discover True Beauty of Sri Lanka",
     SI: "ශ්‍රී ලංකාවේ සැබෑ සුන්දරත්වය සොයා ගන්න"
   },
   exploreDestinations: {
@@ -273,7 +273,7 @@ export const TEA_DATA: TeaExperience[] = [
   {
     id: "nuwara-eliya",
     name: { EN: "Nuwara Eliya Estates", SI: "නුවරඑළිය තේ වතු" },
-    description: { EN: "The 'Champagne of Teas' comes from this high-altitude region.", SI: "උසින් වැඩිම කලාපයේ නිපදවන 'තේ වල ෂැම්පේන්' ලෙස හැඳින්වෙන තේ මෙහි නිපදවේ." },
+    description: { EN: "The 'Champagne of Teas' comes from this high-altitude region.", SI: "උසින් වැඩිම kලාපයේ නිපදවන 'තේ වල ෂැම්පේන්' ලෙස හැඳින්වෙන තේ මෙහි නිපදවේ." },
     image: "https://images.unsplash.com/photo-1558446791-ac5fec3caddf?auto=format&fit=crop&w=800&q=80",
     type: 'location',
     fact: { EN: "Altitude: Above 6,000 feet.", SI: "මුහුදු මට්ටමේ සිට අඩි 6,000 කට වඩා වැඩිය." }
@@ -297,7 +297,7 @@ export const TEA_DATA: TeaExperience[] = [
   {
     id: "fermentation",
     name: { EN: "Oxidation (Fermentation)", SI: "ඔක්සිකරණය" },
-    description: { EN: "The step that defines whether a tea will be black, green, or oolong.", SI: "තේ කොළය කළු, කොළ හෝ ඌලොන්ග් වන්නේදැයි තීරණය කරන පියවරයි." },
+    description: { EN: "The step that defines whether a tea will be black, green, or oolong.", SI: "තේ කොළය කළු, කොළ හෝ ඌලොන්ග් වන්නේදැයි තීරණ කරන පියවරයි." },
     image: "https://images.unsplash.com/photo-1594631252845-29fc45865157?auto=format&fit=crop&w=800&q=80",
     type: 'process',
     fact: { EN: "Temperature control is critical here.", SI: "මෙහිදී උෂ්ණත්වය පාලනය කිරීම ඉතා වැදගත් වේ." }
@@ -706,7 +706,7 @@ export const DESTINATIONS: Destination[] = [
       "https://images.unsplash.com/photo-1620668165561-12f719468e27?auto=format&fit=crop&w=800&q=80",
       "https://images.unsplash.com/photo-1576707833213-9804e107d667?auto=format&fit=crop&w=800&q=80"
     ],
-    videoUrl: "https://www.youtube.com/embed/2X8pWp9E80I",
+    videoUrl: "https://www.youtube.com/shorts/j4ln2UNOnZk",
     history: {
       EN: "Sigiriya, the 'Lion Rock', is a UNESCO World Heritage site and one of the best-preserved examples of ancient urban planning. King Kashyapa (477-495 AD) selected this 200m tall rock for his royal residence to protect himself from his brother Moggallana. The site features advanced hydraulic systems, world-famous frescoes, and the Mirror Wall.",
       SI: "සීගිරිය හෙවත් 'සිංහගිරිය' යනු යුනෙස්කෝ ලෝක උරුම අඩවියක් වන අතර පැරණි නගර නිර්මාණකරණයේ විශිෂ්ටතම නිදසුනකි. කාශ්‍යප රජු (ක්‍රි.ව. 477-495) තම සොහොයුරු මුගලන්ගෙන් ආරක්ෂා වීම සඳහා තම රාජකීය වාසස්ථානය ලෙස මෙය තෝරා ගත්තේය. මෙහි ඇති ජල උද්‍යාන සහ බිතුසිතුවම් ලොව පුරා ප්‍රසිද්ධය."
@@ -726,7 +726,7 @@ export const DESTINATIONS: Destination[] = [
     id: "polonnaruwa",
     name: { EN: "Ancient City of Polonnaruwa", SI: "පොළොන්නරුව පුරාණ නගරය" },
     category: "ancient",
-    image: "https://images.unsplash.com/photo-1656339952847-a360aee9273b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fHBvbG9ubmFydXdhfGVufDB8fDB8fHww auto=format&fit=crop&w=1200&q=80",
+    image: "https://images.unsplash.com/photo-1656339952847-a360aee9273b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fHBvbG9ubmFydXdhfGVufDB8fDB8fHww auto=format&fit=crop&w=1200&q=80",
     gallery: [
       "https://images.unsplash.com/photo-1621393614326-2f9ed389ce02?auto=format&fit=crop&w=800&q=80",
       "https://images.unsplash.com/photo-1721992499083-637b6ee0c7ba?auto=format&fit=crop&w=800&q=80"
