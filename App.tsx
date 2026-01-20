@@ -19,8 +19,8 @@ import LoadingScreen from './components/LoadingScreen.tsx';
 import TravelMemories from './components/TravelMemories.tsx';
 import Quiz from './components/Quiz.tsx';
 import VRExperience from './components/VRExperience.tsx';
-// Fix: Added missing icon imports from lucide-react
-import { Sparkles, Compass } from 'lucide-react';
+import HeritageCollection from './components/HeritageCollection.tsx';
+import { Sparkles, Compass, ShieldCheck, Star, Users, MapPin, ArrowRight } from 'lucide-react';
 
 export interface User {
   name: string;
@@ -37,7 +37,6 @@ const App: React.FC = () => {
   const [isInitialLoading, setIsInitialLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate initial asset loading
     const timer = setTimeout(() => {
       setIsInitialLoading(false);
     }, 2500);
@@ -79,7 +78,6 @@ const App: React.FC = () => {
   }
 
   const handleLogin = () => {
-    // Simulate Google Sign In
     setUser({
       name: "Saman Kumara",
       email: "saman.k@gmail.com",
@@ -94,81 +92,29 @@ const App: React.FC = () => {
   const renderContent = () => {
     switch (view) {
       case 'destinations':
-        return (
-          <div className="pt-8">
-            <Destinations language={language} />
-          </div>
-        );
+        return <div className="pt-8"><Destinations language={language} /></div>;
       case 'foods':
-        return (
-          <div className="pt-8">
-            <Foods language={language} />
-          </div>
-        );
+        return <div className="pt-8"><Foods language={language} /></div>;
       case 'music':
-        return (
-          <div className="pt-8">
-            <HeritageMusic language={language} />
-          </div>
-        );
+        return <div className="pt-8"><HeritageMusic language={language} /></div>;
       case 'medicine':
-        return (
-          <div className="pt-8">
-            <TraditionalMedicine language={language} />
-          </div>
-        );
+        return <div className="pt-8"><TraditionalMedicine language={language} /></div>;
       case 'tea':
-        return (
-          <div className="pt-8">
-            <TeaCulture language={language} />
-          </div>
-        );
+        return <div className="pt-8"><TeaCulture language={language} /></div>;
       case 'phrases':
-        return (
-          <div className="pt-8">
-            <Phrasebook language={language} />
-          </div>
-        );
+        return <div className="pt-8"><Phrasebook language={language} /></div>;
       case 'essentials':
-        return (
-          <div className="pt-8">
-            <TravelEssentials language={language} />
-          </div>
-        );
+        return <div className="pt-8"><TravelEssentials language={language} /></div>;
       case 'festivals':
-        return (
-          <div className="pt-8">
-            <Festivals language={language} />
-          </div>
-        );
+        return <div className="pt-8"><Festivals language={language} /></div>;
       case 'memories':
-        return (
-          <div className="pt-8">
-            <TravelMemories 
-              language={language} 
-              user={user} 
-              onLogin={handleLogin}
-            />
-          </div>
-        );
+        return <div className="pt-8"><TravelMemories language={language} user={user} onLogin={handleLogin} /></div>;
       case 'interests':
-        return (
-          <div className="pt-8">
-            <CategoriesSection language={language} setView={setView} />
-          </div>
-        );
+        return <div className="pt-8"><CategoriesSection language={language} setView={setView} /></div>;
       case 'quiz':
-        return (
-          <div className="pt-8">
-            <Quiz language={language} setView={setView} />
-          </div>
-        );
+        return <div className="pt-8"><Quiz language={language} setView={setView} /></div>;
       case 'vr-experience':
-        return (
-          <div className="pt-8">
-            <VRExperience language={language} setView={setView} />
-          </div>
-        );
+        return <div className="pt-8"><VRExperience language={language} setView={setView} /></div>;
       case 'about':
         return (
           <div className="pt-8">
@@ -178,10 +124,8 @@ const App: React.FC = () => {
                 <h2 className="text-3xl font-heritage font-bold text-[#262626]">
                   {language === 'EN' ? "Our Vision" : "අපගේ දැක්ම"}
                 </h2>
-                <p className="max-w-2xl mx-auto text-gray-600 leading-relaxed">
-                  {language === 'EN' 
-                    ? "Travel Hub Sri Lanka was founded with a single mission: to bridge the gap between our island's glorious past and its vibrant future. We believe that every traveler should experience the soul of Sri Lanka, not just its sights."
-                    : "ට්‍රැවල් හබ් ශ්‍රී ලංකා ආරම්භ කරන ලද්දේ එකම අරමුණකිනි: අපගේ දූපතේ අභිමානවත් අතීතය සහ එහි විචිත්‍රවත් අනාගතය අතර පාලමක් තැනීමයි. සෑම සංචාරකයෙකුම ශ්‍රී ලංකාවේ දසුන් පමණක් නොව එහි ආත්මයද අත්විඳිය යුතු බව අපි විශ්වාස කරමු."}
+                <p className="max-w-2xl mx-auto text-gray-600 leading-relaxed italic">
+                  "Travel Hub Sri Lanka was founded to bridge the gap between our island's glorious past and its vibrant future."
                 </p>
               </div>
             </section>
@@ -192,107 +136,148 @@ const App: React.FC = () => {
         return (
           <>
             <Hero language={language} setView={setView} />
-            <div className="relative">
-              <PopularHighlights language={language} setView={setView} />
+            
+            {/* Trust Banner - Premium Logo Strip */}
+            <div className="py-12 bg-white border-b border-gray-50 overflow-hidden">
+               <div className="max-w-7xl mx-auto px-6 flex flex-wrap justify-center md:justify-between items-center gap-12 opacity-30 grayscale contrast-125">
+                  <span className="text-lg font-heritage font-black italic tracking-tighter uppercase">Condé Nast Traveler</span>
+                  <span className="text-lg font-heritage font-black italic tracking-tighter uppercase">National Geographic</span>
+                  <span className="text-lg font-heritage font-black italic tracking-tighter uppercase">The New York Times</span>
+                  <span className="text-lg font-heritage font-black italic tracking-tighter uppercase">Lonely Planet</span>
+               </div>
+            </div>
 
-              {/* Quiz Invitation CTA */}
-              <div className="bg-[#262626] py-32 px-4 relative overflow-hidden group">
-                <div className="absolute inset-0 pattern-overlay opacity-10"></div>
-                {/* Updated background image: Dark, atmospheric forest/temple vibes */}
-                <div 
-                  className="absolute right-0 top-0 w-1/2 h-full bg-cover bg-center opacity-30 transition-transform duration-[10000ms] group-hover:scale-110"
-                  style={{ backgroundImage: `url('https://images.unsplash.com/photo-1512100353917-7027ee1b277c?q=80&w=2000&auto=format&fit=crop')` }}
-                />
-                <div className="max-w-7xl mx-auto relative z-10 flex flex-col md:flex-row items-center gap-16">
-                   <div className="w-full md:w-1/2 space-y-8 text-center md:text-left">
-                     <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-white/10 text-white text-[11px] font-bold uppercase tracking-[0.5em]">
-                       {/* Fix: Added missing Sparkles icon */}
-                       <Sparkles size={14} className="text-yellow-400" />
-                       Interactive Experience
-                     </div>
-                     <h2 className="text-4xl md:text-6xl font-heritage font-bold text-white leading-tight">
-                        What Kind of <br/>
-                        <span className="insta-text-gradient italic">Explorer</span> Are You?
-                     </h2>
-                     <p className="text-gray-400 text-lg md:text-xl font-light leading-relaxed">
-                        Take our 1-minute visual journey to discover your island soul and receive a personalized itinerary for your next adventure.
-                     </p>
-                     <button 
-                       onClick={() => setView('quiz')}
-                       className="px-12 py-6 bg-white text-[#262626] font-bold rounded-2xl hover:scale-105 transition-all shadow-2xl flex items-center gap-4 mx-auto md:mx-0 group/btn"
-                     >
-                       {/* Fix: Added missing Compass icon */}
-                       <Compass size={22} className="text-[#E1306C] group-hover/btn:rotate-180 transition-transform duration-700" />
-                       <span className="uppercase tracking-[0.2em] text-xs">Start the Quiz</span>
-                     </button>
+            <PopularHighlights language={language} setView={setView} />
+
+            <HeritageCollection language={language} />
+
+            {/* Premium Quiz CTA */}
+            <div className="bg-[#0a0a0a] py-40 px-4 relative overflow-hidden group">
+              <div className="absolute inset-0 pattern-overlay opacity-5"></div>
+              <div 
+                className="absolute right-0 top-0 w-full md:w-3/4 h-full bg-cover bg-center opacity-20 transition-transform duration-[15000ms] group-hover:scale-105"
+                style={{ backgroundImage: `url('https://images.unsplash.com/photo-1512100353917-7027ee1b277c?q=80&w=2000&auto=format&fit=crop')` }}
+              />
+              <div className="max-w-7xl mx-auto relative z-10 flex flex-col md:flex-row items-center gap-20">
+                 <div className="w-full md:w-1/2 space-y-10 text-center md:text-left">
+                   <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-white/5 border border-white/10 text-white text-[10px] font-black uppercase tracking-[0.5em]">
+                     <Sparkles size={14} className="text-[#E1306C]" />
+                     Bespoke Curation
                    </div>
-                   <div className="hidden md:block w-1/2 relative">
-                      <div className="absolute -inset-4 story-ring rounded-[3rem] blur-2xl opacity-20"></div>
-                      <img src="https://images.unsplash.com/photo-1580794749460-76f97b7180d8?auto=format&fit=crop&w=800&q=80" className="relative rounded-[3rem] shadow-2xl border-4 border-white/10" alt="Quiz" />
-                   </div>
-                </div>
-              </div>
-
-              <CategoriesSection language={language} setView={setView} />
-              
-              <div className="bg-[#f4a261]/10 py-16 px-4">
-                <div className="max-w-4xl mx-auto text-center space-y-4">
-                  <h2 className="text-2xl md:text-3xl font-heritage font-bold text-[#262626]">
-                    {language === 'EN' ? "Need a Personalized Plan?" : "ඔබට අවශ්‍ය පුද්ගලික සැලසුමක්ද?"}
-                  </h2>
-                  <p className="text-gray-600">
-                    {language === 'EN' 
-                      ? "Talk to our AI guide or browse through our collection of hand-picked itineraries." 
-                      : "අපගේ AI මගපෙන්වන්නා සමඟ කතා කරන්න හෝ අපගේ තෝරාගත් ගමන් මාර්ග පිරික්සන්න."}
-                  </p>
-                </div>
-              </div>
-
-              <StorySection language={language} />
-              
-              <section className="py-20 px-4 bg-white">
-                <div className="max-w-7xl mx-auto">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
-                    <div className="space-y-4">
-                      <div className="w-16 h-1 bg-[#E1306C]/5 rounded-full flex items-center justify-center mx-auto">
-                        <span className="text-3xl">🏛️</span>
-                      </div>
-                      <h3 className="text-xl font-heritage font-bold">2500+ Years</h3>
-                      <p className="text-sm text-gray-500">{language === 'EN' ? 'Recorded History' : 'වාර්තාගත ඉතිහාසය'}</p>
+                   <h2 className="text-5xl md:text-8xl font-heritage font-bold text-white leading-[0.9] tracking-tight">
+                      Find Your <br/>
+                      <span className="insta-text-gradient italic">Island Soul.</span>
+                   </h2>
+                   <p className="text-gray-500 text-xl font-light leading-relaxed max-w-lg italic">
+                      "Our 1-minute visual archetype engine reveals the journey you were destined to take."
+                   </p>
+                   <button 
+                     onClick={() => setView('quiz')}
+                     className="px-14 py-7 bg-white text-[#262626] font-bold rounded-[2.5rem] hover:scale-105 active:scale-95 transition-all shadow-2xl flex items-center gap-4 mx-auto md:mx-0 group/btn overflow-hidden relative"
+                   >
+                     <div className="absolute inset-0 bg-black/5 opacity-0 group-hover/btn:opacity-100 transition-opacity"></div>
+                     <Compass size={24} className="text-[#E1306C] group-hover/btn:rotate-180 transition-transform duration-1000" />
+                     <span className="uppercase tracking-[0.3em] text-[10px]">Begin Archetype Test</span>
+                   </button>
+                 </div>
+                 <div className="hidden lg:block w-1/2 relative">
+                    <div className="absolute -inset-10 story-ring rounded-[5rem] blur-[100px] opacity-20 animate-pulse"></div>
+                    <div className="relative rounded-[4rem] overflow-hidden shadow-2xl border border-white/10 rotate-2 group-hover:rotate-0 transition-transform duration-700">
+                       <img src="https://images.unsplash.com/photo-1580794749460-76f97b7180d8?auto=format&fit=crop&w=1200&q=80" className="w-full grayscale group-hover:grayscale-0 transition-all duration-1000" alt="Quiz" />
                     </div>
-                    <div className="space-y-4">
-                      <div className="w-16 h-1 bg-[#E1306C]/5 rounded-full flex items-center justify-center mx-auto">
-                        <span className="text-3xl">🏖️</span>
+                 </div>
+              </div>
+            </div>
+
+            {/* Travel Designer / Concierge Section */}
+            <section className="py-40 bg-white">
+              <div className="max-w-7xl mx-auto px-6">
+                <div className="bg-[#fafafa] rounded-[4rem] p-12 md:p-24 shadow-sm border border-gray-100 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 p-20 opacity-[0.02] pointer-events-none rotate-12">
+                     <Users size={300} />
+                  </div>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center relative z-10">
+                    <div className="space-y-10">
+                      <div className="flex items-center gap-3 text-gray-400 font-bold text-[10px] uppercase tracking-[0.4em]">
+                        <ShieldCheck size={16} className="text-green-600" />
+                        Concierge Level Service
                       </div>
-                      <h3 className="text-xl font-heritage font-bold">1300+ KM</h3>
-                      <p className="text-sm text-gray-500">{language === 'EN' ? 'Coastline' : 'වෙරළ තීරය'}</p>
+                      <h3 className="text-5xl md:text-6xl font-heritage font-bold text-[#262626] leading-tight">
+                        Your Personal <br/><span className="insta-text-gradient italic">Travel Designer.</span>
+                      </h3>
+                      <p className="text-gray-500 text-xl font-light leading-relaxed italic border-l-2 border-gray-100 pl-8">
+                        {language === 'EN' 
+                          ? "Beyond a website, we are your gateway to the island's elite experiences. Our AI and local experts craft journeys that linger in memory forever." 
+                          : "අප යනු හුදු වෙබ් අඩවියක් පමණක් නොවේ, දිවයිනේ ප්‍රභූ අත්දැකීම් සඳහා ඔබේ දොරටුවයි. අපගේ AI සහ දේශීය විශේෂඥයින් සදාකාලික මතකයක් එක් කරන සංචාරයන් නිර්මාණය කරයි."}
+                      </p>
+                      <button 
+                         onClick={() => setView('about')}
+                         className="flex items-center gap-4 text-[#262626] font-bold uppercase tracking-[0.3em] text-[10px] hover:text-[#E1306C] transition-colors group"
+                      >
+                         Learn Our Heritage
+                         <div className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center group-hover:border-[#E1306C] transition-colors">
+                            <ArrowRight size={16} />
+                         </div>
+                      </button>
                     </div>
-                    <div className="space-y-4">
-                      <div className="w-16 h-1 bg-[#E1306C]/5 rounded-full flex items-center justify-center mx-auto">
-                        <span className="text-3xl">🐆</span>
-                      </div>
-                      <h3 className="text-xl font-heritage font-bold">8 UNESCO</h3>
-                      <p className="text-sm text-gray-500">{language === 'EN' ? 'World Heritage Sites' : 'ලෝක උරුම ස්ථාන'}</p>
+                    <div className="grid grid-cols-2 gap-6">
+                       <div className="space-y-6">
+                          <div className="p-8 bg-white rounded-3xl shadow-sm border border-gray-50 space-y-4">
+                             <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-orange-500"><MapPin size={20} /></div>
+                             <p className="text-xs font-black uppercase tracking-widest text-[#262626]">Site Mapping</p>
+                             <p className="text-[10px] text-gray-400 leading-relaxed font-bold">250+ Surveyed Locations</p>
+                          </div>
+                          <div className="p-8 bg-white rounded-3xl shadow-sm border border-gray-50 space-y-4">
+                             <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500"><Star size={20} /></div>
+                             <p className="text-xs font-black uppercase tracking-widest text-[#262626]">Quality Score</p>
+                             <p className="text-[10px] text-gray-400 leading-relaxed font-bold">4.9/5 Guest Average</p>
+                          </div>
+                       </div>
+                       <div className="pt-12 space-y-6">
+                          <div className="p-8 bg-[#262626] rounded-3xl shadow-2xl space-y-4 text-white">
+                             <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-white"><ShieldCheck size={20} /></div>
+                             <p className="text-xs font-black uppercase tracking-widest">Verified</p>
+                             <p className="text-[10px] text-white/40 leading-relaxed font-bold">Lanka Tourism Board Certified</p>
+                          </div>
+                       </div>
                     </div>
                   </div>
                 </div>
-              </section>
-            </div>
+              </div>
+            </section>
+
+            <CategoriesSection language={language} setView={setView} />
+            
+            <StorySection language={language} />
+            
+            <section className="py-40 px-4 bg-[#fafafa]">
+              <div className="max-w-7xl mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-24">
+                  <div className="text-center space-y-6">
+                    <div className="w-20 h-20 bg-white shadow-xl rounded-[2rem] flex items-center justify-center mx-auto text-4xl">🏛️</div>
+                    <h3 className="text-3xl font-heritage font-bold">2500+ Years</h3>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{language === 'EN' ? 'Recorded History' : 'වාර්තාගත ඉතිහාසය'}</p>
+                  </div>
+                  <div className="text-center space-y-6">
+                    <div className="w-20 h-20 bg-white shadow-xl rounded-[2rem] flex items-center justify-center mx-auto text-4xl">🏖️</div>
+                    <h3 className="text-3xl font-heritage font-bold">1300+ KM</h3>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{language === 'EN' ? 'Coastline' : 'වෙරළ තීරය'}</p>
+                  </div>
+                  <div className="text-center space-y-6">
+                    <div className="w-20 h-20 bg-white shadow-xl rounded-[2rem] flex items-center justify-center mx-auto text-4xl">🐆</div>
+                    <h3 className="text-3xl font-heritage font-bold">8 UNESCO</h3>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{language === 'EN' ? 'World Heritage Sites' : 'ලෝක උරුම ස්ථාන'}</p>
+                  </div>
+                </div>
+              </div>
+            </section>
           </>
         );
     }
   };
 
   return (
-    <Layout 
-      language={language} 
-      setLanguage={setLanguage} 
-      setView={(v: any) => setView(v)} 
-      currentView={view}
-      user={user}
-      onLogin={handleLogin}
-      onLogout={handleLogout}
-    >
+    <Layout language={language} setLanguage={setLanguage} setView={(v: any) => setView(v)} currentView={view} user={user} onLogin={handleLogin} onLogout={handleLogout}>
       {renderContent()}
       <AIModal language={language} />
     </Layout>
