@@ -131,17 +131,22 @@ const VRShowcase: React.FC<VRShowcaseProps> = ({ language, setView }) => {
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
 
   const particles = useMemo(() => {
-    return Array.from({ length: 120 }).map((_, i) => ({
-      id: i,
-      left: `${Math.random() * 100}%`,
-      top: `${Math.random() * 100}%`,
-      duration: `${10 + Math.random() * 20}s`,
-      delay: `${Math.random() * -20}s`,
-      size: `${Math.random() * 2 + 0.5}px`,
-      opacity: Math.random() * 0.5 + 0.1,
-      blur: `${Math.random() * 1}px`,
-      color: Math.random() > 0.8 ? '#E1306C' : 'white',
-    }));
+    return Array.from({ length: 180 }).map((_, i) => {
+      const size = Math.random() * 3 + 0.5;
+      const opacity = Math.random() * 0.6 + 0.1;
+      return {
+        id: i,
+        left: `${Math.random() * 100}%`,
+        top: '110%', 
+        duration: `${8 + Math.random() * 12}s`,
+        delay: `${Math.random() * -25}s`,
+        size: `${size}px`,
+        opacity,
+        blur: `${Math.random() * 2}px`,
+        color: Math.random() > 0.85 ? '#E1306C' : 'white',
+        driftX: `${(Math.random() - 0.5) * 80}px`
+      };
+    });
   }, []);
 
   useEffect(() => {
@@ -199,15 +204,17 @@ const VRShowcase: React.FC<VRShowcaseProps> = ({ language, setView }) => {
             className="absolute rounded-full pointer-events-none animate-descent-particle" 
             style={{ 
               left: p.left, 
-              top: '110%', // Start below screen
+              top: p.top,
               width: p.size, 
               height: p.size, 
               opacity: p.opacity, 
               filter: `blur(${p.blur})`, 
               backgroundColor: p.color, 
-              boxShadow: p.opacity > 0.3 ? `0 0 10px ${p.color}` : 'none', 
+              boxShadow: p.opacity > 0.4 ? `0 0 12px ${p.color}` : 'none', 
               animationDuration: p.duration, 
-              animationDelay: p.delay 
+              animationDelay: p.delay,
+              // @ts-ignore
+              '--drift-x': p.driftX
             }} 
           />
         ))}
@@ -352,10 +359,10 @@ const VRShowcase: React.FC<VRShowcaseProps> = ({ language, setView }) => {
           to { background-position-y: -80px; }
         }
         @keyframes descent-particle {
-          0% { transform: translateY(0); opacity: 0; }
-          20% { opacity: 0.6; }
-          80% { opacity: 0.6; }
-          100% { transform: translateY(-120vh); opacity: 0; }
+          0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+          25% { opacity: 1; }
+          75% { opacity: 1; }
+          100% { transform: translateY(-135vh) translateX(var(--drift-x)) scale(0.4); opacity: 0; }
         }
         
         .animate-grid-descent {

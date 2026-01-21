@@ -92,10 +92,17 @@ const Hero: React.FC<HeroProps> = ({ language, setView }) => {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-6 animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-700">
           <button 
             onClick={() => setView('destinations')}
-            className="group relative flex items-center gap-6 px-10 py-5 bg-white rounded-full transition-all duration-500 hover:scale-105 active:scale-95 shadow-[0_20px_60px_rgba(255,255,255,0.1)]"
+            className="group relative flex items-center gap-6 px-10 py-5 bg-white rounded-full transition-all duration-500 hover:scale-105 active:scale-95 shadow-[0_20px_60px_rgba(255,255,255,0.1)] overflow-hidden"
           >
-            <span className="text-[10px] font-black text-[#0a0a0a] uppercase tracking-[0.4em]">Launch Portal</span>
-            <div className="w-8 h-8 rounded-full bg-[#0a0a0a] flex items-center justify-center text-white transition-transform group-hover:rotate-45">
+            {/* Animated Ripple Effects */}
+            <div className="absolute inset-0 rounded-full border-2 border-white/20 animate-portal-ripple pointer-events-none"></div>
+            <div className="absolute inset-0 rounded-full border-2 border-white/10 animate-portal-ripple delay-700 pointer-events-none"></div>
+            
+            {/* Shimmer Sweep Effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-[200%] transition-transform duration-1000 ease-in-out pointer-events-none"></div>
+
+            <span className="relative z-10 text-[10px] font-black text-[#0a0a0a] uppercase tracking-[0.4em]">Launch Portal</span>
+            <div className="relative z-10 w-8 h-8 rounded-full bg-[#0a0a0a] flex items-center justify-center text-white transition-transform group-hover:rotate-45">
               <ArrowRight size={16} />
             </div>
           </button>
@@ -135,6 +142,19 @@ const Hero: React.FC<HeroProps> = ({ language, setView }) => {
           50% { transform: scaleY(1); transform-origin: top; opacity: 1; }
           51% { transform: scaleY(1); transform-origin: bottom; opacity: 1; }
           100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
+        }
+        
+        @keyframes portal-ripple {
+          0% { transform: scale(1); opacity: 0.8; border-width: 2px; }
+          100% { transform: scale(1.6); opacity: 0; border-width: 1px; }
+        }
+
+        .animate-portal-ripple {
+          animation: portal-ripple 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
+
+        .delay-700 {
+          animation-delay: 0.7s;
         }
       `}} />
     </div>
