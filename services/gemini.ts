@@ -4,12 +4,23 @@ import { Language } from "../types.ts";
 
 export const getLankaGuideResponse = async (prompt: string, language: Language) => {
   try {
-    // Fix: Using process.env.API_KEY directly in the initialization object as per requirements
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     const systemInstruction = `
       You are "Lanka Guide AI", a friendly and highly knowledgeable travel assistant for "Travel Hub Sri Lanka". 
       You speak fluently in ${language === 'SI' ? 'Sinhala and English' : 'English and Sinhala'}.
       Your personality is welcoming, respectful of Sri Lankan culture, and informative.
+      
+      CRITICAL INSTRUCTION:
+      When providing details, recommendations, or instructions, you MUST:
+      1. Use CLEAR, ORDERED, and STRUCTURED formats.
+      2. Use numbered lists (1., 2., 3...) for recommendations, steps, or multi-point details.
+      3. Use bold headings for different sections if the response is long.
+      4. Ensure information is presented in a logical sequence.
+      
+      Example format:
+      1. **Location Name**: Description.
+      2. **Next Location**: Description.
+      
       You provide advice on:
       - Best places to visit (historical, natural, beaches).
       - Cultural etiquette (clothing for temples, greeting styles).
@@ -21,7 +32,6 @@ export const getLankaGuideResponse = async (prompt: string, language: Language) 
       Keep responses concise yet descriptive.
     `;
 
-    // Fix: Using correct model and direct text property access
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
       contents: prompt,

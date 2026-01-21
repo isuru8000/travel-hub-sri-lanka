@@ -232,9 +232,9 @@ const VRShowcase: React.FC<VRShowcaseProps> = ({ language, setView }) => {
                      <span className="text-[10px] md:text-[12px] font-black uppercase tracking-[0.6em]">Protocol_A8_Active</span>
                   </div>
                   
-                  <h2 className="text-6xl sm:text-7xl md:text-9xl font-heritage font-bold text-white tracking-tighter leading-[0.85] drop-shadow-[0_20px_40px_rgba(0,0,0,0.9)]">
+                  <h2 className="text-6xl sm:text-7xl md:text-9xl font-heritage font-bold text-white tracking-tighter leading-[0.85] drop-shadow-[0_20px_40px_rgba(0,0,0,0.9)] uppercase">
                     REWRITE <br/>
-                    <span className="insta-text-gradient italic">THE VOID.</span>
+                    <span className="insta-text-gradient italic">3D SPACE.</span>
                   </h2>
 
                   <div className="w-full max-w-md space-y-5">
@@ -252,8 +252,8 @@ const VRShowcase: React.FC<VRShowcaseProps> = ({ language, setView }) => {
 
                   <p className="max-w-xl mx-auto text-gray-400 text-[10px] md:text-sm font-medium uppercase tracking-[0.2em] leading-loose opacity-70 italic">
                     {language === 'EN' 
-                      ? "The archive is finalizing 1:1 volumetric reconstruction for the highlands node. Calibration complete in 180 seconds." 
-                      : "ලේඛනාගාරය උඩරට කලාපය සඳහා ත්‍රිමාණ ප්‍රතිනිර්මාණය අවසන් කරමින් පවතී. තත්පර 180 කින් අවසන් වනු ඇත."}
+                      ? "The archive is finalizing 1:1 volumetric reconstruction for the highlands node. Calibration complete in 180 seconds. Synchronizing high-fidelity 3D neural meshes across all spectral channels and 3D Heritage archives." 
+                      : "ලේඛනාගාරය උඩරට කලාපය සඳහා ත්‍රිමාණ ප්‍රතිනිර්මාණය අවසන් කරමින් පවතී. තත්පර 180 කින් අවසන් වනු ඇත. සියලුම නාලිකා හරහා ඉහළ විභේදන සහිත ත්‍රිමාණ පද්ධති සහ ත්‍රිමාණ උරුම ලේඛනාගාරය සමමුහුර්ත කරයි."}
                   </p>
                </div>
             </div>

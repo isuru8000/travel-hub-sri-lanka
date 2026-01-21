@@ -67,9 +67,29 @@ const Layout: React.FC<LayoutProps> = ({
           <div className="space-y-8">
             <h3 className="text-[10px] font-black text-[#0a0a0a] uppercase tracking-[0.4em] border-b border-gray-50 pb-4">Transmission</h3>
             <div className="flex gap-5">
-              <a href="#" className="w-12 h-12 border border-gray-100 rounded-2xl flex items-center justify-center hover:story-ring hover:text-white transition-all text-gray-400" title="Instagram"><Instagram size={20} /></a>
-              <a href="#" className="w-12 h-12 border border-gray-100 rounded-2xl flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all text-gray-400" title="Facebook"><Facebook size={20} /></a>
-              <a href="https://youtube.com/@travelhublk-123" target="_blank" rel="noopener noreferrer" className="w-12 h-12 border border-gray-100 rounded-2xl flex items-center justify-center hover:bg-red-600 hover:text-white transition-all text-gray-400" title="YouTube"><Youtube size={20} /></a>
+              <a 
+                href="#" 
+                className="w-12 h-12 border border-gray-100 rounded-2xl flex items-center justify-center hover:bg-gradient-to-tr hover:from-[#f9ce34] hover:via-[#ee2a7b] hover:to-[#6228d7] hover:text-white hover:border-transparent transition-all text-gray-400" 
+                title="Instagram"
+              >
+                <Instagram size={20} />
+              </a>
+              <a 
+                href="#" 
+                className="w-12 h-12 border border-gray-100 rounded-2xl flex items-center justify-center hover:bg-[#1877F2] hover:text-white hover:border-transparent transition-all text-gray-400" 
+                title="Facebook"
+              >
+                <Facebook size={20} />
+              </a>
+              <a 
+                href="https://youtube.com/@travelhublk-123" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="w-12 h-12 border border-gray-100 rounded-2xl flex items-center justify-center hover:bg-[#FF0000] hover:text-white hover:border-transparent transition-all text-gray-400" 
+                title="YouTube"
+              >
+                <Youtube size={20} />
+              </a>
             </div>
           </div>
         </div>
