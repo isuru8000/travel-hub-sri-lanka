@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Sparkles, X, Send, Compass, Loader2, History, Info, Square, Zap, Cpu, ShieldCheck, MapPin, ExternalLink } from 'lucide-react';
+import { Sparkles, X, Send, Compass, Loader2, History, Info, Square, Zap, Cpu, ShieldCheck, MapPin, ExternalLink, Brain } from 'lucide-react';
 import { Language } from '../types.ts';
 import { UI_STRINGS } from '../constants.tsx';
 import { getLankaGuideResponse, GroundingLink } from '../services/gemini.ts';
@@ -9,6 +9,7 @@ interface Message {
   role: 'user' | 'bot';
   text: string;
   links?: GroundingLink[];
+  isThinking?: boolean;
 }
 
 interface AIModalProps {
@@ -21,6 +22,7 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [isDeepMode, setIsDeepMode] = useState(false);
   const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | undefined>();
   const scrollRef = useRef<HTMLDivElement>(null);
   const hasGreeted = useRef(false);
@@ -51,16 +53,16 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
     { 
       id: 'history', 
       icon: <History size={16} />, 
-      EN: "Explain the history of the Sigiriya Lion Rock", 
-      SI: "සීගිරියේ ඉතිහාසය විස්තර කරන්න",
+      EN: "Explain the deep history of the Sigiriya Lion Rock", 
+      SI: "සීගිරියේ ගැඹුරු ඉතිහාසය විස්තර කරන්න",
       label: { EN: "Deep History", SI: "ගැඹුරු ඉතිහාසය" }
     },
     { 
-      id: 'logistics', 
-      icon: <Info size={16} />, 
-      EN: "Find a verified car rental service in Colombo with maps", 
-      SI: "කොළඹ ඇති රථ වාහන කුලියට දෙන ස්ථාන සොයන්න",
-      label: { EN: "Logistics", SI: "පහසුකම්" }
+      id: 'itinerary', 
+      icon: <Brain size={16} />, 
+      EN: "Analyze the best 3-day cultural route for a historian", 
+      SI: "ඉතිහාසඥයෙකු සඳහා හොඳම තෙදින සංස්කෘතික ගමන් මග විශ්ලේෂණය කරන්න",
+      label: { EN: "Complex Logic", SI: "සංකීර්ණ තර්කනය" }
     }
   ];
 
@@ -70,12 +72,12 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
     setIsTyping(false);
   };
 
-  const typeMessage = async (fullText: string, links?: GroundingLink[]) => {
+  const typeMessage = async (fullText: string, links?: GroundingLink[], wasThinking: boolean = false) => {
     if (!fullText) return;
     setIsTyping(true);
     stopTypingRef.current = false;
     
-    setMessages(prev => [...prev, { role: 'bot', text: '', links }]);
+    setMessages(prev => [...prev, { role: 'bot', text: '', links, isThinking: wasThinking }]);
 
     const chars = Array.from(fullText);
     let accumulated = "";
@@ -90,7 +92,8 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
           newMessages[newMessages.length - 1] = { 
             role: 'bot', 
             text: accumulated,
-            links
+            links,
+            isThinking: wasThinking
           };
         }
         return newMessages;
@@ -108,8 +111,8 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
     if (isOpen && !hasGreeted.current && messages.length === 0) {
       hasGreeted.current = true;
       const initialText = language === 'EN' 
-        ? "Ayubowan! I am the Lanka Guide Intelligence Unit. 🏛️ My neural archives are synchronized with real-time Google Maps data. I can help you find nearby treasures or plan your journey. How can I assist you?" 
-        : "ආයුබෝවන්! මම ලංකා ගයිඩ් බුද්ධි ඒකකයයි. 🏛️ මගේ සියලුම දත්ත දැන් සජීවී ගූගල් සිතියම් සමඟ සම්බන්ධ වී ඇත. අද අපි ගවේෂණය කරන්නේ කුමක්ද?";
+        ? "Ayubowan! I am the Lanka Guide Intelligence Unit. 🏛️ My neural archives are synchronized with real-time data. I can help you find nearby treasures or perform deep reasoning on complex travel logistics. How can I assist you?" 
+        : "ආයුබෝවන්! මම ලංකා ගයිඩ් බුද්ධි ඒකකයයි. 🏛️ මගේ සියලුම දත්ත දැන් සජීවීව සම්බන්ධ වී ඇත. අද අපි ගවේෂණය කරන්නේ කුමක්ද?";
       
       const timer = setTimeout(() => {
         typeMessage(initialText);
@@ -136,7 +139,7 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
     setMessages(prev => [...prev, { role: 'user', text: textToSend }]);
     setIsLoading(true);
 
-    const result = await getLankaGuideResponse(textToSend, language, userLocation);
+    const result = await getLankaGuideResponse(textToSend, language, userLocation, isDeepMode);
     
     if (stopTypingRef.current) {
       setIsLoading(false);
@@ -145,9 +148,9 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
 
     setIsLoading(false);
     if (typeof result === 'string') {
-      await typeMessage(result);
+      await typeMessage(result, undefined, isDeepMode);
     } else if (result) {
-      await typeMessage(result.text, result.links);
+      await typeMessage(result.text, result.links, isDeepMode);
     }
   };
 
@@ -176,7 +179,6 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
       {isOpen && (
         <div className="fixed inset-0 sm:inset-auto sm:bottom-6 sm:right-6 sm:w-[480px] sm:h-[800px] sm:max-h-[92vh] bg-white shadow-[0_60px_150px_rgba(0,0,0,0.4)] rounded-t-[4rem] sm:rounded-[4rem] z-[100] flex flex-col overflow-hidden animate-in slide-in-from-bottom-20 duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] border border-gray-100">
           
-          {/* Header */}
           <div className="relative shrink-0 p-10 bg-[#0a0a0a] text-white overflow-hidden">
             <div className="absolute inset-0 pattern-overlay opacity-10 pointer-events-none"></div>
             <div className="absolute -top-32 -right-32 w-80 h-80 bg-[#E1306C]/30 blur-[120px] rounded-full pointer-events-none animate-pulse" />
@@ -201,12 +203,17 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
                      <h3 className="font-heritage font-black text-3xl tracking-tighter uppercase leading-none">
                        Lanka AI
                      </h3>
-                     <span className="px-2 py-0.5 rounded bg-blue-500 text-[8px] font-black uppercase tracking-widest text-white">Maps Live</span>
+                     <button 
+                       onClick={() => setIsDeepMode(!isDeepMode)}
+                       className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-widest transition-all ${isDeepMode ? 'bg-[#E1306C] text-white shadow-lg shadow-[#E1306C]/20' : 'bg-white/10 text-white/40 border border-white/10'}`}
+                     >
+                       {isDeepMode ? 'Thinking_ON' : 'Thinking_OFF'}
+                     </button>
                   </div>
                   <div className="flex items-center gap-3 mt-2">
                     <ShieldCheck size={12} className="text-[#E1306C]" />
                     <span className="text-[10px] font-black text-gray-500 uppercase tracking-[0.4em]">
-                      {(isLoading || isTyping) ? (language === 'EN' ? 'GROUNDING...' : 'සිතියම පිරික්සයි...') : (language === 'EN' ? 'CORE STABLE' : 'සම්බන්ධයි')}
+                      {(isLoading || isTyping) ? (isDeepMode ? 'REASONING...' : 'SYNCING...') : 'CORE STABLE'}
                     </span>
                   </div>
                 </div>
@@ -220,7 +227,6 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
             </div>
           </div>
 
-          {/* Chat Area */}
           <div 
             ref={scrollRef} 
             className="flex-grow p-10 overflow-y-auto space-y-10 bg-white scroll-smooth no-scrollbar relative"
@@ -229,9 +235,9 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
               <div key={i} className={`flex flex-col animate-in slide-in-from-bottom-8 duration-700 ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
                 {m.role === 'bot' && (
                   <div className="flex items-center gap-3 mb-3 ml-2">
-                    <div className="w-1.5 h-1.5 bg-[#E1306C] rounded-full animate-ping"></div>
+                    <div className={`w-1.5 h-1.5 rounded-full animate-ping ${m.isThinking ? 'bg-blue-500' : 'bg-[#E1306C]'}`}></div>
                     <span className="text-[10px] font-black text-gray-400 uppercase tracking-[0.4em]">
-                      INTELLIGENCE_UNIT
+                      {m.isThinking ? 'REASONING_ENGINE_O1' : 'INTELLIGENCE_UNIT'}
                     </span>
                   </div>
                 )}
@@ -243,7 +249,7 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
                   <div className="text-base sm:text-lg whitespace-pre-line prose prose-sm max-w-none prose-headings:font-heritage prose-headings:text-[#0a0a0a]">
                     {m.text}
                     {isTyping && i === messages.length - 1 && m.role === 'bot' && (
-                      <span className="inline-block w-2 h-5 ml-2 bg-[#E1306C] animate-pulse align-middle rounded-full"></span>
+                      <span className={`inline-block w-2 h-5 ml-2 animate-pulse align-middle rounded-full ${m.isThinking ? 'bg-blue-500' : 'bg-[#E1306C]'}`}></span>
                     )}
                   </div>
                   
@@ -261,8 +267,8 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
                           }`}
                         >
                           <div className="flex items-center gap-3 overflow-hidden">
-                             <div className="w-8 h-8 rounded-lg bg-[#E1306C]/10 flex items-center justify-center text-[#E1306C] shrink-0">
-                               <MapPin size={16} />
+                             <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${m.isThinking ? 'bg-blue-500/10 text-blue-500' : 'bg-[#E1306C]/10 text-[#E1306C]'}`}>
+                               {m.isThinking ? <ExternalLink size={16} /> : <MapPin size={16} />}
                              </div>
                              <span className="text-xs font-bold truncate tracking-tight">{link.title}</span>
                           </div>
@@ -278,24 +284,23 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
             {isLoading && (
               <div className="flex flex-col items-start">
                 <div className="flex items-center gap-3 mb-3 ml-2">
-                  <Loader2 size={12} className="text-[#E1306C] animate-spin" />
+                  {isDeepMode ? <Brain size={12} className="text-blue-500 animate-pulse" /> : <Loader2 size={12} className="text-[#E1306C] animate-spin" />}
                   <span className="text-[10px] font-black text-gray-400 uppercase tracking-[0.4em]">
-                    CALCULATING_TRAJECTORY
+                    {isDeepMode ? 'THINKING_DEEPLY...' : 'CALCULATING_TRAJECTORY'}
                   </span>
                 </div>
                 <div className="bg-[#fafafa] p-8 rounded-[2.5rem] rounded-tl-none border border-gray-100 flex items-center gap-5">
                   <div className="flex gap-2">
-                    <div className="w-2 h-2 rounded-full bg-[#E1306C] animate-bounce [animation-delay:-0.3s]"></div>
-                    <div className="w-2 h-2 rounded-full bg-[#E1306C] animate-bounce [animation-delay:-0.15s]"></div>
-                    <div className="w-2 h-2 rounded-full bg-[#E1306C] animate-bounce"></div>
+                    <div className={`w-2 h-2 rounded-full animate-bounce [animation-delay:-0.3s] ${isDeepMode ? 'bg-blue-500' : 'bg-[#E1306C]'}`}></div>
+                    <div className={`w-2 h-2 rounded-full animate-bounce [animation-delay:-0.15s] ${isDeepMode ? 'bg-blue-500' : 'bg-[#E1306C]'}`}></div>
+                    <div className={`w-2 h-2 rounded-full animate-bounce ${isDeepMode ? 'bg-blue-500' : 'bg-[#E1306C]'}`}></div>
                   </div>
-                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest italic">Scanning Maps Registry...</span>
+                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest italic">{isDeepMode ? 'Accessing gemini-3-pro-preview reasoning...' : 'Scanning Maps Registry...'}</span>
                 </div>
               </div>
             )}
           </div>
 
-          {/* Input & Suggestions */}
           <div className="shrink-0 bg-white p-10 pt-4 border-t border-gray-50 space-y-8">
             {!isLoading && !isTyping && messages.length < 5 && (
               <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2 -mx-4 px-4">
@@ -324,7 +329,7 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                   disabled={isLoading || isTyping}
-                  placeholder={language === 'EN' ? "Query the registry manifold..." : "දත්ත පිරික්සන්න..."}
+                  placeholder={isDeepMode ? "State your complex query..." : (language === 'EN' ? "Query the registry manifold..." : "දත්ත පිරික්සන්න...")}
                   className="flex-grow py-5 bg-transparent focus:outline-none text-base font-bold text-[#0a0a0a] placeholder:text-gray-300 placeholder:italic disabled:opacity-50"
                 />
                 <div className="relative">
@@ -353,11 +358,11 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
 
             <div className="flex justify-between items-center px-4">
                 <div className="flex items-center gap-3">
-                   <div className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_#22c55e]"></div>
-                   <span className="text-[8px] font-black text-gray-300 uppercase tracking-[0.4em]">MAPS SYNC ACTIVE</span>
+                   <div className={`w-1.5 h-1.5 rounded-full ${isDeepMode ? 'bg-blue-500 animate-pulse' : 'bg-green-500'}`}></div>
+                   <span className="text-[8px] font-black text-gray-300 uppercase tracking-[0.4em]">{isDeepMode ? 'REASONING_CORE_PRO_v3' : 'MAPS_SYNC_ACTIVE'}</span>
                 </div>
                 <div className="flex items-center gap-3">
-                   <span className="text-[8px] font-black text-gray-300 uppercase tracking-[0.4em]">POWERED BY GEMINI 2.5 FLASH</span>
+                   <span className="text-[8px] font-black text-gray-300 uppercase tracking-[0.4em]">{isDeepMode ? 'GEMINI 3 PRO PREVIEW' : 'GEMINI 2.5 FLASH'}</span>
                 </div>
             </div>
           </div>

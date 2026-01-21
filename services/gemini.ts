@@ -39,7 +39,6 @@ export function encode(bytes: Uint8Array): string {
 
 /**
  * Decodes raw PCM audio data into an AudioBuffer manually.
- * Note: AudioContext.decodeAudioData is for file formats (WAV/MP3), not raw PCM streams.
  */
 export async function decodeAudioData(
   data: Uint8Array,
@@ -62,7 +61,6 @@ export async function decodeAudioData(
 
 /**
  * Creates an audio/pcm Blob from Float32Array input data.
- * Scales the 32-bit floats to 16-bit signed integers and encodes to base64.
  */
 export function createPcmBlob(data: Float32Array): { data: string; mimeType: string } {
   const l = data.length;
@@ -72,48 +70,42 @@ export function createPcmBlob(data: Float32Array): { data: string; mimeType: str
   }
   return {
     data: encode(new Uint8Array(int16.buffer)),
-    // The supported audio MIME type is 'audio/pcm'.
     mimeType: 'audio/pcm;rate=16000',
   };
 }
 
+/**
+ * Main Guide Response: Uses 2.5 Flash for Maps grounding or 3 Pro for Thinking.
+ */
 export const getLankaGuideResponse = async (
   prompt: string, 
   language: Language, 
-  location?: { latitude: number; longitude: number }
+  location?: { latitude: number; longitude: number },
+  isThinkingMode: boolean = false
 ): Promise<AIResponse | string> => {
   try {
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     
     const systemInstruction = `
       You are "Lanka Guide AI", a prestige travel intelligence unit for "Travel Hub Sri Lanka". 
-      You use real-time Google Maps data to provide accurate, up-to-date information about locations, restaurants, and landmarks in Sri Lanka.
+      ${isThinkingMode ? 'You are currently in DEEP THINKING MODE, utilizing maximum neural resources to solve complex travel queries, historical mysteries, and logistics.' : 'You use real-time Google Maps data to provide accurate, up-to-date information about locations.'}
       
-      Your tone: 
-      - Sophisticated, expert, and welcoming (Ayubowan).
-      - Modern and tech-forward.
-
-      Core Responsibilities:
-      1. Use Google Maps grounding to verify opening hours, locations, and nearby amenities.
-      2. Provide high-fidelity travel recommendations across the island.
-      3. Explain historical narratives (e.g., Sigiriya's history).
-      4. Support both English and Sinhala seamlessly.
-
-      Output Format:
-      - Use Markdown for structure.
-      - Use bold headings for clarity.
-      - Keep responses detailed but structured for mobile readability.
-      
+      Your tone: Sophisticated, expert, and welcoming (Ayubowan).
       Always provide your main response in ${language === 'SI' ? 'Sinhala' : 'English'}.
     `;
 
+    // Use 3 Pro for thinking, 2.5 Flash for Maps
+    const model = isThinkingMode ? 'gemini-3-pro-preview' : 'gemini-2.5-flash';
+    const tools = isThinkingMode ? [{ googleSearch: {} }] : [{ googleMaps: {} }];
+
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash', // Required for Google Maps grounding
+      model,
       contents: [{ role: 'user', parts: [{ text: prompt }] }],
       config: {
         systemInstruction,
-        tools: [{ googleMaps: {} }],
-        ...(location && {
+        tools,
+        ...(isThinkingMode && { thinkingConfig: { thinkingBudget: 32768 } }),
+        ...(!isThinkingMode && location && {
           toolConfig: {
             retrievalConfig: {
               latLng: {
@@ -130,21 +122,16 @@ export const getLankaGuideResponse = async (
     const groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks;
     
     const links: GroundingLink[] = groundingChunks
-      ?.map((chunk: any) => chunk.maps)
+      ?.map((chunk: any) => isThinkingMode ? chunk.web : chunk.maps)
       .filter((m: any) => m && m.uri)
       .map((m: any) => ({ 
-        title: m.title || (language === 'SI' ? "සිතියමෙන් බලන්න" : "View on Maps"), 
+        title: m.title || (language === 'SI' ? "තොරතුරු බලන්න" : "View Details"), 
         uri: m.uri 
       })) || [];
 
     return { text, links };
   } catch (error: any) {
     console.error("Gemini API Error:", error);
-    if (error?.message?.includes("Requested entity was not found.")) {
-       return language === 'SI' 
-         ? "API සම්බන්ධතාවයේ දෝෂයක් පවතී. කරුණාකර ඔබගේ සැකසුම් පරීක්ෂා කරන්න."
-         : "Registry connection error. Please verify your access credentials.";
-    }
     return language === 'SI' 
       ? "කණගාටුයි, මට මේ අවස්ථාවේ පිළිතුරු දිය නොහැක. කරුණාකර නැවත උත්සාහ කරන්න."
       : "I'm sorry, my neural link is experiencing interference. Please try again.";
@@ -152,19 +139,21 @@ export const getLankaGuideResponse = async (
 };
 
 /**
- * Real-time Information Retrieval: Uses gemini-3-flash-preview with Google Search grounding.
+ * Real-time Information Retrieval: Uses gemini-3-pro-preview with max thinking budget.
  */
-export const searchGrounding = async (query: string, language: Language): Promise<AIResponse> => {
+export const searchGrounding = async (query: string, language: Language, isThinkingMode: boolean = true): Promise<AIResponse> => {
   try {
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
+      model: isThinkingMode ? "gemini-3-pro-preview" : "gemini-3-flash-preview",
       contents: query,
       config: {
         systemInstruction: `You are the "Neural Intelligence Hub" for Travel Hub Sri Lanka. 
-        Your goal is to provide up-to-the-minute, accurate travel information (prices, opening times, weather, events) for Sri Lanka using real-time search.
-        Use Markdown. Format with clean sections. Language: ${language === 'SI' ? 'Sinhala' : 'English'}.`,
+        Provide up-to-the-minute, accurate travel information using real-time search.
+        ${isThinkingMode ? 'Use your deep reasoning capabilities to analyze trends and provide insightful conclusions.' : ''}
+        Format with clean Markdown. Language: ${language === 'SI' ? 'Sinhala' : 'English'}.`,
         tools: [{ googleSearch: {} }],
+        ...(isThinkingMode && { thinkingConfig: { thinkingBudget: 32768 } })
       },
     });
 
@@ -191,12 +180,12 @@ export const searchGrounding = async (query: string, language: Language): Promis
 };
 
 /**
- * Fast task: Refine user story content using gemini-3-flash-preview.
+ * Poetic refinement: Uses gemini-3-flash-preview.
  */
 export const refineTravelStory = async (story: string, language: Language): Promise<string> => {
   try {
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-    const prompt = `Refine this travel story to be more poetic, engaging, and atmospheric while keeping it personal. Return ONLY the refined story text. Language: ${language === 'SI' ? 'Sinhala' : 'English'}. Story: "${story}"`;
+    const prompt = `Refine this travel story to be more poetic and atmospheric. Return ONLY the text. Language: ${language === 'SI' ? 'Sinhala' : 'English'}. Story: "${story}"`;
     
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
@@ -204,30 +193,28 @@ export const refineTravelStory = async (story: string, language: Language): Prom
     });
     return response.text || story;
   } catch (e) {
-    console.error(e);
     return story;
   }
 };
 
 /**
- * Complex task: Generate a detailed travel itinerary using gemini-3-pro-preview.
+ * Itinerary creation: Uses gemini-3-pro-preview with max thinking.
  */
 export const generateDetailedItinerary = async (destination: string, language: Language): Promise<string> => {
   try {
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-    const systemInstruction = `You are an elite travel planner for Travel Hub Sri Lanka. You specialize in creating high-end, culturally immersive 3-day itineraries. Use Markdown. Tone: Prestige and expert. Language: ${language === 'SI' ? 'Sinhala' : 'English'}.`;
+    const systemInstruction = `You are an elite travel planner. Create high-end 3-day itineraries. Language: ${language === 'SI' ? 'Sinhala' : 'English'}. Use deep reasoning for logistics.`;
     
     const response = await ai.models.generateContent({
       model: 'gemini-3-pro-preview',
-      contents: [{ role: 'user', parts: [{ text: `Create a 3-day immersive itinerary for ${destination}, Sri Lanka.` }] }],
+      contents: [{ role: 'user', parts: [{ text: `Create a detailed 3-day immersive itinerary for ${destination}, Sri Lanka.` }] }],
       config: { 
         systemInstruction,
-        thinkingConfig: { thinkingBudget: 4000 } 
+        thinkingConfig: { thinkingBudget: 32768 } 
       }
     });
     return response.text || "";
   } catch (e) {
-    console.error(e);
-    return "Failed to generate itinerary. Please try again later.";
+    return "Failed to generate itinerary.";
   }
 };

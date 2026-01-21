@@ -19,7 +19,8 @@ import {
   Clock,
   ChevronRight,
   TrendingUp,
-  MapPin
+  MapPin,
+  Brain
 } from 'lucide-react';
 import { Language } from '../types.ts';
 import { searchGrounding, AIResponse } from '../services/gemini.ts';
@@ -54,6 +55,7 @@ const SearchPortal: React.FC<SearchPortalProps> = ({ language }) => {
   const [activeTab, setActiveTab] = useState('general');
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isDeepMode, setIsDeepMode] = useState(true);
   const suggestionRef = useRef<HTMLDivElement>(null);
 
   const categories = [
@@ -72,9 +74,13 @@ const SearchPortal: React.FC<SearchPortalProps> = ({ language }) => {
     setResult(null);
     setStatus(language === 'EN' ? 'Initializing Neural Uplink...' : 'සම්බන්ධතාවය ස්ථාපිත කරමින්...');
 
-    const statuses = language === 'EN' 
-      ? ['Syncing with Global News Mesh...', 'Verifying Local Registries...', 'Synthesizing Live Data...']
-      : ['තොරතුරු ජාලය පිරික්සමින්...', 'මූලාශ්‍ර තහවුරු කරමින්...', 'පුවත් සකසමින්...'];
+    const statuses = isDeepMode 
+      ? (language === 'EN' 
+          ? ['Engaging Reasoning Engine...', 'Analyzing Contextual Patterns...', 'Synthesizing Strategic Response...', 'Finalizing Logic Path...']
+          : ['තර්කන එන්ජිම පණගන්වමින්...', 'පසුබිම් රටා විශ්ලේෂණය කරමින්...', 'ප්‍රතිචාරය සකසමින්...', 'අවසාන තොරතුරු එක් කරමින්...'])
+      : (language === 'EN' 
+          ? ['Syncing with Global News Mesh...', 'Verifying Local Registries...', 'Synthesizing Live Data...']
+          : ['තොරතුරු ජාලය පිරික්සමින්...', 'මූලාශ්‍ර තහවුරු කරමින්...', 'පුවත් සකසමින්...']);
 
     let sIdx = 0;
     const sInterval = setInterval(() => {
@@ -82,9 +88,9 @@ const SearchPortal: React.FC<SearchPortalProps> = ({ language }) => {
         setStatus(statuses[sIdx]);
         sIdx++;
       }
-    }, 1200);
+    }, isDeepMode ? 2000 : 1200);
 
-    const data = await searchGrounding(searchQuery, language);
+    const data = await searchGrounding(searchQuery, language, isDeepMode);
     
     clearInterval(sInterval);
     setResult(data);
@@ -92,12 +98,10 @@ const SearchPortal: React.FC<SearchPortalProps> = ({ language }) => {
     setStatus('');
   };
 
-  // Auto-load top stories on mount
   useEffect(() => {
     handleSearch(categories[0].prompt);
   }, []);
 
-  // Handle outside click for suggestions
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (suggestionRef.current && !suggestionRef.current.contains(event.target as Node)) {
@@ -131,13 +135,11 @@ const SearchPortal: React.FC<SearchPortalProps> = ({ language }) => {
 
   return (
     <div className="min-h-screen bg-[#fafafa] text-[#262626] pt-24 pb-32 px-4 md:px-8 relative overflow-hidden">
-      {/* Background Ambience */}
       <div className="absolute inset-0 pattern-overlay opacity-5 pointer-events-none" />
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-gradient-to-b from-blue-50/50 via-transparent to-transparent pointer-events-none" />
       
       <div className="max-w-7xl mx-auto relative z-10 space-y-12">
         
-        {/* Header Dashboard Style */}
         <div className="flex flex-col lg:flex-row justify-between items-end gap-8 border-b border-gray-100 pb-12">
           <div className="space-y-6 text-left">
             <div className="inline-flex items-center gap-4 px-5 py-1.5 rounded-full bg-white border border-gray-100 shadow-sm text-gray-400 text-[9px] font-black uppercase tracking-[0.4em]">
@@ -154,23 +156,27 @@ const SearchPortal: React.FC<SearchPortalProps> = ({ language }) => {
             </p>
           </div>
 
-          {/* Quick Stats / Ticker */}
-          <div className="hidden lg:flex items-center gap-8">
-            <div className="p-6 bg-white rounded-3xl border border-gray-100 shadow-sm space-y-2 w-48">
-              <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest">Global_Latency</p>
-              <p className="text-xl font-heritage font-bold text-green-500">24ms <span className="text-[10px] text-gray-300">STABLE</span></p>
-            </div>
-            <div className="p-6 bg-white rounded-3xl border border-gray-100 shadow-sm space-y-2 w-48">
-              <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest">Active_Nodes</p>
-              <p className="text-xl font-heritage font-bold text-[#E1306C]">1,204 <span className="text-[10px] text-gray-300">VERIFIED</span></p>
+          <div className="flex flex-col items-end gap-6">
+            <button 
+              onClick={() => setIsDeepMode(!isDeepMode)}
+              className={`flex items-center gap-4 px-6 py-3 rounded-2xl border transition-all shadow-sm ${isDeepMode ? 'bg-[#0a0a0a] border-transparent text-white' : 'bg-white border-gray-100 text-gray-400 hover:border-[#E1306C]/40'}`}
+            >
+              <Brain size={18} className={isDeepMode ? 'text-[#E1306C] animate-pulse' : ''} />
+              <div className="text-left">
+                <p className="text-[8px] font-black uppercase tracking-widest leading-none mb-1">Neural_Depth</p>
+                <p className="text-[10px] font-bold tracking-widest uppercase">{isDeepMode ? 'Thinking_Mode_ON' : 'Thinking_Mode_OFF'}</p>
+              </div>
+            </button>
+            <div className="hidden lg:flex items-center gap-8">
+              <div className="p-6 bg-white rounded-3xl border border-gray-100 shadow-sm space-y-2 w-48">
+                <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest">Model_Type</p>
+                <p className="text-xl font-heritage font-bold text-blue-500">{isDeepMode ? 'Gemini 3 Pro' : 'Gemini 3 Flash'}</p>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Dashboard Navigation & Search */}
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
-          
-          {/* Left Column: Categories */}
           <div className="xl:col-span-3 space-y-4">
              <h3 className="px-4 text-[10px] font-black text-gray-300 uppercase tracking-[0.3em] mb-4">News_Sectors</h3>
              <div className="flex flex-row xl:flex-col gap-3 overflow-x-auto no-scrollbar pb-2">
@@ -197,26 +203,9 @@ const SearchPortal: React.FC<SearchPortalProps> = ({ language }) => {
                   );
                 })}
              </div>
-
-             <div className="hidden xl:block p-8 bg-gradient-to-br from-[#0a0a0a] to-[#1a1a1a] rounded-[2.5rem] mt-12 text-white space-y-6 shadow-2xl relative overflow-hidden group">
-                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:rotate-12 transition-transform">
-                  <Zap size={80} />
-                </div>
-                <h4 className="text-xl font-heritage font-bold relative z-10">Breaking Alerts</h4>
-                <p className="text-xs text-gray-400 leading-relaxed italic relative z-10">
-                  Neural synthesis protocol monitors 250+ local agencies for instant verification.
-                </p>
-                <div className="pt-4 border-t border-white/10 flex items-center justify-between relative z-10">
-                   <span className="text-[8px] font-black uppercase tracking-widest text-green-500">Live_Tracking</span>
-                   <Signal size={12} className="text-green-500 animate-pulse" />
-                </div>
-             </div>
           </div>
 
-          {/* Main Column: Content */}
           <div className="xl:col-span-9 space-y-10">
-            
-            {/* Search Bar with Suggestions */}
             <div className="relative group" ref={suggestionRef}>
               <div className="absolute -inset-1 bg-gradient-to-r from-[#E1306C]/20 to-blue-500/20 rounded-3xl blur-xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-700" />
               <form 
@@ -243,7 +232,6 @@ const SearchPortal: React.FC<SearchPortalProps> = ({ language }) => {
                 </button>
               </form>
 
-              {/* Suggestions Dropdown */}
               {showSuggestions && (
                 <div className="absolute top-[calc(100%-1rem)] left-0 right-0 bg-white border border-gray-100 rounded-b-3xl shadow-2xl pt-6 pb-4 z-10 animate-in slide-in-from-top-2 duration-300">
                   <div className="px-4 pb-2 mb-2 border-b border-gray-50">
@@ -264,17 +252,21 @@ const SearchPortal: React.FC<SearchPortalProps> = ({ language }) => {
               )}
             </div>
 
-            {/* Results Area */}
             {isLoading ? (
               <div className="py-32 flex flex-col items-center gap-8 animate-in fade-in duration-500">
                  <div className="relative">
                     <div className="w-24 h-24 rounded-3xl border-2 border-dashed border-gray-200 animate-spin-slow" />
                     <div className="absolute inset-0 flex items-center justify-center">
-                       <Cpu size={32} className="text-[#E1306C] animate-pulse" />
+                       {isDeepMode ? <Brain size={32} className="text-[#E1306C] animate-pulse" /> : <Cpu size={32} className="text-[#E1306C] animate-pulse" />}
                     </div>
                  </div>
-                 <div className="text-center space-y-2">
+                 <div className="text-center space-y-4">
                     <p className="text-[10px] font-black uppercase tracking-[0.5em] text-gray-300">{status}</p>
+                    {isDeepMode && (
+                      <div className="px-6 py-2 bg-black text-white text-[8px] font-black rounded-full tracking-[0.4em] uppercase shadow-lg border border-white/10 mx-auto w-fit">
+                         Deep_Reasoning_Protocol_Active
+                      </div>
+                    )}
                     <div className="flex justify-center gap-1.5">
                        <div className="w-1 h-1 rounded-full bg-[#E1306C] animate-bounce" style={{ animationDelay: '0ms' }} />
                        <div className="w-1 h-1 rounded-full bg-[#E1306C] animate-bounce" style={{ animationDelay: '150ms' }} />
@@ -284,8 +276,6 @@ const SearchPortal: React.FC<SearchPortalProps> = ({ language }) => {
               </div>
             ) : result ? (
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 animate-in slide-in-from-bottom-6 duration-700">
-                 
-                 {/* Main Content Block */}
                  <div className="lg:col-span-8 space-y-8">
                     <div className="bg-white border border-gray-100 p-8 md:p-12 rounded-[3.5rem] shadow-sm relative overflow-hidden group">
                        <div className="absolute top-0 right-0 p-8 opacity-[0.02] text-[#0a0a0a] group-hover:rotate-6 transition-transform">
@@ -293,8 +283,8 @@ const SearchPortal: React.FC<SearchPortalProps> = ({ language }) => {
                        </div>
                        
                        <div className="flex items-center gap-4 mb-10 text-[#E1306C]">
-                          <Sparkles size={18} />
-                          <span className="text-[10px] font-black uppercase tracking-[0.4em]">Integrated_Synthesis</span>
+                          {isDeepMode ? <Brain size={18} className="animate-pulse" /> : <Sparkles size={18} />}
+                          <span className="text-[10px] font-black uppercase tracking-[0.4em]">{isDeepMode ? 'Deep_Neural_Synthesis' : 'Integrated_Synthesis'}</span>
                           <div className="ml-auto flex items-center gap-2 text-gray-300">
                              <Clock size={12} />
                              <span className="text-[9px] font-bold">JUST NOW</span>
@@ -310,15 +300,16 @@ const SearchPortal: React.FC<SearchPortalProps> = ({ language }) => {
                              <ShieldCheck size={14} className="text-green-500" />
                              <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Grounding_Verified</span>
                           </div>
-                          <div className="flex items-center gap-2">
-                             <TrendingUp size={14} className="text-blue-500" />
-                             <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Real_Time_Accuracy: 98%</span>
-                          </div>
+                          {isDeepMode && (
+                            <div className="flex items-center gap-2">
+                               <TrendingUp size={14} className="text-blue-500" />
+                               <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Analytical_Depth: Maximum</span>
+                            </div>
+                          )}
                        </div>
                     </div>
                  </div>
 
-                 {/* Sidebar: Sources */}
                  <div className="lg:col-span-4 space-y-6">
                     <div className="bg-white border border-gray-100 p-8 rounded-[2.5rem] shadow-sm space-y-8">
                        <div className="flex items-center gap-3">
@@ -350,33 +341,6 @@ const SearchPortal: React.FC<SearchPortalProps> = ({ language }) => {
                             </div>
                           )}
                        </div>
-
-                       {result.links.length > 0 && (
-                          <p className="text-[8px] font-bold text-gray-300 uppercase text-center tracking-[0.2em]">
-                             Archive complete with {result.links.length} verification nodes
-                          </p>
-                       )}
-                    </div>
-
-                    <div className="p-8 rounded-[2.5rem] bg-[#E1306C]/5 border border-[#E1306C]/10 space-y-4">
-                       <div className="flex items-center gap-3 text-[#E1306C]">
-                          <Zap size={14} />
-                          <span className="text-[10px] font-black uppercase tracking-widest">Quick Actions</span>
-                       </div>
-                       <div className="grid grid-cols-2 gap-2">
-                          <button 
-                            onClick={() => { setQuery('Colombo Traffic'); handleSearch('Current traffic status in Colombo city'); }}
-                            className="p-3 bg-white rounded-xl text-[8px] font-black uppercase tracking-widest border border-gray-100 hover:border-[#E1306C]/30 transition-all flex items-center justify-center gap-2 group"
-                          >
-                             Traffic <ChevronRight size={10} className="group-hover:translate-x-1 transition-transform" />
-                          </button>
-                          <button 
-                            onClick={() => { setQuery('Kandy Train'); handleSearch('Current Kandy to Colombo train schedule and delays'); }}
-                            className="p-3 bg-white rounded-xl text-[8px] font-black uppercase tracking-widest border border-gray-100 hover:border-[#E1306C]/30 transition-all flex items-center justify-center gap-2 group"
-                          >
-                             Trains <ChevronRight size={10} className="group-hover:translate-x-1 transition-transform" />
-                          </button>
-                       </div>
                     </div>
                  </div>
               </div>
@@ -390,19 +354,6 @@ const SearchPortal: React.FC<SearchPortalProps> = ({ language }) => {
             )}
           </div>
         </div>
-      </div>
-
-      {/* Persistent Floating HUD */}
-      <div className="fixed bottom-8 right-8 flex flex-col items-end gap-4 pointer-events-none opacity-40">
-         <div className="flex items-center gap-4">
-            <div className="text-right">
-               <p className="text-[8px] font-black uppercase tracking-widest text-gray-400">Registry_Status</p>
-               <p className="text-[10px] font-bold text-gray-500 tracking-widest uppercase">UP_TIME_99.9%</p>
-            </div>
-            <div className="w-10 h-10 rounded-xl bg-white border border-gray-100 flex items-center justify-center text-gray-300 shadow-sm">
-               <Database size={16} />
-            </div>
-         </div>
       </div>
 
       <style dangerouslySetInnerHTML={{ __html: `
