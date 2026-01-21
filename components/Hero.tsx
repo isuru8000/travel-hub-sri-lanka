@@ -1,8 +1,8 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Language } from '../types.ts';
 import { UI_STRINGS } from '../constants.tsx';
-import { Compass, Database, Hash } from 'lucide-react';
+import { Compass, Database, Box, Layers, ArrowRight, Sparkles, Globe } from 'lucide-react';
 
 interface HeroProps {
   language: Language;
@@ -10,91 +10,133 @@ interface HeroProps {
 }
 
 const Hero: React.FC<HeroProps> = ({ language, setView }) => {
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleMove = (e: MouseEvent) => {
+      setMousePos({
+        x: (e.clientX / window.innerWidth - 0.5) * 40,
+        y: (e.clientY / window.innerHeight - 0.5) * 40
+      });
+    };
+    
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 100);
+    };
+
+    window.addEventListener('mousemove', handleMove);
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('mousemove', handleMove);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   return (
-    <div className="relative h-screen flex items-center justify-center overflow-hidden bg-white">
-      {/* Waterfall Background - Set to show fully (High Opacity) */}
+    <div className="relative h-screen flex items-center justify-center overflow-hidden bg-[#0a0a0a]">
+      
+      {/* 1. High-Impact Background Image (Waterfall) */}
       <div 
-        className="absolute inset-0 bg-cover bg-center opacity-100 transition-opacity duration-1000 pointer-events-none" 
+        className="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out scale-105 brightness-[0.6] contrast-[1.1]" 
         style={{ 
-          backgroundImage: `url('https://media.istockphoto.com/id/822563612/photo/waterfall.webp?a=1&b=1&s=612x612&w=0&k=20&c=hBcdOefGG4mpu6iWZaxcob0h9p_b1Rl8muZqHE9bd-w=')`
+          backgroundImage: `url('https://images.unsplash.com/photo-1562089432-b9faf2227db9?q=80&w=2400&auto=format&fit=crop')`,
+          transform: `translate3d(${mousePos.x * -0.1}px, ${mousePos.y * -0.1}px, 0) scale(${1.05 + window.scrollY / 5000})`,
         }}
+      >
+        {/* Clean atmospheric vignette */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-[#0a0a0a]" />
+      </div>
+
+      {/* 2. Subtile Grid Overlay */}
+      <div className="absolute inset-0 opacity-[0.02] pointer-events-none" 
+        style={{ backgroundImage: `radial-gradient(circle, #fff 1px, transparent 1px)`, backgroundSize: '50px 50px' }} 
       />
-      
-      {/* Minimal Overlay for Text Legibility only */}
-      <div className="absolute inset-0 bg-white/10 pointer-events-none" />
-      
-      {/* Archive Meta-Data (Charcoal Theme) - Standard Casing Labels */}
-      <div className="absolute top-48 left-12 hidden lg:flex flex-col gap-4 opacity-40">
-        <div className="flex items-center gap-3 text-[#0a0a0a] text-[9px] font-black uppercase tracking-[0.6em]">
-          <Database size={14} />
-          SL-REF: 001/HERITAGE
-        </div>
-        <div className="h-px w-32 bg-black/20" />
-      </div>
 
-      <div className="absolute top-48 right-12 hidden lg:flex flex-col items-end gap-4 opacity-40">
-        <div className="flex items-center gap-3 text-[#0a0a0a] text-[9px] font-black uppercase tracking-[0.6em]">
-          CLASSIFICATION: ANCIENT
-          <Hash size={14} />
+      {/* 3. Hero Content Container - Now Centered */}
+      <div className="relative z-30 max-w-5xl w-full px-6 flex flex-col items-center text-center">
+        
+        {/* Top Label */}
+        <div className="flex flex-col items-center gap-4 mb-8 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+          <span className="text-white/60 font-black text-[10px] uppercase tracking-[0.8em] drop-shadow-sm">
+            {language === 'EN' ? 'ESTABLISHED HERITAGE' : 'ස්ථාපිත උරුමය'}
+          </span>
+          <div className="h-12 w-[1px] bg-gradient-to-b from-[#E1306C] to-transparent"></div>
         </div>
-        <div className="h-px w-32 bg-black/20" />
-      </div>
-
-      <div className="relative z-20 max-w-7xl mx-auto text-center px-8 space-y-16">
-        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-12 duration-1000">
-          <div className="inline-flex items-center gap-5 px-8 py-3 rounded-2xl bg-white/60 backdrop-blur-3xl border border-black/10 text-[#0a0a0a] text-[10px] font-black uppercase tracking-[0.6em] mb-6 shadow-xl">
-            <span className="w-2 h-2 bg-[#E1306C] rounded-full animate-pulse shadow-[0_0_15px_#E1306C]"></span>
-            {language === 'EN' ? 'The Heritage Archive' : 'සංරක්ෂණාගාරය'}
-          </div>
-          
-          <h1 className="text-6xl md:text-[10rem] font-heritage font-black leading-[0.9] tracking-tighter text-[#0a0a0a] drop-shadow-[0_4px_12px_rgba(255,255,255,0.8)]">
+        
+        {/* The Beautiful Two-Line Title */}
+        <div className="space-y-4 mb-10 animate-in fade-in zoom-in-95 duration-1000 delay-200">
+          <h1 className="text-4xl sm:text-6xl md:text-[5.5rem] font-heritage font-black leading-[1.1] tracking-tight text-white uppercase">
             {language === 'EN' ? (
               <>
-                <span className="block">Discover True Beauty</span>
-                <span className="block italic insta-text-gradient">of Sri Lanka</span>
+                <span className="block opacity-90">Discover the beauty</span>
+                <span className="block italic insta-text-gradient font-medium lowercase md:mt-2">of Sri Lanka</span>
               </>
             ) : (
               <>
-                <span className="block">ශ්‍රී ලංකාවේ සැබෑ</span>
-                <span className="block italic insta-text-gradient">සුන්දරත්වය සොයා ගන්න</span>
+                <span className="block opacity-90">ශ්‍රී ලංකාවේ</span>
+                <span className="block italic insta-text-gradient md:mt-2">අසිරිමත් සුන්දරත්වය.</span>
               </>
             )}
           </h1>
-          
-          <p className="text-xl md:text-3xl text-[#1a1a1a] font-bold max-w-4xl mx-auto leading-relaxed opacity-100 tracking-tight italic drop-shadow-[0_2px_4px_rgba(255,255,255,0.8)]">
-            {language === 'EN' 
-              ? "Cataloguing the sacred memories of a 2,500-year-old civilization." 
-              : "වසර 2,500 ක ශිෂ්ටාචාරයක පූජනීය මතකයන් පෙළගැස්ම."}
-          </p>
         </div>
+        
+        {/* Centered Description */}
+        <p className="text-base md:text-xl text-white/60 font-light max-w-2xl leading-relaxed italic mb-12 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
+          {language === 'EN' 
+            ? "Journey through high-fidelity archives of an ancient civilization. A synchronized portal to the soul of the Indian Ocean." 
+            : "ශ්‍රී ලංකාවේ උරුමය පිළිබඳ උසස් තත්ත්වයේ ලේඛනාගාරයට පිවිසෙන්න. ඉන්දියන් සාගරයේ ආත්මයට විවෘත වූ ද්වාරයකි."}
+        </p>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-10 pt-12 animate-in fade-in zoom-in-95 duration-1000 delay-300">
+        {/* Centered Buttons */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-700">
           <button 
             onClick={() => setView('destinations')}
-            className="group relative flex items-center gap-12 px-20 py-10 bg-[#0a0a0a] rounded-[3.5rem] shadow-[0_30px_100px_rgba(0,0,0,0.3)] transition-all duration-700 hover:scale-110 active:scale-95 hover:shadow-[0_50px_120px_rgba(0,0,0,0.4)]"
+            className="group relative flex items-center gap-6 px-10 py-5 bg-white rounded-full transition-all duration-500 hover:scale-105 active:scale-95 shadow-[0_20px_60px_rgba(255,255,255,0.1)]"
           >
-            <div className="flex flex-col items-start text-left leading-none">
-              <span className="text-[10px] font-black text-gray-500 uppercase tracking-[0.6em] mb-2">SYNC REALITY</span>
-              <span className="text-2xl font-black text-white uppercase tracking-[0.1em]">
-                {UI_STRINGS.exploreDestinations[language]}
-              </span>
+            <span className="text-[10px] font-black text-[#0a0a0a] uppercase tracking-[0.4em]">Launch Portal</span>
+            <div className="w-8 h-8 rounded-full bg-[#0a0a0a] flex items-center justify-center text-white transition-transform group-hover:rotate-45">
+              <ArrowRight size={16} />
             </div>
-            
-            <div className="w-20 h-20 rounded-[1.5rem] bg-white flex items-center justify-center text-[#E1306C] transition-all duration-1000 group-hover:rotate-[360deg] shadow-2xl">
-              <Compass size={40} className="text-[#E1306C]" />
-            </div>
+          </button>
+
+          <button 
+            onClick={() => setView('vr-showcase')}
+            className="group relative flex items-center gap-4 px-10 py-5 bg-white/5 backdrop-blur-xl border border-white/10 rounded-full transition-all duration-500 hover:bg-white/10 active:scale-95"
+          >
+            <Globe size={16} className="text-[#E1306C] group-hover:rotate-180 transition-transform duration-1000" />
+            <span className="text-[10px] font-black text-white uppercase tracking-[0.4em]">3D Registry</span>
           </button>
         </div>
       </div>
 
-      {/* Radiant Scroll Indicator */}
-      <div className="absolute bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center gap-6 opacity-80 hover:opacity-100 transition-opacity pointer-events-none">
-        <span className="text-[10px] font-black text-[#0a0a0a] uppercase tracking-[1em] drop-shadow-md">SCAN ARCHIVES</span>
-        <div className="w-[2px] h-24 bg-gradient-to-b from-[#E1306C] via-gray-400 to-transparent rounded-full shadow-lg" />
+      {/* Floating Info Nodes - Repositioned for center layout */}
+      <div className="absolute bottom-12 right-12 hidden xl:flex flex-col items-end gap-4 animate-in fade-in slide-in-from-right-8 duration-1000 delay-1000 opacity-40 hover:opacity-100 transition-opacity">
+         <div className="bg-white/5 backdrop-blur-md p-4 rounded-2xl border border-white/10 text-right space-y-2 max-w-[200px]">
+            <p className="text-[8px] font-bold text-white/60 uppercase tracking-[0.2em] leading-tight">
+              SYNCING ARCHIVES...
+            </p>
+            <div className="flex items-center justify-end gap-2 text-[7px] font-black text-white/30">
+               <Database size={10} />
+               <span className="tracking-[0.2em]">HUB_01</span>
+            </div>
+         </div>
       </div>
 
-      {/* Pure White Grounding Mask (Fades the image into the white page) */}
-      <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-white via-white/20 to-transparent pointer-events-none" />
+      {/* Scroll Indicator */}
+      <div className={`absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 transition-all duration-1000 z-40 ${scrolled ? 'opacity-0 translate-y-10' : 'opacity-100'}`}>
+        <div className="w-[1px] h-10 bg-gradient-to-b from-white/40 to-transparent"></div>
+        <span className="text-[7px] font-black text-white/30 uppercase tracking-[1.5em] ml-[1.5em]">DESCEND</span>
+      </div>
+
+      <style dangerouslySetInnerHTML={{ __html: `
+        @keyframes scroll-line {
+          0% { transform: scaleY(0); transform-origin: top; opacity: 0; }
+          50% { transform: scaleY(1); transform-origin: top; opacity: 1; }
+          51% { transform: scaleY(1); transform-origin: bottom; opacity: 1; }
+          100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
+        }
+      `}} />
     </div>
   );
 };

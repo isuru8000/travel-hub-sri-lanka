@@ -10,34 +10,35 @@ interface CategoriesSectionProps {
 }
 
 const CategoriesSection: React.FC<CategoriesSectionProps> = ({ language, setView }) => {
-  // Add Quiz to categories locally or could be in constants
   const extendedCategories = [
     ...CATEGORIES_DATA,
     {
       id: "quiz",
       icon: "Compass",
       title: { EN: "Travel Quiz", SI: "සංචාරක ප්‍රශ්න විචාරාත්මක" },
-      description: { EN: "Discover your true island explorer soul.", SI: "ඔබේ සැබෑ දූපත් ගවේෂක ආත්මය හඳුනා ගන්න." }
+      description: { EN: "Identify your true island explorer archetype.", SI: "ඔබේ සැබෑ ගවේෂක ආත්මය හඳුනා ගන්න." }
     }
   ];
 
   return (
-    <section className="py-32 bg-white border-y border-gray-100">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="text-center space-y-6 mb-24">
-          <h2 className="text-4xl md:text-5xl font-heritage font-bold text-[#262626]">
-            {UI_STRINGS.exploreInterests[language]}
+    <section className="py-20 md:py-32 bg-white border-y border-gray-50 overflow-hidden" style={{ perspective: '3000px' }}>
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="text-center space-y-8 md:space-y-12 mb-12 md:mb-24 transform translateZ(50px) md:translateZ(100px)">
+          <div className="inline-flex items-center gap-3 md:gap-4 px-6 md:px-8 py-2 md:py-3 rounded-full bg-black/5 border border-black/10 text-[#0a0a0a] text-[9px] md:text-[10px] font-black uppercase tracking-[0.4em] md:tracking-[0.6em] mb-4 md:mb-6">
+             {language === 'EN' ? 'THE REGISTRY' : 'සංරක්ෂණාගාරය'}
+          </div>
+          <h2 className="text-3xl md:text-[7rem] font-heritage font-bold text-[#262626] leading-tight md:leading-[0.8] tracking-tighter uppercase">
+            Choose Your <br/><span className="italic insta-text-gradient">Heritage.</span>
           </h2>
-          <p className="text-gray-500 max-w-2xl mx-auto text-base md:text-lg font-light leading-relaxed italic">
+          <p className="text-gray-400 max-w-4xl mx-auto text-lg md:text-2xl font-light italic leading-relaxed">
             {language === 'EN' 
-              ? "Discover the soul of our nation through unique experiences tailored to your spirit." 
-              : "ඔබේ රුචිකත්වයට සරිලන පරිදි සකස් කරන ලද සුවිශේෂී අත්දැකීම් තුළින් අපේ ජාතියේ ආත්මය හඳුනා ගන්න."}
+              ? "Access high-fidelity archival categories curated for the modern voyager." 
+              : "නූතන ගවේෂකයා වෙනුවෙන්ම සැකසූ සුවිශේෂී ප්‍රවර්ග වෙත පිවිසෙන්න."}
           </p>
-          <div className="w-24 h-1 story-ring mx-auto rounded-full shadow-[0_0_15px_rgba(225,48,108,0.1)]" />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 lg:grid-cols-4 2xl:grid-cols-7 gap-12">
-          {extendedCategories.map((cat) => {
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 lg:gap-16">
+          {extendedCategories.map((cat, idx) => {
             // @ts-ignore
             const IconComponent = Icons[cat.icon];
             return (
@@ -54,41 +55,40 @@ const CategoriesSection: React.FC<CategoriesSectionProps> = ({ language, setView
                    else if (cat.id === 'quiz') setView('quiz');
                    else setView('destinations');
                 }}
-                className="group p-10 rounded-[40px] bg-white border border-gray-100 hover:shadow-[0_20px_60px_rgba(0,0,0,0.08)] transition-all text-center cursor-pointer flex flex-col items-center h-full"
+                className="group relative p-10 md:p-14 rounded-[3rem] md:rounded-[4rem] bg-white border border-gray-100 shadow-sm transition-all duration-700 cursor-pointer flex flex-col items-center text-center overflow-hidden lg:hover:shadow-[0_80px_150px_rgba(0,0,0,0.12)] lg:hover:-translate-y-8 active:scale-95 md:active:scale-100"
+                style={{ transformStyle: 'preserve-3d' }}
               >
-                <div className="relative flex flex-col items-center">
-                  {/* Premium Heritage Tooltip */}
-                  <div className="absolute -top-16 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none z-30 translate-y-2 group-hover:translate-y-0 scale-95 group-hover:scale-100">
-                    <div className="relative">
-                      <div className="story-ring p-[1.5px] rounded-2xl shadow-[0_20px_40px_rgba(225,48,108,0.2)]">
-                        <div className="bg-white px-6 py-2.5 rounded-[14px] whitespace-nowrap border border-white/50">
-                          <span className="insta-text-gradient font-heritage font-bold text-[11px] uppercase tracking-[0.25em]">
-                            {cat.title[language]}
-                          </span>
-                        </div>
-                      </div>
-                      {/* Tooltip Arrow */}
-                      <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white rotate-45 z-10"></div>
-                    </div>
-                  </div>
+                {/* 3D Depth Elements */}
+                <div className="absolute inset-0 bg-gradient-to-br from-[#E1306C]/5 to-transparent opacity-0 lg:group-hover:opacity-100 transition-opacity" />
+                
+                {/* Refractive glint */}
+                <div className="absolute top-0 left-0 w-full h-[200%] bg-gradient-to-b from-white/20 via-transparent to-transparent -translate-y-full lg:group-hover:translate-y-full transition-transform duration-1000 pointer-events-none" />
 
-                  {/* Icon Container */}
-                  <div className="w-24 h-24 story-ring rounded-full p-[4px] mb-8 transition-all duration-700 group-hover:scale-110 group-hover:rotate-6 group-hover:shadow-[0_15px_30px_rgba(225,48,108,0.2)]">
-                    <div className="bg-white w-full h-full rounded-full flex items-center justify-center text-[#262626] group-hover:insta-gradient group-hover:text-white transition-all duration-500 overflow-hidden relative shadow-inner">
-                        {IconComponent && <IconComponent size={40} strokeWidth={1.5} className="relative z-10" />}
+                <div className="relative mb-8 md:mb-12" style={{ transform: 'translateZ(40px) md:translateZ(60px)' }}>
+                  {/* Glowing Aura */}
+                  <div className="absolute -inset-6 md:-inset-10 rounded-full bg-gradient-to-tr from-[#E1306C]/20 to-[#f09433]/20 blur-2xl md:blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 animate-pulse" />
+                  
+                  {/* Icon Slab */}
+                  <div className="w-24 h-24 md:w-36 md:h-36 story-ring rounded-[1.5rem] md:rounded-[2.5rem] p-[3px] md:p-[4px] shadow-lg md:shadow-[0_30px_80px_rgba(0,0,0,0.15)] transition-all duration-700 group-hover:rotate-y-12 group-hover:scale-110">
+                    <div className="bg-white w-full h-full rounded-[1.3rem] md:rounded-[2.3rem] flex items-center justify-center text-[#262626] group-hover:bg-[#0a0a0a] group-hover:text-white transition-all duration-500">
+                        {IconComponent && <IconComponent size={window.innerWidth < 768 ? 32 : 56} strokeWidth={1} className="relative z-10" />}
                     </div>
                   </div>
                 </div>
 
-                <h3 className="text-2xl font-heritage font-bold text-[#262626] mb-4 group-hover:insta-text-gradient transition-all duration-500">
-                  {cat.title[language]}
-                </h3>
-                <p className="text-sm text-gray-400 leading-relaxed font-light line-clamp-3 italic">
-                  {cat.description[language]}
-                </p>
+                <div className="space-y-4 md:space-y-6 relative z-10" style={{ transform: 'translateZ(20px) md:translateZ(40px)' }}>
+                  <h3 className="text-2xl md:text-4xl font-heritage font-bold text-[#262626] group-hover:insta-text-gradient transition-all duration-500 uppercase tracking-tighter">
+                    {cat.title[language]}
+                  </h3>
+                  <p className="text-sm md:text-base text-gray-400 leading-relaxed font-light italic">
+                    {cat.description[language]}
+                  </p>
+                </div>
                 
-                {/* Visual Accent */}
-                <div className="mt-6 w-0 group-hover:w-12 h-0.5 insta-gradient rounded-full transition-all duration-700 ease-out"></div>
+                {/* 3D Data Tag */}
+                <div className="mt-8 md:mt-10 px-5 py-2 md:px-8 md:py-3 bg-gray-50 rounded-full border border-gray-100 text-[8px] md:text-[9px] font-black uppercase tracking-[0.3em] md:tracking-[0.5em] text-gray-400 group-hover:bg-[#E1306C]/10 group-hover:text-[#E1306C] transition-all transform translateZ(10px) md:translateZ(20px)">
+                  Protocol 0{idx + 1}
+                </div>
               </div>
             );
           })}
