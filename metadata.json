@@ -3,6 +3,7 @@
   "description": "A modern, fast, and mobile-friendly travel website inspired by Sri Lanka’s ancient heritage, history, and cultural memory combined with a modern travel experience.",
   "requestFramePermissions": [
     "camera",
-    "microphone"
+    "microphone",
+    "geolocation"
   ]
 }

@@ -6,13 +6,28 @@ const LoadingScreen: React.FC = () => {
     <div className="fixed inset-0 z-[100] bg-white flex flex-col items-center justify-center animate-in fade-in duration-500">
       <div className="relative">
         {/* Pulsing rings */}
-        <div className="absolute inset-0 story-ring rounded-[30px] animate-ping opacity-20 scale-150"></div>
-        <div className="absolute inset-0 story-ring rounded-[30px] animate-pulse opacity-40 scale-125"></div>
+        <div className="absolute inset-0 story-ring rounded-full animate-ping opacity-20 scale-150"></div>
+        <div className="absolute inset-0 story-ring rounded-full animate-pulse opacity-40 scale-125"></div>
         
         {/* Central Logo Container */}
-        <div className="relative w-24 h-24 story-ring rounded-[30px] p-1 shadow-2xl">
-          <div className="bg-white w-full h-full rounded-[25px] flex items-center justify-center">
-            <span className="insta-text-gradient font-heritage font-bold text-4xl animate-bounce">L</span>
+        <div className="relative w-24 h-24 story-ring rounded-full p-1 shadow-2xl">
+          <div className="bg-white w-full h-full rounded-full flex items-center justify-center overflow-hidden">
+            <img 
+              src="https://raw.githubusercontent.com/stackblitz/stackblitz-images/main/travel-hub-logo.png" 
+              alt="Travel Hub Logo" 
+              className="w-full h-full object-cover p-1 animate-bounce"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+                const parent = target.parentElement;
+                if (parent) {
+                  const span = document.createElement('span');
+                  span.className = "insta-text-gradient font-heritage font-bold text-4xl animate-bounce";
+                  span.innerText = "L";
+                  parent.appendChild(span);
+                }
+              }}
+            />
           </div>
         </div>
       </div>

@@ -61,9 +61,26 @@ const Navbar: React.FC<NavbarProps> = ({
             onClick={() => handleNav('home')}
             className="flex items-center gap-3 group"
           >
-            <div className="relative w-9 h-9 story-ring rounded-[12px] p-[2px] shadow-lg transition-transform duration-500 group-hover:rotate-12">
-              <div className="bg-white w-full h-full rounded-[10px] flex items-center justify-center">
-                <span className="insta-text-gradient font-heritage font-black text-xl leading-none">L</span>
+            <div className="relative w-10 h-10 story-ring rounded-full p-[2px] shadow-lg transition-all duration-500 group-hover:scale-110 group-hover:rotate-12">
+              <div className="bg-white w-full h-full rounded-full flex items-center justify-center overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1620668165561-12f719468e27?auto=format&fit=crop&w=100&q=80" className="hidden" alt="hidden-preloader" />
+                <img 
+                  src="https://raw.githubusercontent.com/stackblitz/stackblitz-images/main/travel-hub-logo.png" 
+                  alt="Travel Hub Logo" 
+                  className="w-full h-full object-cover p-0.5"
+                  onError={(e) => {
+                    // Fallback to a styled 'L' if image fails to load during development
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                    const parent = target.parentElement;
+                    if (parent) {
+                      const span = document.createElement('span');
+                      span.className = "insta-text-gradient font-heritage font-black text-xl leading-none";
+                      span.innerText = "L";
+                      parent.appendChild(span);
+                    }
+                  }}
+                />
               </div>
             </div>
             <div className="hidden sm:flex flex-col items-start leading-none gap-0.5">
