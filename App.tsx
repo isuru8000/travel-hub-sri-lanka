@@ -21,6 +21,7 @@ import Quiz from './components/Quiz.tsx';
 import VRExperience from './components/VRExperience.tsx';
 import VRShowcase from './components/VRShowcase.tsx';
 import HeritageCollection from './components/HeritageCollection.tsx';
+import SearchPortal from './components/SearchPortal.tsx';
 import { Sparkles, Compass, ShieldCheck, Star, MapPin, ArrowRight, Database, Box, Layers, Zap } from 'lucide-react';
 
 export interface User {
@@ -29,7 +30,7 @@ export interface User {
   photo: string;
 }
 
-type View = 'home' | 'destinations' | 'about' | 'foods' | 'music' | 'interests' | 'medicine' | 'tea' | 'phrases' | 'essentials' | 'festivals' | 'memories' | 'quiz' | 'vr-experience' | 'vr-showcase';
+type View = 'home' | 'destinations' | 'about' | 'foods' | 'music' | 'interests' | 'medicine' | 'tea' | 'phrases' | 'essentials' | 'festivals' | 'memories' | 'quiz' | 'vr-experience' | 'vr-showcase' | 'search';
 
 const App: React.FC = () => {
   const [language, setLanguage] = useState<Language>('EN');
@@ -137,6 +138,8 @@ const App: React.FC = () => {
         return <div className="pt-24"><VRExperience language={language} setView={setView} /></div>;
       case 'vr-showcase':
         return <VRShowcase language={language} setView={setView} />;
+      case 'search':
+        return <SearchPortal language={language} />;
       case 'home':
       default:
         return (

@@ -12,6 +12,71 @@ export interface AIResponse {
   links: GroundingLink[];
 }
 
+/**
+ * Decodes a base64 string into a Uint8Array.
+ */
+export function decode(base64: string): Uint8Array {
+  const binaryString = atob(base64);
+  const len = binaryString.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+  return bytes;
+}
+
+/**
+ * Encodes a Uint8Array into a base64 string.
+ */
+export function encode(bytes: Uint8Array): string {
+  let binary = '';
+  const len = bytes.byteLength;
+  for (let i = 0; i < len; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary);
+}
+
+/**
+ * Decodes raw PCM audio data into an AudioBuffer manually.
+ * Note: AudioContext.decodeAudioData is for file formats (WAV/MP3), not raw PCM streams.
+ */
+export async function decodeAudioData(
+  data: Uint8Array,
+  ctx: AudioContext,
+  sampleRate: number,
+  numChannels: number,
+): Promise<AudioBuffer> {
+  const dataInt16 = new Int16Array(data.buffer);
+  const frameCount = dataInt16.length / numChannels;
+  const buffer = ctx.createBuffer(numChannels, frameCount, sampleRate);
+
+  for (let channel = 0; channel < numChannels; channel++) {
+    const channelData = buffer.getChannelData(channel);
+    for (let i = 0; i < frameCount; i++) {
+      channelData[i] = dataInt16[i * numChannels + channel] / 32768.0;
+    }
+  }
+  return buffer;
+}
+
+/**
+ * Creates an audio/pcm Blob from Float32Array input data.
+ * Scales the 32-bit floats to 16-bit signed integers and encodes to base64.
+ */
+export function createPcmBlob(data: Float32Array): { data: string; mimeType: string } {
+  const l = data.length;
+  const int16 = new Int16Array(l);
+  for (let i = 0; i < l; i++) {
+    int16[i] = data[i] * 32768;
+  }
+  return {
+    data: encode(new Uint8Array(int16.buffer)),
+    // The supported audio MIME type is 'audio/pcm'.
+    mimeType: 'audio/pcm;rate=16000',
+  };
+}
+
 export const getLankaGuideResponse = async (
   prompt: string, 
   language: Language, 
@@ -83,6 +148,45 @@ export const getLankaGuideResponse = async (
     return language === 'SI' 
       ? "කණගාටුයි, මට මේ අවස්ථාවේ පිළිතුරු දිය නොහැක. කරුණාකර නැවත උත්සාහ කරන්න."
       : "I'm sorry, my neural link is experiencing interference. Please try again.";
+  }
+};
+
+/**
+ * Real-time Information Retrieval: Uses gemini-3-flash-preview with Google Search grounding.
+ */
+export const searchGrounding = async (query: string, language: Language): Promise<AIResponse> => {
+  try {
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    const response = await ai.models.generateContent({
+      model: "gemini-3-flash-preview",
+      contents: query,
+      config: {
+        systemInstruction: `You are the "Neural Intelligence Hub" for Travel Hub Sri Lanka. 
+        Your goal is to provide up-to-the-minute, accurate travel information (prices, opening times, weather, events) for Sri Lanka using real-time search.
+        Use Markdown. Format with clean sections. Language: ${language === 'SI' ? 'Sinhala' : 'English'}.`,
+        tools: [{ googleSearch: {} }],
+      },
+    });
+
+    const text = response.text || "";
+    const links: GroundingLink[] = [];
+    
+    const groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks;
+    if (groundingChunks) {
+      groundingChunks.forEach((chunk: any) => {
+        if (chunk.web) {
+          links.push({
+            title: chunk.web.title || "Source",
+            uri: chunk.web.uri
+          });
+        }
+      });
+    }
+
+    return { text, links };
+  } catch (e) {
+    console.error(e);
+    return { text: "Error syncing with the live web registry.", links: [] };
   }
 };
 

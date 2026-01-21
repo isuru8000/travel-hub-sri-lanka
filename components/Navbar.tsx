@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Language } from '../types';
-import { Menu, X, Globe, LogIn, LogOut, ChevronRight, Sparkles, Compass } from 'lucide-react';
+import { Menu, X, Globe, LogIn, LogOut, ChevronRight, Sparkles, Compass, Search } from 'lucide-react';
 import { User } from '../App.tsx';
 
 interface NavbarProps {
@@ -45,13 +45,14 @@ const Navbar: React.FC<NavbarProps> = ({
   const navLinks = [
     { id: 'home', label: language === 'EN' ? 'Home' : 'මුල් පිටුව' },
     { id: 'destinations', label: language === 'EN' ? 'Portals' : 'පිවිසුම්' },
+    { id: 'search', label: language === 'EN' ? 'Live News' : 'සජීවී පුවත්', highlight: true },
     { id: 'vr-showcase', label: language === 'EN' ? '3D Spaces' : 'ත්‍රිමාණ', vipsOnly: true },
     { id: 'memories', label: language === 'EN' ? 'memories' : 'මතකයන්' },
   ];
 
   return (
     <div className={`fixed left-0 right-0 z-[70] transition-all duration-1000 flex justify-center pointer-events-none ${scrolled ? 'top-4' : 'top-6'}`}>
-      <nav className={`transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] relative flex items-center justify-between px-6 md:px-12 w-[98%] max-w-[1800px] py-3 bg-white/80 backdrop-blur-[40px] rounded-[2rem] border border-white/40 shadow-[0_20px_50px_rgba(0,0,0,0.05)] pointer-events-auto ${
+      <nav className={`transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] relative flex items-center justify-between px-6 md:px-12 w-[98%] max-w-[1800px] py-3 bg-white/80 backdrop-blur-[40px] rounded-2rem border border-white/40 shadow-[0_20px_50px_rgba(0,0,0,0.05)] pointer-events-auto ${
         scrolled ? 'scale-100' : 'scale-[1.005]'
       }`}>
         
@@ -69,7 +70,6 @@ const Navbar: React.FC<NavbarProps> = ({
                   alt="Travel Hub Logo" 
                   className="w-full h-full object-cover p-0.5"
                   onError={(e) => {
-                    // Fallback to a styled 'L' if image fails to load during development
                     const target = e.target as HTMLImageElement;
                     target.style.display = 'none';
                     const parent = target.parentElement;
@@ -98,9 +98,10 @@ const Navbar: React.FC<NavbarProps> = ({
               onClick={() => handleNav(link.id)} 
               className="group relative py-2"
             >
-              <span className={`text-[10px] font-black uppercase tracking-[0.4em] transition-all duration-500 ${
+              <span className={`text-[10px] font-black uppercase tracking-[0.4em] transition-all duration-500 flex items-center gap-2 ${
                 currentView === link.id ? 'text-[#0a0a0a]' : 'text-gray-400 hover:text-[#0a0a0a]'
               }`}>
+                {link.highlight && <Search size={10} className="text-[#E1306C]" />}
                 {link.label}
               </span>
               <div className={`absolute -bottom-1 left-0 h-[2px] transition-all duration-700 ${
@@ -174,7 +175,7 @@ const Navbar: React.FC<NavbarProps> = ({
         </div>
       </nav>
 
-      {/* Mobile Drawer (High-End White UI) */}
+      {/* Mobile Drawer */}
       {isOpen && (
         <div className="fixed inset-0 bg-white/98 backdrop-blur-[30px] z-[60] flex flex-col p-10 pt-32 animate-in fade-in slide-in-from-right-10 duration-500 pointer-events-auto">
           <div className="flex flex-col gap-10">
@@ -185,9 +186,10 @@ const Navbar: React.FC<NavbarProps> = ({
                 className="group flex flex-col items-start gap-2 animate-in slide-in-from-left-8 duration-700"
                 style={{ animationDelay: `${i * 100}ms` }}
               >
-                <span className={`text-4xl font-heritage font-black transition-all ${
+                <span className={`text-4xl font-heritage font-black transition-all flex items-center gap-4 ${
                   currentView === link.id ? 'insta-text-gradient' : 'text-gray-300'
                 }`}>
+                  {link.highlight && <Search size={24} className="text-[#E1306C]" />}
                   {link.label}
                 </span>
                 <div className={`h-1 bg-[#E1306C] transition-all ${currentView === link.id ? 'w-20' : 'w-0'}`} />
