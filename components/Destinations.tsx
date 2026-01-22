@@ -1,5 +1,4 @@
-
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { Language, Destination } from '../types.ts';
 import { DESTINATIONS, UI_STRINGS } from '../constants.tsx';
 import { 
@@ -8,7 +7,6 @@ import {
   Filter, 
   ChevronLeft, 
   ChevronRight, 
-  // Add missing ChevronDown import
   ChevronDown,
   ArrowRight, 
   X, 
@@ -20,7 +18,9 @@ import {
   Mountain,
   LayoutGrid,
   Compass,
-  Loader2
+  Loader2,
+  TrendingUp,
+  History
 } from 'lucide-react';
 import DestinationModal from './DestinationModal.tsx';
 
@@ -37,6 +37,9 @@ const Destinations: React.FC<DestinationsProps> = ({ language }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedDestination, setSelectedDestination] = useState<Destination | null>(null);
   const [isSearching, setIsSearching] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  
+  const searchWrapperRef = useRef<HTMLDivElement>(null);
 
   const categories = [
     { id: 'all', EN: 'All', SI: 'සියල්ල', icon: LayoutGrid },
@@ -49,7 +52,8 @@ const Destinations: React.FC<DestinationsProps> = ({ language }) => {
   const popularSearches = [
     { EN: "Sigiriya", SI: "සීගිරිය" },
     { EN: "Ella", SI: "ඇල්ල" },
-    { EN: "Temple", SI: "මාළිගාව" }
+    { EN: "Temple of the Tooth", SI: "දළදා මාළිගාව" },
+    { EN: "Galle Fort", SI: "ගාල්ල කොටුව" }
   ];
 
   const locations = useMemo(() => {
@@ -67,6 +71,16 @@ const Destinations: React.FC<DestinationsProps> = ({ language }) => {
     });
   }, [categoryFilter, locationFilter, search]);
 
+  const dynamicSuggestions = useMemo(() => {
+    if (search.length < 2) return [];
+    return DESTINATIONS
+      .filter(d => 
+        d.name.EN.toLowerCase().includes(search.toLowerCase()) || 
+        d.name.SI.includes(search)
+      )
+      .slice(0, 5);
+  }, [search]);
+
   useEffect(() => {
     setCurrentPage(1);
     if (search) {
@@ -75,6 +89,16 @@ const Destinations: React.FC<DestinationsProps> = ({ language }) => {
       return () => clearTimeout(timer);
     }
   }, [categoryFilter, locationFilter, search]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchWrapperRef.current && !searchWrapperRef.current.contains(event.target as Node)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const totalPages = Math.ceil(filteredDestinations.length / ITEMS_PER_PAGE);
   const paginatedDestinations = useMemo(() => {
@@ -92,6 +116,12 @@ const Destinations: React.FC<DestinationsProps> = ({ language }) => {
     setLocationFilter('all');
     setSearch('');
     setCurrentPage(1);
+    setShowSuggestions(false);
+  };
+
+  const handleSuggestionClick = (name: string) => {
+    setSearch(name);
+    setShowSuggestions(false);
   };
 
   return (
@@ -115,12 +145,12 @@ const Destinations: React.FC<DestinationsProps> = ({ language }) => {
             </p>
           </div>
 
-          {/* Enhanced Search Bar Area */}
-          <div className="max-w-3xl mx-auto relative animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-300">
+          {/* Enhanced Search Bar Area with Suggestions */}
+          <div className="max-w-3xl mx-auto relative animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-300" ref={searchWrapperRef}>
             {/* Outer Decorative Glow */}
             <div className="absolute -inset-1 bg-gradient-to-r from-[#E1306C]/20 via-[#f09433]/20 to-[#E1306C]/20 rounded-[3rem] blur-2xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-700" />
             
-            <div className="relative group overflow-hidden rounded-[2.8rem] bg-white border border-gray-100 shadow-[0_25px_60px_rgba(0,0,0,0.08)] transition-all duration-500 hover:shadow-[0_40px_100px_rgba(0,0,0,0.12)] focus-within:scale-[1.02] focus-within:ring-1 focus-within:ring-[#E1306C]/30">
+            <div className="relative group overflow-hidden rounded-[2.8rem] bg-white border border-gray-100 shadow-[0_25px_60px_rgba(0,0,0,0.08)] transition-all duration-500 hover:shadow-[0_40px_100px_rgba(0,0,0,0.12)] focus-within:scale-[1.01] focus-within:ring-1 focus-within:ring-[#E1306C]/30 z-30">
               
               {/* Internal Shimmer Sweep */}
               <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -139,13 +169,17 @@ const Destinations: React.FC<DestinationsProps> = ({ language }) => {
                 type="text" 
                 placeholder={UI_STRINGS.searchPlaceholder[language]}
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onFocus={() => setShowSuggestions(true)}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setShowSuggestions(true);
+                }}
                 className="w-full pl-20 pr-16 py-7 md:py-8 bg-transparent text-lg md:text-xl font-medium focus:outline-none placeholder:text-gray-300 placeholder:italic tracking-tight"
               />
 
               {search && (
                 <button 
-                  onClick={() => setSearch('')}
+                  onClick={() => { setSearch(''); setShowSuggestions(false); }}
                   className="absolute inset-y-0 right-8 flex items-center text-gray-300 hover:text-red-500 transition-all hover:scale-125"
                 >
                   <X size={20} />
@@ -156,19 +190,79 @@ const Destinations: React.FC<DestinationsProps> = ({ language }) => {
               <div className={`absolute bottom-0 left-0 h-[3px] insta-gradient transition-all duration-700 ${search ? 'w-full opacity-100' : 'w-0 opacity-0'}`}></div>
             </div>
 
-            {/* Popular Search Nuggets */}
-            <div className="flex flex-wrap items-center justify-center gap-4 mt-6 opacity-0 animate-in fade-in slide-in-from-bottom-2 duration-700 delay-1000">
-               <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Trending Tags:</span>
-               {popularSearches.map((s, i) => (
-                 <button 
-                   key={i}
-                   onClick={() => setSearch(s[language])}
-                   className="px-4 py-1.5 bg-black/5 hover:bg-[#E1306C] hover:text-white transition-all rounded-full text-[9px] font-black uppercase tracking-widest border border-black/5"
-                 >
-                   {s[language]}
-                 </button>
-               ))}
-            </div>
+            {/* Auto-Suggestions Dropdown */}
+            {showSuggestions && (search.length > 0 || popularSearches.length > 0) && (
+              <div className="absolute top-[calc(100%-1rem)] left-0 right-0 bg-white/95 backdrop-blur-xl border border-gray-100 rounded-b-[2.5rem] shadow-[0_30px_70px_rgba(0,0,0,0.15)] pt-8 pb-4 z-20 animate-in slide-in-from-top-2 duration-300">
+                <div className="max-h-[400px] overflow-y-auto no-scrollbar px-2">
+                  
+                  {/* Dynamic Results from Archive */}
+                  {dynamicSuggestions.length > 0 && (
+                    <div className="mb-4">
+                      <div className="px-6 py-2 flex items-center gap-2 text-gray-400">
+                        <TrendingUp size={12} className="text-[#E1306C]" />
+                        <span className="text-[10px] font-black uppercase tracking-widest">Matched in Archive</span>
+                      </div>
+                      {dynamicSuggestions.map((dest) => (
+                        <button
+                          key={dest.id}
+                          onClick={() => handleSuggestionClick(dest.name[language])}
+                          className="w-full text-left px-6 py-4 hover:bg-gray-50 flex items-center justify-between group/item transition-colors rounded-2xl"
+                        >
+                          <div className="flex items-center gap-4">
+                            <div className="w-10 h-10 rounded-xl overflow-hidden bg-gray-100 border border-gray-100">
+                              <img src={dest.image} className="w-full h-full object-cover group-hover/item:scale-110 transition-transform" />
+                            </div>
+                            <div>
+                              <p className="text-sm font-bold text-[#0a0a0a] group-hover/item:text-[#E1306C] transition-colors">{dest.name[language]}</p>
+                              <p className="text-[10px] text-gray-400 font-medium uppercase tracking-widest">{dest.location}</p>
+                            </div>
+                          </div>
+                          <ArrowRight size={14} className="text-gray-200 group-hover/item:text-[#E1306C] group-hover/item:translate-x-1 transition-all" />
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Popular Suggestions */}
+                  <div>
+                    <div className="px-6 py-2 flex items-center gap-2 text-gray-400">
+                      <Sparkles size={12} className="text-[#E1306C]" />
+                      <span className="text-[10px] font-black uppercase tracking-widest">Global Favorites</span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 p-2">
+                      {popularSearches.map((s, i) => (
+                        <button
+                          key={i}
+                          onClick={() => handleSuggestionClick(s[language])}
+                          className="text-left px-4 py-3 hover:bg-gray-50 rounded-xl flex items-center gap-3 group/pop transition-colors border border-transparent hover:border-gray-100"
+                        >
+                          <div className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-gray-300 group-hover/pop:text-[#E1306C] group-hover/pop:bg-white transition-all">
+                            <History size={14} />
+                          </div>
+                          <span className="text-xs font-bold text-gray-500 group-hover/pop:text-[#0a0a0a] transition-colors">{s[language]}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Static Visual Tags (Visible when no dropdown) */}
+            {!showSuggestions && (
+              <div className="flex flex-wrap items-center justify-center gap-4 mt-6 opacity-0 animate-in fade-in slide-in-from-bottom-2 duration-700 delay-1000">
+                 <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Trending Hubs:</span>
+                 {popularSearches.slice(0,3).map((s, i) => (
+                   <button 
+                     key={i}
+                     onClick={() => setSearch(s[language])}
+                     className="px-4 py-1.5 bg-black/5 hover:bg-[#E1306C] hover:text-white transition-all rounded-full text-[9px] font-black uppercase tracking-widest border border-black/5"
+                   >
+                     {s[language]}
+                   </button>
+                 ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

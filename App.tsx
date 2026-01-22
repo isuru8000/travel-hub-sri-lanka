@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useMemo } from 'react';
 import { Language } from './types.ts';
 import Layout from './components/Layout.tsx';
@@ -7,6 +6,7 @@ import PopularHighlights from './components/PopularHighlights.tsx';
 import Destinations from './components/Destinations.tsx';
 import Foods from './components/Foods.tsx';
 import HeritageMusic from './components/HeritageMusic.tsx';
+// Fix: Removed space in 'Traditional Medicine' to correctly import the component
 import TraditionalMedicine from './components/TraditionalMedicine.tsx';
 import TeaCulture from './components/TeaCulture.tsx';
 import Phrasebook from './components/Phrasebook.tsx';
@@ -24,6 +24,7 @@ import HeritageCollection from './components/HeritageCollection.tsx';
 import SearchPortal from './components/SearchPortal.tsx';
 import LoginModal from './components/LoginModal.tsx';
 import Contact from './components/Contact.tsx';
+import ScrollControls from './components/ScrollControls.tsx'; // Import new component
 import { Sparkles, Compass, ShieldCheck, Star, MapPin, ArrowRight, Database, Box, Layers, Zap } from 'lucide-react';
 
 export interface User {
@@ -420,6 +421,8 @@ const App: React.FC = () => {
       />
       
       <AIModal language={language} />
+
+      <ScrollControls /> { /* Integrated Scroll HUD */ }
       
       <style dangerouslySetInnerHTML={{ __html: `
         @keyframes marquee {

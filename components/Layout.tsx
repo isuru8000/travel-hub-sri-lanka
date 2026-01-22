@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Navbar from './Navbar.tsx';
 import { Language } from '../types.ts';
@@ -82,7 +81,7 @@ const Layout: React.FC<LayoutProps> = ({
                 <Facebook size={20} />
               </a>
               <a 
-                href="https://youtube.com/@travelhublk-123" 
+                href="https://www.youtube.com/@TravelHublk-123" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="w-12 h-12 border border-gray-100 rounded-2xl flex items-center justify-center hover:bg-[#FF0000] hover:text-white hover:border-transparent transition-all text-gray-400" 
