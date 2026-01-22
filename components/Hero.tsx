@@ -118,7 +118,7 @@ const Hero: React.FC<HeroProps> = ({ language, setView }) => {
         <div className="flex flex-col items-center gap-4 mb-8 animate-in fade-in slide-in-from-bottom-8 duration-1000">
           <div className="px-5 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-xl flex items-center gap-3">
              <div className="w-2 h-2 bg-[#E1306C] rounded-full animate-ping" />
-             <span className="text-white/80 font-black text-[9px] uppercase tracking-[0.5em]">
+             <span className="white/80 font-black text-[9px] uppercase tracking-[0.5em]">
                {language === 'EN' ? 'LIVE NEURAL LINK' : 'සජීවී සබඳතාවය'}
              </span>
           </div>
@@ -183,7 +183,7 @@ const Hero: React.FC<HeroProps> = ({ language, setView }) => {
       {/* Dynamic HUD Details */}
       <div className="absolute bottom-12 left-12 right-12 flex justify-between items-end pointer-events-none opacity-40 animate-in fade-in duration-1000 delay-1000">
          <div className="flex items-center gap-6">
-            <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/40">
+            <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/40">
                <Cpu size={20} className="animate-pulse" />
             </div>
             <div className="text-left space-y-1">

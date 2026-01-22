@@ -22,6 +22,7 @@ import VRExperience from './components/VRExperience.tsx';
 import VRShowcase from './components/VRShowcase.tsx';
 import HeritageCollection from './components/HeritageCollection.tsx';
 import SearchPortal from './components/SearchPortal.tsx';
+import LoginModal from './components/LoginModal.tsx';
 import { Sparkles, Compass, ShieldCheck, Star, MapPin, ArrowRight, Database, Box, Layers, Zap } from 'lucide-react';
 
 export interface User {
@@ -37,6 +38,7 @@ const App: React.FC = () => {
   const [view, setView] = useState<View>('home');
   const [user, setUser] = useState<User | null>(null);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [scrollPos, setScrollPos] = useState(0);
 
   useEffect(() => {
@@ -99,11 +101,30 @@ const App: React.FC = () => {
   }
 
   const handleLogin = () => {
-    setUser({
-      name: "Saman Kumara",
-      email: "saman.k@gmail.com",
-      photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80"
-    });
+    setIsLoginModalOpen(true);
+  };
+
+  const handleGoogleSuccess = (response: any) => {
+    try {
+      // Decode JWT token manually
+      const base64Url = response.credential.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      
+      const payload = JSON.parse(jsonPayload);
+      
+      setUser({
+        name: payload.name,
+        email: payload.email,
+        photo: payload.picture
+      });
+      
+      setIsLoginModalOpen(false);
+    } catch (e) {
+      console.error("Authentication decoding failed", e);
+    }
   };
 
   const handleLogout = () => {
@@ -387,7 +408,16 @@ const App: React.FC = () => {
       <div className="overflow-x-hidden">
         {renderContent()}
       </div>
+      
+      <LoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => setIsLoginModalOpen(false)} 
+        language={language}
+        onGoogleSuccess={handleGoogleSuccess}
+      />
+      
       <AIModal language={language} />
+      
       <style dangerouslySetInnerHTML={{ __html: `
         @keyframes marquee {
           0% { transform: translateX(0); }

@@ -271,8 +271,8 @@ const LiveVoiceGuide: React.FC<LiveVoiceGuideProps> = ({ language }) => {
                    ></div>
                  ))}
 
-                 <div className="relative w-32 h-32 story-ring p-[2px] rounded-[2rem] shadow-[0_0_80px_rgba(225,48,108,0.4)]">
-                    <div className="w-full h-full bg-[#0a0a0a] rounded-[1.9rem] flex items-center justify-center overflow-hidden">
+                 <div className="relative w-32 h-32 story-ring p-[2px] rounded-full shadow-[0_0_80px_rgba(225,48,108,0.4)]">
+                    <div className="w-full h-full bg-[#0a0a0a] rounded-full flex items-center justify-center overflow-hidden">
                        {status === 'speaking' ? (
                          <Volume2 size={48} className="text-white animate-bounce-slow" />
                        ) : (
@@ -309,7 +309,7 @@ const LiveVoiceGuide: React.FC<LiveVoiceGuideProps> = ({ language }) => {
 
            <div className="absolute bottom-16 left-16 right-16 flex justify-between items-end pointer-events-none opacity-40">
               <div className="flex items-center gap-6">
-                 <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white/40">
+                 <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/40">
                     <Cpu size={24} className="animate-spin-slow" />
                  </div>
                  <div className="text-left space-y-1">
