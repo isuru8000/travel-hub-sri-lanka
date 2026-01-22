@@ -20,7 +20,9 @@ import {
   ChevronRight,
   TrendingUp,
   MapPin,
-  Brain
+  Brain,
+  Key,
+  Lock
 } from 'lucide-react';
 import { Language } from '../types.ts';
 import { searchGrounding, AIResponse } from '../services/gemini.ts';
@@ -56,6 +58,7 @@ const SearchPortal: React.FC<SearchPortalProps> = ({ language }) => {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isDeepMode, setIsDeepMode] = useState(true);
+  const [needsApiKey, setNeedsApiKey] = useState(false);
   const suggestionRef = useRef<HTMLDivElement>(null);
 
   const categories = [
@@ -72,6 +75,7 @@ const SearchPortal: React.FC<SearchPortalProps> = ({ language }) => {
     setIsLoading(true);
     setShowSuggestions(false);
     setResult(null);
+    setNeedsApiKey(false);
     setStatus(language === 'EN' ? 'Initializing Neural Uplink...' : 'සම්බන්ධතාවය ස්ථාපිත කරමින්...');
 
     const statuses = isDeepMode 
@@ -93,9 +97,22 @@ const SearchPortal: React.FC<SearchPortalProps> = ({ language }) => {
     const data = await searchGrounding(searchQuery, language, isDeepMode);
     
     clearInterval(sInterval);
-    setResult(data);
+    
+    if (data.error === "API_KEY_REQUIRED") {
+      setNeedsApiKey(true);
+    } else {
+      setResult(data);
+    }
     setIsLoading(false);
     setStatus('');
+  };
+
+  const handleKeySelection = async () => {
+    if ((window as any).aistudio?.openSelectKey) {
+      await (window as any).aistudio.openSelectKey();
+      setNeedsApiKey(false);
+      handleSearch();
+    }
   };
 
   useEffect(() => {
@@ -286,6 +303,34 @@ const SearchPortal: React.FC<SearchPortalProps> = ({ language }) => {
                        <div className="w-1 h-1 rounded-full bg-[#E1306C] animate-bounce" style={{ animationDelay: '0ms' }} />
                        <div className="w-1 h-1 rounded-full bg-[#E1306C] animate-bounce" style={{ animationDelay: '150ms' }} />
                        <div className="w-1 h-1 rounded-full bg-[#E1306C] animate-bounce" style={{ animationDelay: '300ms' }} />
+                    </div>
+                 </div>
+              </div>
+            ) : needsApiKey ? (
+              <div className="py-20 md:py-32 flex flex-col items-center gap-10 animate-in fade-in duration-700">
+                 <div className="w-24 h-24 bg-white/50 backdrop-blur-xl border border-gray-100 rounded-full flex items-center justify-center shadow-2xl relative group">
+                    <div className="absolute inset-0 bg-[#E1306C]/10 rounded-full animate-ping opacity-20" />
+                    <Lock size={40} className="text-[#E1306C] group-hover:scale-110 transition-transform" />
+                 </div>
+                 <div className="text-center space-y-4 max-w-lg px-6">
+                    <h3 className="text-3xl font-heritage font-bold text-[#0a0a0a]">Permission Required</h3>
+                    <p className="text-gray-500 font-medium italic leading-relaxed">
+                      {language === 'EN' 
+                        ? "Real-time search grounding requires a verified Project Key. Please select your key to synchronize the live registry." 
+                        : "තත්‍ය කාලීන තොරතුරු පිරික්සීම සඳහා තහවුරු කළ ව්‍යාපෘති යතුරක් අවශ්‍ය වේ. කරුණාකර ඔබගේ යතුර තෝරාගන්න."}
+                    </p>
+                    <div className="pt-6">
+                       <button 
+                         onClick={handleKeySelection}
+                         className="group relative px-12 py-5 bg-[#0a0a0a] text-white font-black text-xs uppercase tracking-[0.4em] rounded-full overflow-hidden transition-all hover:scale-110 hover:shadow-2xl active:scale-95 flex items-center gap-4 mx-auto"
+                       >
+                         <div className="absolute inset-0 bg-gradient-to-r from-[#E1306C] to-[#f09433] opacity-0 group-hover:opacity-100 transition-opacity" />
+                         <Key size={18} className="relative z-10 group-hover:rotate-12 transition-transform" />
+                         <span className="relative z-10">Select Project Key</span>
+                       </button>
+                       <p className="mt-6 text-[10px] font-bold text-gray-300 uppercase tracking-widest">
+                         Required for: <span className="text-[#E1306C]">Google Search Tool</span>
+                       </p>
                     </div>
                  </div>
               </div>

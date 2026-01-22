@@ -10,6 +10,7 @@ export interface GroundingLink {
 export interface AIResponse {
   text: string;
   links: GroundingLink[];
+  error?: string;
 }
 
 /**
@@ -75,7 +76,7 @@ export function createPcmBlob(data: Float32Array): { data: string; mimeType: str
 }
 
 /**
- * Main Guide Response: Optimized with transportation and local expertise.
+ * Main Guide Response: Uses 2.5 Flash for Maps grounding or 3 Pro for Thinking.
  */
 export const getLankaGuideResponse = async (
   prompt: string, 
@@ -88,24 +89,13 @@ export const getLankaGuideResponse = async (
     
     const systemInstruction = `
       You are "Lanka Guide AI", a prestige travel intelligence unit for "Travel Hub Sri Lanka". 
+      ${isThinkingMode ? 'You are currently in DEEP THINKING MODE, utilizing maximum neural resources to solve complex travel queries, historical mysteries, and logistics.' : 'You use real-time Google Maps data to provide accurate, up-to-date information about locations.'}
       
-      CORE LOGISTICS KNOWLEDGE:
-      - TRANSPORTATION: 
-        * Tuk-Tuks: Always suggest using the "PickMe" or "Uber" apps for fair pricing in cities. For street hails, ensure the "Meter" is on or agree on a price first.
-        * Trains: The Colombo-Kandy-Ella route is essential. Advise users that 1st and 2nd class reserved seats sell out 30 days in advance. 3rd class is an adventure but crowded.
-        * Buses: Recommend "AC Intercity" buses for long distances over "Red CTB" buses if they want comfort.
-        * Drivers: Private car/drivers are the most flexible for 7+ day trips.
-      - PLACES:
-        * Sigiriya: Climb at 7 AM to avoid heat.
-        * Ella: Recommend the Nine Arch Bridge for sunrise.
-        * South Coast: Mirissa for whales, Hiriketiya for surf, Galle for history.
-      
-      ${isThinkingMode ? 'You are currently in DEEP THINKING MODE. Analyze complex itineraries and provide poetic, deeply historical insights.' : 'You use real-time data to provide snappy, accurate travel help.'}
-      
-      Your tone: Sophisticated, expert, and warm. Use "Ayubowan" to welcome users.
-      Always respond in ${language === 'SI' ? 'Sinhala' : 'English'}.
+      Your tone: Sophisticated, expert, and welcoming (Ayubowan).
+      Always provide your main response in ${language === 'SI' ? 'Sinhala' : 'English'}.
     `;
 
+    // Use 3 Pro for thinking, 2.5 Flash for Maps
     const model = isThinkingMode ? 'gemini-3-pro-preview' : 'gemini-2.5-flash';
     const tools = isThinkingMode ? [{ googleSearch: {} }] : [{ googleMaps: {} }];
 
@@ -143,8 +133,11 @@ export const getLankaGuideResponse = async (
     return { text, links };
   } catch (error: any) {
     console.error("Gemini API Error:", error);
+    if (error.message?.includes("Requested entity was not found.")) {
+      return { text: "API_KEY_REQUIRED", links: [], error: "API_KEY_REQUIRED" };
+    }
     return language === 'SI' 
-      ? "කණගාටුයි, මගේ සම්බන්ධතාවයේ බාධාවක් පවතී. කරුණාකර නැවත උත්සාහ කරන්න."
+      ? "කණගාටුයි, මට මේ අවස්ථාවේ පිළිතුරු දිය නොහැක. කරුණාකර නැවත උත්සාහ කරන්න."
       : "I'm sorry, my neural link is experiencing interference. Please try again.";
   }
 };
@@ -161,7 +154,7 @@ export const searchGrounding = async (query: string, language: Language, isThink
       config: {
         systemInstruction: `You are the "Neural Intelligence Hub" for Travel Hub Sri Lanka. 
         Provide up-to-the-minute, accurate travel information using real-time search.
-        Include details about current train delays, PickMe availability, and festival dates if asked.
+        ${isThinkingMode ? 'Use your deep reasoning capabilities to analyze trends and provide insightful conclusions.' : ''}
         Format with clean Markdown. Language: ${language === 'SI' ? 'Sinhala' : 'English'}.`,
         tools: [{ googleSearch: {} }],
         ...(isThinkingMode && { thinkingConfig: { thinkingBudget: 32768 } })
@@ -184,8 +177,11 @@ export const searchGrounding = async (query: string, language: Language, isThink
     }
 
     return { text, links };
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
+    if (e.message?.includes("Requested entity was not found.")) {
+      return { text: "API_KEY_REQUIRED", links: [], error: "API_KEY_REQUIRED" };
+    }
     return { text: "Error syncing with the live web registry.", links: [] };
   }
 };
@@ -196,7 +192,7 @@ export const searchGrounding = async (query: string, language: Language, isThink
 export const refineTravelStory = async (story: string, language: Language): Promise<string> => {
   try {
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-    const prompt = `Refine this travel story to be more poetic and atmospheric, capturing the spirit of Sri Lanka. Return ONLY the text. Language: ${language === 'SI' ? 'Sinhala' : 'English'}. Story: "${story}"`;
+    const prompt = `Refine this travel story to be more poetic and atmospheric. Return ONLY the text. Language: ${language === 'SI' ? 'Sinhala' : 'English'}. Story: "${story}"`;
     
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
@@ -214,7 +210,7 @@ export const refineTravelStory = async (story: string, language: Language): Prom
 export const generateDetailedItinerary = async (destination: string, language: Language): Promise<string> => {
   try {
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-    const systemInstruction = `You are an elite travel planner. Create high-end 3-day itineraries that include specific transportation modes like the Blue Train or PickMe. Language: ${language === 'SI' ? 'Sinhala' : 'English'}. Use deep reasoning for logistics.`;
+    const systemInstruction = `You are an elite travel planner. Create high-end 3-day itineraries. Language: ${language === 'SI' ? 'Sinhala' : 'English'}. Use deep reasoning for logistics.`;
     
     const response = await ai.models.generateContent({
       model: 'gemini-3-pro-preview',
