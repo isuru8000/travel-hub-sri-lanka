@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Language } from '../types';
-import { Menu, X, Globe, LogIn, LogOut, ChevronRight, Sparkles, Compass, Search } from 'lucide-react';
+import { Menu, X, Globe, LogIn, LogOut, ChevronRight, Sparkles, Compass, Search, Mail } from 'lucide-react';
 import { User } from '../App.tsx';
 
 interface NavbarProps {
@@ -52,7 +52,7 @@ const Navbar: React.FC<NavbarProps> = ({
     { id: 'destinations', label: language === 'EN' ? 'destinations' : 'පිවිසුම්' },
     { id: 'search', label: language === 'EN' ? 'Live News' : 'සජීවී පුවත්', highlight: true },
     { id: 'vr-showcase', label: language === 'EN' ? '3D Spaces' : 'ත්‍රිමාණ', vipsOnly: true },
-    { id: 'memories', label: language === 'EN' ? 'memories' : 'මතකයන්' },
+    { id: 'contact', label: language === 'EN' ? 'contact' : 'සම්බන්ධ වන්න' },
   ];
 
   return (
