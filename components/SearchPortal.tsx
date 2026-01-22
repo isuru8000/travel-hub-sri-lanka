@@ -22,7 +22,8 @@ import {
   MapPin,
   Brain,
   Key,
-  Lock
+  Lock,
+  RefreshCw
 } from 'lucide-react';
 import { Language } from '../types.ts';
 import { searchGrounding, AIResponse } from '../services/gemini.ts';
@@ -59,6 +60,7 @@ const SearchPortal: React.FC<SearchPortalProps> = ({ language }) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isDeepMode, setIsDeepMode] = useState(true);
   const [needsApiKey, setNeedsApiKey] = useState(false);
+  const [isError, setIsError] = useState(false);
   const suggestionRef = useRef<HTMLDivElement>(null);
 
   const categories = [
@@ -73,6 +75,7 @@ const SearchPortal: React.FC<SearchPortalProps> = ({ language }) => {
     if (!searchQuery.trim() || isLoading) return;
 
     setIsLoading(true);
+    setIsError(false);
     setShowSuggestions(false);
     setResult(null);
     setNeedsApiKey(false);
@@ -94,17 +97,24 @@ const SearchPortal: React.FC<SearchPortalProps> = ({ language }) => {
       }
     }, isDeepMode ? 2000 : 1200);
 
-    const data = await searchGrounding(searchQuery, language, isDeepMode);
-    
-    clearInterval(sInterval);
-    
-    if (data.error === "API_KEY_REQUIRED") {
-      setNeedsApiKey(true);
-    } else {
-      setResult(data);
+    try {
+      const data = await searchGrounding(searchQuery, language, isDeepMode);
+      clearInterval(sInterval);
+      
+      if (data.error === "API_KEY_REQUIRED") {
+        setNeedsApiKey(true);
+      } else if (data.text.includes("Critical Error") || data.text.includes("Error syncing")) {
+        setIsError(true);
+      } else {
+        setResult(data);
+      }
+    } catch (e) {
+      clearInterval(sInterval);
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
+      setStatus('');
     }
-    setIsLoading(false);
-    setStatus('');
   };
 
   const handleKeySelection = async () => {
@@ -331,6 +341,25 @@ const SearchPortal: React.FC<SearchPortalProps> = ({ language }) => {
                        <p className="mt-6 text-[10px] font-bold text-gray-300 uppercase tracking-widest">
                          Required for: <span className="text-[#E1306C]">Google Search Tool</span>
                        </p>
+                    </div>
+                 </div>
+              </div>
+            ) : isError ? (
+              <div className="py-20 md:py-32 flex flex-col items-center gap-10 animate-in fade-in duration-700">
+                 <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center text-red-400">
+                    <AlertCircle size={40} />
+                 </div>
+                 <div className="text-center space-y-4 px-6">
+                    <h3 className="text-2xl font-heritage font-bold text-[#0a0a0a]">Registry Sync Failed</h3>
+                    <p className="text-gray-400 font-medium italic">We're having trouble reaching the live web registry. This might be due to regional restrictions or API limits.</p>
+                    <div className="pt-6">
+                       <button 
+                         onClick={() => handleSearch()}
+                         className="px-10 py-4 bg-[#0a0a0a] text-white rounded-full font-black text-[10px] uppercase tracking-[0.4em] flex items-center gap-3 mx-auto hover:scale-105 transition-transform"
+                       >
+                         <RefreshCw size={16} />
+                         Retry Sync
+                       </button>
                     </div>
                  </div>
               </div>

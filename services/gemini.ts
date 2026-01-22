@@ -133,7 +133,8 @@ export const getLankaGuideResponse = async (
     return { text, links };
   } catch (error: any) {
     console.error("Gemini API Error:", error);
-    if (error.message?.includes("Requested entity was not found.")) {
+    const errMsg = error.message || "";
+    if (errMsg.includes("Requested entity was not found.") || errMsg.includes("API key not found") || errMsg.includes("403")) {
       return { text: "API_KEY_REQUIRED", links: [], error: "API_KEY_REQUIRED" };
     }
     return language === 'SI' 
@@ -148,8 +149,10 @@ export const getLankaGuideResponse = async (
 export const searchGrounding = async (query: string, language: Language, isThinkingMode: boolean = true): Promise<AIResponse> => {
   try {
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    
+    // Using gemini-3-pro-preview for best compatibility with googleSearch tool
     const response = await ai.models.generateContent({
-      model: isThinkingMode ? "gemini-3-pro-preview" : "gemini-3-flash-preview",
+      model: "gemini-3-pro-preview",
       contents: query,
       config: {
         systemInstruction: `You are the "Neural Intelligence Hub" for Travel Hub Sri Lanka. 
@@ -157,7 +160,7 @@ export const searchGrounding = async (query: string, language: Language, isThink
         ${isThinkingMode ? 'Use your deep reasoning capabilities to analyze trends and provide insightful conclusions.' : ''}
         Format with clean Markdown. Language: ${language === 'SI' ? 'Sinhala' : 'English'}.`,
         tools: [{ googleSearch: {} }],
-        ...(isThinkingMode && { thinkingConfig: { thinkingBudget: 32768 } })
+        ...(isThinkingMode && { thinkingConfig: { thinkingBudget: 20000 } })
       },
     });
 
@@ -178,11 +181,23 @@ export const searchGrounding = async (query: string, language: Language, isThink
 
     return { text, links };
   } catch (e: any) {
-    console.error(e);
-    if (e.message?.includes("Requested entity was not found.")) {
+    console.error("Search Grounding Error:", e);
+    const errMsg = e.message || "";
+    if (errMsg.includes("Requested entity was not found.") || errMsg.includes("API key") || errMsg.includes("403")) {
       return { text: "API_KEY_REQUIRED", links: [], error: "API_KEY_REQUIRED" };
     }
-    return { text: "Error syncing with the live web registry.", links: [] };
+    
+    // Fallback: try standard generation without search tool if it fails
+    try {
+      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      const fallback = await ai.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: `Provide general information about: ${query}. (Note: Search registry offline, providing archival data.) Language: ${language === 'SI' ? 'Sinhala' : 'English'}`
+      });
+      return { text: fallback.text || "Neural connection intermittent.", links: [] };
+    } catch (inner) {
+      return { text: "Critical Error: Registry Manifold Offline.", links: [] };
+    }
   }
 };
 

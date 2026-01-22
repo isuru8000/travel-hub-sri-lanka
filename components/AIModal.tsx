@@ -1,10 +1,8 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Sparkles, X, Send, Compass, Loader2, History, Info, Square, Zap, Cpu, ShieldCheck, MapPin, ExternalLink, Brain, Globe, Bot, Navigation, Lock } from 'lucide-react';
-// Fix: Import Language from types.ts
+import { Sparkles, X, Send, Compass, Loader2, History, Info, Square, Zap, Cpu, ShieldCheck, MapPin, ExternalLink, Brain, Globe, Bot, Navigation, Lock, Orbit, Activity } from 'lucide-react';
 import { Language } from '../types.ts';
 import { UI_STRINGS } from '../constants.tsx';
-// Fix: Import AIResponse from services/gemini.ts where it is defined
 import { getLankaGuideResponse, GroundingLink, AIResponse } from '../services/gemini.ts';
 
 interface Message {
@@ -177,25 +175,26 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
   return (
     <>
       <div className="fixed bottom-6 right-6 z-[60] group/ai">
-        <div className="absolute inset-0 bg-[#E1306C] rounded-full animate-ping opacity-20 scale-150 group-hover/ai:opacity-0 transition-opacity"></div>
+        {/* Holographic Aura */}
+        <div className="absolute inset-[-12px] bg-gradient-to-tr from-[#E1306C] via-purple-500 to-blue-500 rounded-full animate-spin-slow opacity-20 blur-xl group-hover:opacity-40 transition-opacity"></div>
+        <div className="absolute inset-[-4px] border border-white/20 rounded-full animate-ping opacity-10"></div>
         
         <button 
           onClick={() => setIsOpen(true)}
-          className="relative p-5 bg-[#0a0a0a] text-white rounded-full shadow-[0_30px_70px_rgba(0,0,0,0.5)] hover:scale-110 active:scale-95 transition-all flex items-center gap-4 group overflow-hidden border border-white/20"
+          className="relative w-16 h-16 sm:w-20 sm:h-20 bg-[#0a0a0a] text-white rounded-full shadow-[0_30px_70px_rgba(0,0,0,0.5)] hover:scale-110 active:scale-95 transition-all flex items-center justify-center group overflow-hidden border border-white/20"
         >
-          <div className="relative z-10 flex items-center gap-4">
-            <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-700 whitespace-nowrap font-black text-[11px] tracking-[0.5em] uppercase pl-1">
-              LIVE GUIDE ACTIVE
-            </span>
-            <div className="relative w-12 h-12 flex items-center justify-center">
-              <div className="absolute inset-0 bg-white/20 blur-xl rounded-full scale-150 group-hover:bg-[#E1306C]/40 transition-all"></div>
-              <div className="absolute inset-0 story-ring p-[2px] rounded-full animate-spin-slow">
-                 <div className="w-full h-full bg-black rounded-full" />
-              </div>
-              <Compass size={28} className="text-white relative z-10 group-hover:rotate-[360deg] transition-transform duration-1000" />
-            </div>
+          {/* Inner Light Sweep */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-[#E1306C]/40 via-transparent to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+          
+          <div className="relative z-10 flex items-center justify-center">
+             <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/5 backdrop-blur-xl rounded-full border border-white/10 flex items-center justify-center shadow-2xl relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#E1306C]/20 to-transparent animate-pulse"></div>
+                <Navigation size={24} className="text-white relative z-10 group-hover:rotate-[360deg] transition-transform duration-1000 ease-in-out sm:w-7 sm:h-7" />
+             </div>
+             
+             {/* Orbital Ring */}
+             <div className="absolute inset-[-8px] border-2 border-dashed border-[#E1306C]/30 rounded-full animate-spin-slow"></div>
           </div>
-          <div className="absolute inset-0 bg-gradient-to-tr from-[#E1306C]/30 via-transparent to-white/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
         </button>
       </div>
 
@@ -204,21 +203,23 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
           
           <div className="relative shrink-0 p-10 bg-[#0a0a0a] text-white overflow-hidden">
             <div className="absolute inset-0 pattern-overlay opacity-10 pointer-events-none"></div>
-            <div className="absolute -top-32 -right-32 w-80 h-80 bg-[#E1306C]/30 blur-[120px] rounded-full pointer-events-none animate-pulse" />
+            <div className="absolute -top-32 -right-32 w-80 h-80 bg-gradient-to-br from-[#E1306C]/40 to-blue-600/30 blur-[120px] rounded-full pointer-events-none animate-pulse" />
             
             <div className="relative flex justify-between items-center">
               <div className="flex items-center gap-6">
                 <div className="relative">
-                   <div className="w-16 h-16 story-ring p-[2.5px] rounded-full shadow-3xl">
+                   <div className="w-16 h-16 rounded-full p-[2px] bg-gradient-to-tr from-[#E1306C] via-purple-500 to-blue-500 shadow-3xl animate-spin-slow">
                       <div className="bg-[#0a0a0a] w-full h-full rounded-full flex items-center justify-center overflow-hidden relative">
                          <div className="absolute inset-0 bg-gradient-to-tr from-[#E1306C]/20 to-transparent animate-pulse" />
-                         <Navigation 
-                           size={32} 
-                           className={`text-white transition-all duration-1000 ${
-                             (isLoading || isTyping) ? 'animate-talking-bot scale-110' : 'animate-floating-bot'
-                           }`} 
-                         />
                       </div>
+                   </div>
+                   <div className="absolute inset-0 flex items-center justify-center">
+                      <Navigation 
+                        size={32} 
+                        className={`text-white transition-all duration-1000 ${
+                          (isLoading || isTyping) ? 'animate-talking-bot scale-110' : 'animate-floating-bot'
+                        }`} 
+                      />
                    </div>
                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 border-4 border-[#0a0a0a] rounded-full shadow-2xl"></div>
                 </div>
@@ -235,7 +236,7 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
                      </button>
                   </div>
                   <div className="flex items-center gap-3 mt-2">
-                    <ShieldCheck size={12} className="text-[#E1306C]" />
+                    <Activity size={12} className="text-[#E1306C] animate-pulse" />
                     <span className="text-[10px] font-black text-gray-500 uppercase tracking-[0.4em]">
                       {(isLoading || isTyping) ? (isDeepMode ? 'REASONING...' : 'SYNCING...') : 'CORE STABLE'}
                     </span>
@@ -259,7 +260,7 @@ const AIModal: React.FC<AIModalProps> = ({ language }) => {
               <div className="flex flex-col items-center justify-center h-full text-center space-y-8 animate-in fade-in duration-700 p-6">
                 <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center shadow-inner relative group">
                   <div className="absolute inset-0 bg-[#E1306C]/10 rounded-full animate-ping opacity-20" />
-                  <Lock size={40} className="text-[#E1306C]" />
+                  <Lock size={32} className="text-[#E1306C]" />
                 </div>
                 <div className="space-y-3">
                   <h4 className="text-2xl font-heritage font-bold text-[#0a0a0a]">Uplink Restricted</h4>
