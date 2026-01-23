@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Language } from './types.ts';
 import Layout from './components/Layout.tsx';
-import Hero from '././components/Hero.tsx';
+import Hero from './components/Hero.tsx';
 import PopularHighlights from './components/PopularHighlights.tsx';
 import Destinations from './components/Destinations.tsx';
 import Foods from './components/Foods.tsx';

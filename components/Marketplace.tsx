@@ -366,11 +366,11 @@ const Marketplace: React.FC<MarketplaceProps> = ({ language }) => {
         <div className="relative group">
           <div className="absolute -inset-1 bg-gradient-to-r from-[#E1306C] via-purple-500 to-[#285AEB] rounded-[5rem] blur-[80px] opacity-10 group-hover:opacity-20 transition-opacity" />
           
-          <div className="relative bg-white/95 backdrop-blur-[60px] p-8 md:p-20 rounded-[5rem] shadow-[0_80px_180px_rgba(0,0,0,0.08)] border border-gray-50 space-y-20 overflow-hidden">
+          <div className="relative bg-white/95 backdrop-blur-[60px] p-8 md:p-20 rounded-[5rem] shadow-[0_80px_180px_rgba(0,0,0,0.08)] border border-gray-100 space-y-20 overflow-hidden">
             <div className="absolute top-0 right-0 p-32 opacity-[0.02] pointer-events-none text-gray-400 rotate-12"><Target size={400} /></div>
             
             {/* COMING SOON OVERLAY FOR FORM */}
-            <div className="absolute inset-0 z-50 bg-[#0a0a0a]/5 backdrop-blur-[2px] flex flex-col items-center justify-center text-center p-12 group/coming">
+            <div className="absolute inset-0 z-50 bg-[#0a0a0a]/5 backdrop-blur-[4px] flex flex-col items-center justify-center text-center p-12 group/coming">
                <div className="w-24 h-24 bg-white rounded-3xl shadow-2xl flex items-center justify-center text-[#E1306C] mb-8 animate-float border border-gray-100 group-hover/coming:rotate-12 transition-transform duration-700">
                   <Hammer size={48} />
                </div>
@@ -383,7 +383,7 @@ const Marketplace: React.FC<MarketplaceProps> = ({ language }) => {
                </div>
             </div>
 
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-10 border-b border-gray-50 pb-16 opacity-20 grayscale pointer-events-none">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-10 border-b border-gray-100 pb-16 opacity-20 grayscale pointer-events-none">
               <div className="space-y-6">
                 <div className="flex items-center gap-5 text-[#E1306C]">
                   <div className="w-14 h-14 rounded-2xl bg-[#E1306C]/5 flex items-center justify-center shadow-inner border border-[#E1306C]/10">
@@ -437,18 +437,22 @@ const Marketplace: React.FC<MarketplaceProps> = ({ language }) => {
                <Gem size={16} className="text-[#E1306C]" />
                Curated Registry 01
             </div>
-            <h3 className="text-5xl md:text-8xl font-heritage font-bold text-[#0a0a0a] tracking-tighter uppercase text-center">Elite <span className="italic insta-text-gradient">Registry.</span></h3>
+            <h3 className="text-5xl md:text-8xl font-heritage font-bold text-[#0a0a0a] tracking-tighter uppercase text-center">Elite <span className="italic insta-text-gradient">Hotels.</span></h3>
           </div>
 
-          {/* COMING SOON MASSAGE FOR HOTEL SECTION */}
+          {/* COMING SOON OVERLAY FOR HOTEL SECTION */}
           <div className="relative group">
-            <div className="absolute inset-x-0 -top-12 bottom-0 z-40 bg-white/40 backdrop-blur-[1px] pointer-events-none flex items-center justify-center overflow-hidden rounded-[5rem]">
-               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-12 py-6 bg-[#0a0a0a] text-white rounded-[2rem] font-black text-xs uppercase tracking-[0.8em] shadow-[0_40px_100px_rgba(0,0,0,0.4)] border border-white/10 animate-in zoom-in duration-1000">
-                  Expansion_Archive_Pending
+            <div className="absolute inset-x-0 -top-12 -bottom-12 z-40 bg-white/60 backdrop-blur-[6px] pointer-events-none flex flex-col items-center justify-center overflow-hidden rounded-[5rem] border border-gray-100/50 shadow-inner">
+               <div className="w-20 h-20 bg-[#0a0a0a] rounded-3xl flex items-center justify-center text-white mb-6 shadow-2xl animate-pulse">
+                  <BedDouble size={40} />
                </div>
+               <div className="px-12 py-6 bg-[#0a0a0a] text-white rounded-[2rem] font-black text-xs uppercase tracking-[0.8em] shadow-[0_40px_100px_rgba(0,0,0,0.4)] border border-white/10 animate-in zoom-in duration-1000">
+                  Hotel_Archive_Pending
+               </div>
+               <p className="mt-6 text-gray-500 font-heritage font-bold italic text-lg">"Registry expansion in progress..."</p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-16 opacity-40 grayscale blur-[2px]">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-16 opacity-30 grayscale blur-[4px]">
               {filteredHotels.map((hotel) => (
                 <div key={hotel.id} className="relative bg-white rounded-[4rem] overflow-hidden border border-gray-100 shadow-sm">
                   <div className="relative h-[480px] overflow-hidden">
@@ -472,7 +476,7 @@ const Marketplace: React.FC<MarketplaceProps> = ({ language }) => {
           </div>
         </div>
 
-        {/* --- FUTURE MODULES / COMING SOON --- */}
+        {/* --- FUTURE MODULES / PLACES COMING SOON --- */}
         <div className="space-y-20 py-20 border-t border-gray-50 relative overflow-hidden" id="luxury-expeditions">
            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-40 bg-blue-600/[0.03] blur-[150px] -rotate-6 pointer-events-none" />
 
@@ -482,10 +486,10 @@ const Marketplace: React.FC<MarketplaceProps> = ({ language }) => {
                  Expansion Registry 02 & 03
               </div>
               <h3 className="text-4xl md:text-8xl font-heritage font-bold text-[#0a0a0a] uppercase tracking-tighter leading-none">
-                 COMING <span className="insta-text-gradient italic">SOON.</span>
+                 COMING <span className="insta-text-gradient italic">PLACES.</span>
               </h3>
               <p className="text-gray-400 text-base md:text-xl font-light italic max-w-2xl mx-auto border-l-4 border-blue-100 pl-8 text-center">
-                 "Our architectural bureau is currently calibrating the next wave of high-fidelity travel modules. Prepare for full integration."
+                 "Our architectural bureau is currently calibrating the next wave of high-fidelity travel destinations and expeditions. Prepare for full integration."
               </p>
            </div>
 

@@ -95,7 +95,7 @@ const Navbar: React.FC<NavbarProps> = ({
       ]
     },
     { id: 'nexus', label: language === 'EN' ? 'NEXUS' : 'නෙක්සස්', highlight: true, icon: <Wallet size={10} /> },
-    { id: 'search', label: language === 'EN' ? 'Live' : 'සජීවී' },
+    { id: 'search', label: language === 'EN' ? 'News' : 'පුවත්' },
   ];
 
   return (
