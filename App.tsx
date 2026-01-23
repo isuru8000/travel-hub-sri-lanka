@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Language } from './types.ts';
 import Layout from './components/Layout.tsx';
-import Hero from './components/Hero.tsx';
+import Hero from '././components/Hero.tsx';
 import PopularHighlights from './components/PopularHighlights.tsx';
 import Destinations from './components/Destinations.tsx';
 import Foods from './components/Foods.tsx';
 import HeritageMusic from './components/HeritageMusic.tsx';
-// Fix: Removed space in 'Traditional Medicine' to correctly import the component
 import TraditionalMedicine from './components/TraditionalMedicine.tsx';
 import TeaCulture from './components/TeaCulture.tsx';
+import Hiking from './components/Hiking.tsx';
 import Phrasebook from './components/Phrasebook.tsx';
 import TravelEssentials from './components/TravelEssentials.tsx';
 import Festivals from './components/Festivals.tsx';
@@ -24,7 +24,10 @@ import HeritageCollection from './components/HeritageCollection.tsx';
 import SearchPortal from './components/SearchPortal.tsx';
 import LoginModal from './components/LoginModal.tsx';
 import Contact from './components/Contact.tsx';
-import ScrollControls from './components/ScrollControls.tsx'; // Import new component
+import Marketplace from './components/Marketplace.tsx';
+import NexusRewards from './components/NexusRewards.tsx'; // New
+import ScrollControls from './components/ScrollControls.tsx';
+import { supabase } from './lib/supabase.ts';
 import { Sparkles, Compass, ShieldCheck, Star, MapPin, ArrowRight, Database, Box, Layers, Zap } from 'lucide-react';
 
 export interface User {
@@ -33,7 +36,7 @@ export interface User {
   photo: string;
 }
 
-type View = 'home' | 'destinations' | 'about' | 'foods' | 'music' | 'interests' | 'medicine' | 'tea' | 'phrases' | 'essentials' | 'festivals' | 'memories' | 'quiz' | 'vr-experience' | 'vr-showcase' | 'search' | 'contact';
+type View = 'home' | 'destinations' | 'about' | 'foods' | 'music' | 'interests' | 'medicine' | 'tea' | 'hiking' | 'phrases' | 'essentials' | 'festivals' | 'memories' | 'quiz' | 'vr-experience' | 'vr-showcase' | 'search' | 'contact' | 'marketplace' | 'nexus';
 
 const App: React.FC = () => {
   const [language, setLanguage] = useState<Language>('EN');
@@ -47,12 +50,34 @@ const App: React.FC = () => {
     const handleScroll = () => setScrollPos(window.scrollY);
     window.addEventListener('scroll', handleScroll, { passive: true });
     
-    const timer = setTimeout(() => {
+    // Check for existing session on mount
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        setUser({
+          name: session.user.user_metadata.full_name || session.user.email?.split('@')[0] || 'Explorer',
+          email: session.user.email || '',
+          photo: session.user.user_metadata.avatar_url || `https://ui-avatars.com/api/?name=${session.user.email}`
+        });
+      }
       setIsInitialLoading(false);
-    }, 2500);
+    });
+
+    // Subscribe to auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        setUser({
+          name: session.user.user_metadata.full_name || session.user.email?.split('@')[0] || 'Explorer',
+          email: session.user.email || '',
+          photo: session.user.user_metadata.avatar_url || `https://ui-avatars.com/api/?name=${session.user.email}`
+        });
+        setIsLoginModalOpen(false); // Close login modal on successful sign-in
+      } else {
+        setUser(null);
+      }
+    });
 
     return () => {
-      clearTimeout(timer);
+      subscription.unsubscribe();
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
@@ -106,35 +131,18 @@ const App: React.FC = () => {
     setIsLoginModalOpen(true);
   };
 
-  const handleGoogleSuccess = (response: any) => {
-    try {
-      // Decode JWT token manually
-      const base64Url = response.credential.split('.')[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join(''));
-      
-      const payload = JSON.parse(jsonPayload);
-      
-      setUser({
-        name: payload.name,
-        email: payload.email,
-        photo: payload.picture
-      });
-      
-      setIsLoginModalOpen(false);
-    } catch (e) {
-      console.error("Authentication decoding failed", e);
-    }
-  };
-
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
     setUser(null);
   };
 
   const renderContent = () => {
     switch (view) {
+      case 'nexus':
+        // Passed setView to NexusRewards to enable navigation and resolve TypeScript error
+        return <NexusRewards language={language} user={user} onLogin={handleLogin} setView={setView} />;
+      case 'marketplace':
+        return <div className="pt-24"><Marketplace language={language} /></div>;
       case 'destinations':
         return <div className="pt-24"><Destinations language={language} /></div>;
       case 'foods':
@@ -145,6 +153,8 @@ const App: React.FC = () => {
         return <div className="pt-24"><TraditionalMedicine language={language} /></div>;
       case 'tea':
         return <div className="pt-24"><TeaCulture language={language} /></div>;
+      case 'hiking':
+        return <div className="pt-24"><Hiking language={language} setView={setView} /></div>;
       case 'phrases':
         return <div className="pt-24"><Phrasebook language={language} /></div>;
       case 'essentials':
@@ -417,7 +427,6 @@ const App: React.FC = () => {
         isOpen={isLoginModalOpen} 
         onClose={() => setIsLoginModalOpen(false)} 
         language={language}
-        onGoogleSuccess={handleGoogleSuccess}
       />
       
       <AIModal language={language} />

@@ -1,5 +1,7 @@
 
-import { Destination, Food, HeritageMusic, TraditionalMedicine, TeaExperience, Phrase, TravelEssential, Festival, Translation } from './types.ts';
+import { Destination, Food, HeritageMusic, TraditionalMedicine, TeaExperience, Phrase, TravelEssential, Festival, Translation, HikingSpot } from './types.ts';
+
+export const SUPABASE_KEY = 'sb_publishable_c8wPY71QFNsFJKcAEuD86w_pcqen0nv';
 
 export const UI_STRINGS: Translation = {
   heroTitle: {
@@ -86,6 +88,12 @@ export const CATEGORIES_DATA = [
     description: { EN: "Scale misty peaks and trek through lush green trails.", SI: "මීදුමෙන් වැසුණු කඳු මුදුන් සහ හරිත මාවත් ඔස්සේ ඇවිද යන්න." }
   },
   {
+    id: "foods",
+    icon: "Utensils",
+    title: { EN: "Food Heritage", SI: "ආහාර උරුමය" },
+    description: { EN: "Taste the history of Lanka through its ancient spices.", SI: "පැරණි කුළුබඩු රසයෙන් ලංකාවේ ඉතිහාසය අත්විඳින්න." }
+  },
+  {
     id: "essentials",
     icon: "Backpack",
     title: { EN: "Travel Guide", SI: "සංචාරක උපදෙස්" },
@@ -108,6 +116,109 @@ export const CATEGORIES_DATA = [
     icon: "MessageSquare",
     title: { EN: "Local Language", SI: "දේශීය භාෂාව" },
     description: { EN: "Learn basic Sinhala to connect with the locals.", SI: "දේශීය ජනතාව සමඟ සන්නිවේදනය කිරීමට සිංහල භාෂාව ඉගෙන ගන්න." }
+  }
+];
+
+export const HIKING_DATA: HikingSpot[] = [
+  {
+    id: "h-1",
+    name: { EN: "Adam’s Peak (Sri Pada)", SI: "ශ්‍රී පාදය" },
+    location: { EN: "Ratnapura", SI: "රත්නපුර" },
+    difficulty: "Hard",
+    duration: { EN: "5-7 Hours", SI: "පැය 5-7" },
+    elevation: "2,243m",
+    description: { EN: "A sacred pilgrimage site with 5,000+ steps, famous for the sunrise and the 'Ira Sewaya'.", SI: "පඩිපෙළ 5,000 කට වඩා වැඩි ප්‍රමාණයක් සහිත පූජනීය කඳු මුදුනකි. මෙහි හිරු උදාව ඉතා ප්‍රසිද්ධය." },
+    image: "https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    id: "h-2",
+    name: { EN: "Ella Rock", SI: "ඇල්ල රොක්" },
+    location: { EN: "Ella", SI: "ඇල්ල" },
+    difficulty: "Moderate",
+    duration: { EN: "3-4 Hours", SI: "පැය 3-4" },
+    elevation: "1,350m",
+    description: { EN: "A popular trek through rail tracks and tea estates offering panoramic views of Ella Gap.", SI: "දුම්රිය මාර්ග සහ තේ වතු හරහා දිවෙන, ඇල්ල කපොල්ලේ අලංකාර දසුන් නැරඹිය හැකි සංචාරයකි." },
+    image: "https://images.unsplash.com/photo-1578519050142-afb511e518de?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    id: "h-3",
+    name: { EN: "Knuckles Range", SI: "නකල්ස් කඳු පන්තිය" },
+    location: { EN: "Matale/Kandy", SI: "මාතලේ/මහනුවර" },
+    difficulty: "Hard",
+    duration: { EN: "1-3 Days", SI: "දින 1-3" },
+    elevation: "1,863m",
+    description: { EN: "A UNESCO World Heritage site with diverse climates and hidden waterfalls.", SI: "යුනෙස්කෝ ලෝක උරුමයක් වන මෙම කඳු පන්තිය ජෛව විවිධත්වයෙන් සහ සැඟවුණු දිය ඇලිවලින් පිරි ඉසව්වකි." },
+    image: "https://images.unsplash.com/photo-1580635849305-4399d586ac5c?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    id: "h-4",
+    name: { EN: "Horton Plains (World’s End)", SI: "හෝර්ටන් තැන්න (ලෝකාන්තය)" },
+    location: { EN: "Nuwara Eliya", SI: "නුවරඑළිය" },
+    difficulty: "Easy",
+    duration: { EN: "3-4 Hours", SI: "පැය 3-4" },
+    elevation: "2,100m",
+    description: { EN: "A high-altitude plateau trek ending at a 880m vertical drop known as World's End.", SI: "ලෝකාන්තය ලෙස හැඳින්වෙන අඩි 2,800 ක ප්‍රපාතයකින් අවසන් වන සානුමය ගමන් පථයකි." },
+    image: "https://images.unsplash.com/photo-1671432751719-d1a032c1a369?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    id: "h-5",
+    name: { EN: "Little Adam’s Peak", SI: "පුංචි ශ්‍රී පාදය" },
+    location: { EN: "Ella", SI: "ඇල්ල" },
+    difficulty: "Easy",
+    duration: { EN: "1-2 Hours", SI: "පැය 1-2" },
+    elevation: "1,141m",
+    description: { EN: "A family-friendly hike with stunning views of the surrounding mountains and Nine Arch Bridge.", SI: "පවුලේ සැමට යා හැකි, අවට කඳු පන්තිවල අලංකාර දසුන් සහිත පහසු සංචාරයකි." },
+    image: "https://images.unsplash.com/photo-1546708973-b339540b5162?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    id: "h-6",
+    name: { EN: "Pidurangala Rock", SI: "පිදුරංගල ගල" },
+    location: { EN: "Sigiriya", SI: "සීගිරිය" },
+    difficulty: "Moderate",
+    duration: { EN: "1-2 Hours", SI: "පැය 1-2" },
+    elevation: "200m (Base to Top)",
+    description: { EN: "Offers the most iconic view of Sigiriya Lion Rock, best climbed for sunrise or sunset.", SI: "සීගිරි පර්වතයේ අලංකාර දසුනක් නැරඹීමට හොඳම ස්ථානය මෙයයි. හිරු උදාව නැරඹීමට ඉතා සුදුසුයි." },
+    image: "https://images.unsplash.com/photo-1612862862126-865765df2ded?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    id: "h-7",
+    name: { EN: "Bible Rock (Bathalegala)", SI: "බතලේගල (බයිබල් රොක්)" },
+    location: { EN: "Kegalle", SI: "කෑගල්ල" },
+    difficulty: "Moderate",
+    duration: { EN: "2-3 Hours", SI: "පැය 2-3" },
+    elevation: "797m",
+    description: { EN: "A rock shaped like an open book, offering a 360-degree view of the central highlands.", SI: "විවෘත කළ පොතක හැඩය ඇති මෙම ගල මුදුනේ සිට මුළු කඳුකරයම අංශක 360 කින් නැරඹිය හැකිය." },
+    image: "https://images.unsplash.com/photo-1514483127413-f72f273478c3?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    id: "h-8",
+    name: { EN: "Hanthana Mountain Range", SI: "හන්තාන කඳු පන්තිය" },
+    location: { EN: "Kandy", SI: "මහනුවර" },
+    difficulty: "Moderate",
+    duration: { EN: "4-5 Hours", SI: "පැය 4-5" },
+    elevation: "1,150m",
+    description: { EN: "A range consisting of seven peaks, popular among students and nature lovers near Kandy.", SI: "කඳු මුදුන් හතකින් සමන්විත මෙම පන්තිය මහනුවර ආශ්‍රිතව පිහිටි ඉතා ජනප්‍රිය ගමන් මගකි." },
+    image: "https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    id: "h-9",
+    name: { EN: "Riverston (The Mini World's End)", SI: "රිවර්ස්ටන් (පුංචි ලෝකාන්තය)" },
+    location: { EN: "Matale", SI: "මාතලේ" },
+    difficulty: "Moderate",
+    duration: { EN: "2-3 Hours", SI: "පැය 2-3" },
+    elevation: "1,400m",
+    description: { EN: "Misty mountains and high winds characterize this trek, leading to a breathtaking cliff edge.", SI: "මීදුමෙන් වැසුණු කඳු සහ තද සුළඟක් පවතින මෙම ගමන අවසානයේ මනරම් ප්‍රපාතයක් හමුවේ." },
+    image: "https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    id: "h-10",
+    name: { EN: "Rose Quartz Mountain", SI: "නකල්ස් රෝස තිරුවානා කන්ද" },
+    location: { EN: "Dambulla", SI: "දඹුල්ල" },
+    difficulty: "Easy",
+    duration: { EN: "1-2 Hours", SI: "පැය 1-2" },
+    elevation: "180m",
+    description: { EN: "The largest rose quartz mountain in South Asia, part of the Jathika Namal Uyana.", SI: "දකුණු ආසියාවේ විශාලතම රෝස තිරුවානා කන්ද වන මෙය ජාතික නාමල් උයනේ කොටසකි." },
+    image: "https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?auto=format&fit=crop&w=800&q=80"
   }
 ];
 
@@ -191,7 +302,7 @@ export const FESTIVALS_DATA: Festival[] = [
     id: "deepavali",
     name: { EN: "Deepavali", SI: "දීපාවලි" },
     date: { EN: "October / November", SI: "ඔක්තෝබර් / නොවැම්බර්" },
-    description: { EN: "The Hindu Festival of Lights, where homes are adorned with lamps and colorful Kolam floor art.", SI: "හින්දු භක්තිකයන්ගේ ආලෝකයේ උත්සවයයි. නිවෙස් පහන්වලින් සහ අලංකාර කෝලම් රටාවලින් හැඩගන්වනු ලැබේ." },
+    description: { EN: "The Hindu Festival of Lights, where homes are adorned with xlamps and colorful Kolam floor art.", SI: "හින්දු භක්තිකයන්ගේ ආලෝකයේ උත්සවයයි. නිවෙස් පහන්වලින් සහ අලංකාර කෝලම් රටාවලින් හැඩගන්වනු ලැබේ." },
     image: "https://images.unsplash.com/photo-1588666309990-d68f08e3d4a6?auto=format&fit=crop&w=800&q=80",
     significance: { EN: "Symbolizes the spiritual victory of light over darkness and good over evil.", SI: "අඳුර පරදා ආලෝකයත්, අයහපත පරදා යහපතත් ජය ගැනීම මෙයින් සංකේතවත් වේ." }
   },
@@ -321,7 +432,7 @@ export const TEA_DATA: TeaExperience[] = [
   {
     id: "low-grown",
     name: { EN: "Low-Grown Varieties", SI: "පහතරට තේ" },
-    description: { EN: "Grown in warmer regions, producing a strong, dark infusion used for blends.", SI: "උණුසුම් ප්‍රදේශවල වැවෙන, තද වර්ණයෙන් යුත් ප්‍රබල තේ වර්ගයකි." },
+    description: { EN: "Grown in warmer regions, producing a strong, dark xinfusion used for blends.", SI: "උණුසුම් ප්‍රදේශවල වැවෙන, තද වර්ණයෙන් යුත් ප්‍රබල තේ වර්ගයකි." },
     image: "https://images.unsplash.com/photo-1627662168280-456073809214?auto=format&fit=crop&w=800&q=80",
     type: 'location',
     fact: { EN: "Mainly exported to the Middle East.", SI: "ප්‍රධාන වශයෙන් මැද පෙරදිගට අපනයනය කරයි." }
@@ -511,7 +622,7 @@ export const HERITAGE_MUSIC_DATA: HeritageMusic[] = [
     id: "dawula",
     type: 'instrument',
     name: { EN: "Dawula", SI: "දවුල" },
-    description: { EN: "The main drum of the Sabaragamuwa region. Played with a stick (Kaduppuwa) on one side and the hand on the other.", SI: "සබරගමුව පළාතට ආවේණික බෙරයයි. මෙය එක් පැත්තකින් කඩුප්පුව නම් කූරෙන්ද, අනෙක් පැත්තෙන් අතින්ද වාදනය කරයි." },
+    description: { EN: "The main drum of the Sabaragamuwa region. Played with a stick (Kaduppuwa) on one side and the hand on the other.", SI: "සබරගමුව පළාතට ආවේණික බෙරයයි. මෙය එක් පැත්තකින් kඩුප්පුව නම් කූරෙන්ද, අනෙක් පැත්තෙන් අතින්ද වාදනය කරයි." },
     image: "https://images.unsplash.com/photo-1514483127413-f72f273478c3?auto=format&fit=crop&w=800&q=80",
     origin: { EN: "Sabaragamuwa Province", SI: "සබරගමුව" },
     significance: { EN: "Used frequently in Buddhist temple ceremonies.", SI: "බෞද්ධ විහාරස්ථාන වල පවත්වන පුදපූජා සඳහා නිතර භාවිතා වේ." }
@@ -674,7 +785,7 @@ export const HERITAGE_MUSIC_DATA: HeritageMusic[] = [
     description: { EN: "Descriptive songs from the Kandyan dance tradition, each depicting a specific animal or legendary concept through song and motion.", SI: "උඩරට නර්තන සම්ප්‍රදායට අයත්, සතුන් හෝ වෙනත් විශේෂිත සංකල්ප වර්ණනා කරමින් ගැයෙන ගීතමය කවි වේ." },
     image: "https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=800&q=80",
     origin: { EN: "Kandyan Royal Courts", SI: "රාජ සභා ඇසුරෙන්" },
-    significance: { EN: "A bridge between classical poetry, music, and physical performance.", SI: "ශාස්ත්‍රීය කවිය, සංගීතය සහ නර්තනය අතර පවතින සබඳතාවය මෙයින් විදහා දක්වයි." },
+    significance: { EN: "A bridge between classical poetry, music, and physical performance.", SI: "ශාරීලික කවිය, සංගීතය සහ නර්තනය අතර පවතින සබඳතාවය මෙයින් විදහා දක්වයි." },
     sampleLyrics: {
       EN: "Behold the elephant, majestic and slow,\nWith a rhythm that only the ancient ones know,\nThrough jungle paths where the wild rivers flow,\nA dance of the gods in the temple's glow.",
       SI: "ගජගා වන්නම තාලෙට වයමින්\nඅලි ඇතුන්ගේ ගමන පෙන්වමින්\nපාරම්පරික රිද්මය රකිමින්\nඋඩරට නර්තන අසිරිය පතුරමින්"
@@ -809,7 +920,7 @@ export const DESTINATIONS: Destination[] = [
     videoUrl: "https://www.youtube.com/embed/5HlR9eS1X2M",
     history: {
       EN: "Trincomalee boasts the world's fifth-largest natural harbor. Its history is tied to the Koneswaram Temple, which was destroyed by the Portuguese in 1622 and later rebuilt. The area served as a critical strategic point for the British Royal Navy during World War II.",
-      SI: "ත්‍රිකුණාමලය එහි ලොව පස්වන විශාලතම ස්වභාවික වරාය සහ පෞරාණික කෝණේශ්වරම් කෝවිල සඳහා ප්‍රසිද්ධය. දෙවන ලෝක යුද්ධ සමයේදී මෙය බ්‍රිතාන්‍ය නාවික හමුදාවට ඉතා වැදගත් මධ්‍යස්ථානයක් විය."
+      SI: "ත්‍රිකුණාමලය එහි ලොව පස්වන විශාලතම ස්වරාජිත වරාය සහ පෞරාණික කෝණේශ්වරම් කෝවිල සඳහා ප්‍රසිද්ධය. දෙවන ලෝක යුද්ධ සමයේදී මෙය බ්‍රිතාන්‍ය නාවික හමුදාවට ඉතා වැදගත් මධ්‍යස්ථානයක් විය."
     },
     shortStory: {
       EN: "Deep blue harbors, golden sands, and ancient spiritual echoes from the cliffside temples.",

@@ -53,6 +53,7 @@ const CategoriesSection: React.FC<CategoriesSectionProps> = ({ language, setView
                    else if (cat.id === 'essentials') setView('essentials');
                    else if (cat.id === 'festivals') setView('festivals');
                    else if (cat.id === 'quiz') setView('quiz');
+                   else if (cat.id === 'hiking') setView('hiking');
                    else setView('destinations');
                 }}
                 className="group relative p-10 md:p-14 rounded-[3rem] md:rounded-[4rem] bg-white border border-gray-100 shadow-sm transition-all duration-700 cursor-pointer flex flex-col items-center text-center overflow-hidden lg:hover:shadow-[0_80px_150px_rgba(0,0,0,0.12)] lg:hover:-translate-y-8 active:scale-95 md:active:scale-100"

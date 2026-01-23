@@ -1,48 +1,43 @@
-
-import React, { useEffect, useRef } from 'react';
-import { X, Sparkles, ShieldCheck, Globe, LogIn } from 'lucide-react';
+import React, { useState } from 'react';
+import { X, Globe, Chrome, ShieldCheck } from 'lucide-react';
 import { Language } from '../types.ts';
-
-// Fix: Define the google property on the window interface to prevent TypeScript from reporting it as missing.
-declare global {
-  interface Window {
-    google: any;
-  }
-}
+import { supabase, GOOGLE_CLIENT_ID } from '../lib/supabase.ts';
 
 interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
   language: Language;
-  onGoogleSuccess: (response: any) => void;
 }
 
-const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, language, onGoogleSuccess }) => {
-  const googleBtnRef = useRef<HTMLDivElement>(null);
+const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, language }) => {
+  const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    // Fix: Access the google object from window, which is now recognized due to the global declaration.
-    if (isOpen && window.google) {
-      // Small delay to ensure the container is rendered
-      const timer = setTimeout(() => {
-        window.google.accounts.id.initialize({
-          client_id: "873836173004-9v4s989u6v7j4m3e8p5d5d8o8j6r5q9a.apps.googleusercontent.com", // Replace with your real Client ID
-          callback: onGoogleSuccess,
-        });
-
-        if (googleBtnRef.current) {
-          window.google.accounts.id.renderButton(googleBtnRef.current, {
-            theme: "outline",
-            size: "large",
-            width: googleBtnRef.current.offsetWidth,
-            text: language === 'EN' ? "signin_with" : "continue_with",
-            shape: "pill",
-          });
+  const handleGoogleLogin = async () => {
+    setIsLoading(true);
+    try {
+      /**
+       * Supabase OAuth flow handles the redirect to Google and back to your site.
+       * redirectTo ensures the user is sent back to the travel hub after auth.
+       * Note: Ensure GOOGLE_CLIENT_ID is configured in your Supabase Dashboard
+       * under Auth > Providers > Google.
+       */
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'select_account',
+          },
         }
-      }, 100);
-      return () => clearTimeout(timer);
+      });
+      
+      if (error) throw error;
+    } catch (error: any) {
+      console.error("Authentication error:", error.message);
+      setIsLoading(false);
     }
-  }, [isOpen, language, onGoogleSuccess]);
+  };
 
   if (!isOpen) return null;
 
@@ -80,20 +75,29 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, language, onGo
           </div>
 
           <div className="space-y-6">
-            <div ref={googleBtnRef} className="w-full min-h-[44px]" />
+            <button
+              onClick={handleGoogleLogin}
+              disabled={isLoading}
+              className="group w-full flex items-center justify-center gap-4 py-5 px-6 bg-[#0a0a0a] text-white rounded-full font-black text-xs uppercase tracking-[0.2em] transition-all hover:shadow-[0_20px_40px_rgba(225,48,108,0.3)] active:scale-95 disabled:opacity-50"
+            >
+              {isLoading ? (
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              ) : (
+                <Chrome size={20} className="text-white group-hover:rotate-12 transition-transform" />
+              )}
+              {language === 'EN' ? "Continue with Google" : "ගූගල් සමඟ සම්බන්ධ වන්න"}
+            </button>
             
             <div className="relative flex items-center justify-center">
               <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-100"></div></div>
               <span className="relative px-4 bg-white text-[10px] font-black text-gray-300 uppercase tracking-widest">Secure Handshake</span>
             </div>
 
-            <div className="grid grid-cols-1 gap-4">
-              <div className="flex items-center gap-4 p-4 rounded-2xl bg-gray-50 border border-gray-100">
-                <ShieldCheck size={20} className="text-green-500" />
-                <div className="text-left">
-                  <p className="text-[10px] font-black uppercase text-[#0a0a0a]">Verified Protocol</p>
-                  <p className="text-[9px] font-bold text-gray-400 uppercase">SSL Encryption Active</p>
-                </div>
+            <div className="flex items-center gap-4 p-5 rounded-2xl bg-gray-50 border border-gray-100">
+              <ShieldCheck size={20} className="text-green-500" />
+              <div className="text-left">
+                <p className="text-[10px] font-black uppercase text-[#0a0a0a]">Verified Protocol</p>
+                <p className="text-[9px] font-bold text-gray-400 uppercase">Supabase Auth Integrated</p>
               </div>
             </div>
           </div>

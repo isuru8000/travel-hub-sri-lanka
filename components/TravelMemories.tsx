@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Language, Memory } from '../types.ts';
 import { 
@@ -94,7 +93,6 @@ const INITIAL_MEMORIES: Memory[] = [
   }
 ];
 
-// Re-constructing the TravelMemories component since it was truncated in the source.
 const TravelMemories: React.FC<TravelMemoriesProps> = ({ language, user, onLogin }) => {
   const [memories, setMemories] = useState<Memory[]>(INITIAL_MEMORIES);
   const [showForm, setShowForm] = useState(false);
@@ -128,7 +126,6 @@ const TravelMemories: React.FC<TravelMemoriesProps> = ({ language, user, onLogin
     
     setIsSubmitting(true);
     
-    // Simulate API delay
     setTimeout(() => {
       const memory: Memory = {
         id: Date.now().toString(),

@@ -1,4 +1,3 @@
-
 import { GoogleGenAI } from "@google/genai";
 import { Language } from "../types.ts";
 
@@ -99,9 +98,10 @@ export const getLankaGuideResponse = async (
     const model = isThinkingMode ? 'gemini-3-pro-preview' : 'gemini-2.5-flash';
     const tools = isThinkingMode ? [{ googleSearch: {} }] : [{ googleMaps: {} }];
 
+    // Fix: Simplified contents parameter to follow SDK guidelines
     const response = await ai.models.generateContent({
       model,
-      contents: [{ role: 'user', parts: [{ text: prompt }] }],
+      contents: prompt,
       config: {
         systemInstruction,
         tools,
@@ -209,9 +209,10 @@ export const refineTravelStory = async (story: string, language: Language): Prom
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     const prompt = `Refine this travel story to be more poetic and atmospheric. Return ONLY the text. Language: ${language === 'SI' ? 'Sinhala' : 'English'}. Story: "${story}"`;
     
+    // Fix: Simplified contents parameter to follow SDK guidelines
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
-      contents: [{ role: 'user', parts: [{ text: prompt }] }],
+      contents: prompt,
     });
     return response.text || story;
   } catch (e) {
@@ -227,9 +228,10 @@ export const generateDetailedItinerary = async (destination: string, language: L
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     const systemInstruction = `You are an elite travel planner. Create high-end 3-day itineraries. Language: ${language === 'SI' ? 'Sinhala' : 'English'}. Use deep reasoning for logistics.`;
     
+    // Fix: Simplified contents parameter to follow SDK guidelines
     const response = await ai.models.generateContent({
       model: 'gemini-3-pro-preview',
-      contents: [{ role: 'user', parts: [{ text: `Create a detailed 3-day immersive itinerary for ${destination}, Sri Lanka.` }] }],
+      contents: `Create a detailed 3-day immersive itinerary for ${destination}, Sri Lanka.`,
       config: { 
         systemInstruction,
         thinkingConfig: { thinkingBudget: 32768 } 

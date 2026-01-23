@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useMemo } from 'react';
 import { Language } from '../types.ts';
 import { UI_STRINGS } from '../constants.tsx';
@@ -55,13 +54,35 @@ const Hero: React.FC<HeroProps> = ({ language, setView }) => {
         
         {/* A. Atmospheric Background Image Layer */}
         <div 
-          className="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out brightness-[0.4] contrast-[1.2]" 
+          className="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out brightness-[0.45] contrast-[1.1]" 
           style={{ 
-            backgroundImage: `url('https://images.unsplash.com/photo-1562089432-b9faf2227db9?q=80&w=2400&auto=format&fit=crop')`,
-            transform: `scale(${1.1 + scrollPos / 5000}) translateZ(-200px)`,
+            backgroundImage: `url('https://plus.unsplash.com/premium_photo-1661954483883-edd65eac3577?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')`,
+            transform: `scale(${1.1 + scrollPos / 4000}) translateZ(-200px)`,
           }}
         >
-          <div className="absolute inset-0 bg-gradient-to-b from-[#020202] via-transparent to-[#020202]" />
+          {/* Main Cinematic Gradient Overlays */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#020202] via-transparent to-[#020202] opacity-80" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#020202] via-transparent to-transparent opacity-40" />
+        </div>
+
+        {/* NEW: Volumetric God Rays / Lighting effects */}
+        <div className="absolute inset-0 overflow-hidden">
+          {/* Top-Left Soft Warm Light Leak */}
+          <div 
+            className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] rounded-full opacity-20 blur-[120px] transition-transform duration-[3000ms] animate-pulse-slow"
+            style={{ 
+              background: 'radial-gradient(circle, #fdf497 0%, transparent 70%)',
+              transform: `translate3d(${mousePos.x * 40}px, ${mousePos.y * 40}px, 0)`
+            }}
+          />
+          
+          {/* Top Edge Beam */}
+          <div className="absolute top-0 left-0 w-full h-[30%] bg-gradient-to-b from-[#E1306C]/10 to-transparent opacity-40" />
+          
+          {/* God Rays Layer */}
+          <div className="absolute inset-0 opacity-15 mix-blend-screen overflow-hidden">
+            <div className="absolute top-[-50%] left-[-10%] w-[120%] h-[200%] rotate-[25deg] bg-[repeating-linear-gradient(90deg,transparent,transparent_40px,rgba(255,255,255,0.1)_41px,rgba(255,255,255,0.1)_45px,transparent_46px)] blur-[10px]" />
+          </div>
         </div>
 
         {/* B. 3D Spatial Grid Floor */}
@@ -99,11 +120,11 @@ const Hero: React.FC<HeroProps> = ({ language, setView }) => {
           ))}
         </div>
 
-        {/* D. Moving Light Beams / Volumetric Gradients */}
+        {/* D. Moving High-Intensity Searchlight (Follows Mouse) */}
         <div 
-          className="absolute inset-0 opacity-40 transition-opacity duration-1000"
+          className="absolute inset-0 opacity-60 transition-opacity duration-1000 mix-blend-overlay"
           style={{
-            background: `radial-gradient(circle at ${50 + mousePos.x * 20}% ${50 + mousePos.y * 20}%, #E1306C15 0%, transparent 40%)`,
+            background: `radial-gradient(circle at ${50 + mousePos.x * 30}% ${50 + mousePos.y * 30}%, rgba(225,48,108,0.3) 0%, transparent 35%)`,
           }}
         />
         
@@ -137,7 +158,7 @@ const Hero: React.FC<HeroProps> = ({ language, setView }) => {
             {language === 'EN' ? (
               <>
                 <span className="block opacity-95">Discover the</span>
-                <span className="block italic insta-text-gradient font-medium lowercase -mt-2">soul of Lanka</span>
+                <span className="block italic insta-text-gradient font-medium lowercase -mt-2">sri lanka</span>
               </>
             ) : (
               <>

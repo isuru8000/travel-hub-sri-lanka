@@ -68,6 +68,17 @@ export interface TeaExperience {
   fact: { EN: string; SI: string };
 }
 
+export interface HikingSpot {
+  id: string;
+  name: { EN: string; SI: string };
+  location: { EN: string; SI: string };
+  difficulty: 'Easy' | 'Moderate' | 'Challenging' | 'Hard';
+  duration: { EN: string; SI: string };
+  description: { EN: string; SI: string };
+  image: string;
+  elevation: string;
+}
+
 export interface Phrase {
   id: string;
   english: string;
