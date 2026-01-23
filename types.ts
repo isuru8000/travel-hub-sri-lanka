@@ -1,6 +1,12 @@
 
 export type Language = 'EN' | 'SI';
 
+export interface User {
+  name: string;
+  email: string;
+  photo: string;
+}
+
 export interface Destination {
   id: string;
   name: { EN: string; SI: string };

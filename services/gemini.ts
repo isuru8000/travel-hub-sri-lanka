@@ -1,3 +1,4 @@
+
 import { GoogleGenAI } from "@google/genai";
 import { Language } from "../types.ts";
 
@@ -16,13 +17,19 @@ export interface AIResponse {
  * Decodes a base64 string into a Uint8Array.
  */
 export function decode(base64: string): Uint8Array {
-  const binaryString = atob(base64);
-  const len = binaryString.length;
-  const bytes = new Uint8Array(len);
-  for (let i = 0; i < len; i++) {
-    bytes[i] = binaryString.charCodeAt(i);
+  if (!base64 || typeof base64 !== 'string') return new Uint8Array(0);
+  try {
+    const binaryString = atob(base64);
+    const len = binaryString.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    return bytes;
+  } catch (e) {
+    console.error("Failed to decode base64 string", e);
+    return new Uint8Array(0);
   }
-  return bytes;
 }
 
 /**
@@ -84,6 +91,7 @@ export const getLankaGuideResponse = async (
   isThinkingMode: boolean = false
 ): Promise<AIResponse | string> => {
   try {
+    // Fix: Initialization now uses process.env.API_KEY directly as required by standard guidelines
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     
     const systemInstruction = `
@@ -98,7 +106,6 @@ export const getLankaGuideResponse = async (
     const model = isThinkingMode ? 'gemini-3-pro-preview' : 'gemini-2.5-flash';
     const tools = isThinkingMode ? [{ googleSearch: {} }] : [{ googleMaps: {} }];
 
-    // Fix: Simplified contents parameter to follow SDK guidelines
     const response = await ai.models.generateContent({
       model,
       contents: prompt,
@@ -148,9 +155,9 @@ export const getLankaGuideResponse = async (
  */
 export const searchGrounding = async (query: string, language: Language, isThinkingMode: boolean = true): Promise<AIResponse> => {
   try {
+    // Fix: Initialization now uses process.env.API_KEY directly as required by standard guidelines
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     
-    // Using gemini-3-pro-preview for best compatibility with googleSearch tool
     const response = await ai.models.generateContent({
       model: "gemini-3-pro-preview",
       contents: query,
@@ -189,6 +196,7 @@ export const searchGrounding = async (query: string, language: Language, isThink
     
     // Fallback: try standard generation without search tool if it fails
     try {
+      // Fix: Initialization now uses process.env.API_KEY directly as required by standard guidelines
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
       const fallback = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
@@ -206,10 +214,10 @@ export const searchGrounding = async (query: string, language: Language, isThink
  */
 export const refineTravelStory = async (story: string, language: Language): Promise<string> => {
   try {
+    // Fix: Initialization now uses process.env.API_KEY directly as required by standard guidelines
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     const prompt = `Refine this travel story to be more poetic and atmospheric. Return ONLY the text. Language: ${language === 'SI' ? 'Sinhala' : 'English'}. Story: "${story}"`;
     
-    // Fix: Simplified contents parameter to follow SDK guidelines
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
       contents: prompt,
@@ -225,10 +233,10 @@ export const refineTravelStory = async (story: string, language: Language): Prom
  */
 export const generateDetailedItinerary = async (destination: string, language: Language): Promise<string> => {
   try {
+    // Fix: Initialization now uses process.env.API_KEY directly as required by standard guidelines
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     const systemInstruction = `You are an elite travel planner. Create high-end 3-day itineraries. Language: ${language === 'SI' ? 'Sinhala' : 'English'}. Use deep reasoning for logistics.`;
     
-    // Fix: Simplified contents parameter to follow SDK guidelines
     const response = await ai.models.generateContent({
       model: 'gemini-3-pro-preview',
       contents: `Create a detailed 3-day immersive itinerary for ${destination}, Sri Lanka.`,

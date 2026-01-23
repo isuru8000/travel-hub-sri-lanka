@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect, useMemo } from 'react';
-import { Language } from './types.ts';
+import { Language, User } from './types.ts';
 import Layout from './components/Layout.tsx';
 import Hero from './components/Hero.tsx';
 import PopularHighlights from './components/PopularHighlights.tsx';
@@ -13,6 +14,7 @@ import Phrasebook from './components/Phrasebook.tsx';
 import TravelEssentials from './components/TravelEssentials.tsx';
 import Festivals from './components/Festivals.tsx';
 import CategoriesSection from './components/CategoriesSection.tsx';
+import HeritageHub from './components/HeritageHub.tsx';
 import StorySection from './components/StorySection.tsx';
 import AIModal from './components/AIModal.tsx';
 import LoadingScreen from './components/LoadingScreen.tsx';
@@ -25,44 +27,46 @@ import SearchPortal from './components/SearchPortal.tsx';
 import LoginModal from './components/LoginModal.tsx';
 import Contact from './components/Contact.tsx';
 import Marketplace from './components/Marketplace.tsx';
-import NexusRewards from './components/NexusRewards.tsx'; // New
+import NexusRewards from './components/NexusRewards.tsx';
 import ScrollControls from './components/ScrollControls.tsx';
+import TravelStore from './components/TravelStore.tsx';
 import { supabase } from './lib/supabase.ts';
 import { Sparkles, Compass, ShieldCheck, Star, MapPin, ArrowRight, Database, Box, Layers, Zap } from 'lucide-react';
 
-export interface User {
-  name: string;
-  email: string;
-  photo: string;
-}
-
-type View = 'home' | 'destinations' | 'about' | 'foods' | 'music' | 'interests' | 'medicine' | 'tea' | 'hiking' | 'phrases' | 'essentials' | 'festivals' | 'memories' | 'quiz' | 'vr-experience' | 'vr-showcase' | 'search' | 'contact' | 'marketplace' | 'nexus';
+type View = 'home' | 'destinations' | 'about' | 'foods' | 'music' | 'interests' | 'medicine' | 'tea' | 'hiking' | 'phrases' | 'essentials' | 'festivals' | 'memories' | 'quiz' | 'vr-experience' | 'vr-showcase' | 'search' | 'contact' | 'marketplace' | 'community' | 'shop';
 
 const App: React.FC = () => {
   const [language, setLanguage] = useState<Language>('EN');
   const [view, setView] = useState<View>('home');
   const [user, setUser] = useState<User | null>(null);
-  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [isDataReady, setIsDataReady] = useState(false);
+  const [isSiteEntered, setIsSiteEntered] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [scrollPos, setScrollPos] = useState(0);
+
+  // Global scroll-to-top on view change
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }, [view]);
 
   useEffect(() => {
     const handleScroll = () => setScrollPos(window.scrollY);
     window.addEventListener('scroll', handleScroll, { passive: true });
     
-    // Check for existing session on mount
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        setUser({
-          name: session.user.user_metadata.full_name || session.user.email?.split('@')[0] || 'Explorer',
-          email: session.user.email || '',
-          photo: session.user.user_metadata.avatar_url || `https://ui-avatars.com/api/?name=${session.user.email}`
+    // Simulate background sync check + user auth
+    const initTimer = setTimeout(() => {
+        supabase.auth.getSession().then(({ data: { session } }) => {
+          if (session?.user) {
+            setUser({
+              name: session.user.user_metadata.full_name || session.user.email?.split('@')[0] || 'Explorer',
+              email: session.user.email || '',
+              photo: session.user.user_metadata.avatar_url || `https://ui-avatars.com/api/?name=${session.user.email}`
+            });
+          }
+          setIsDataReady(true);
         });
-      }
-      setIsInitialLoading(false);
-    });
+    }, 3000); // Minimum 3s for cinematic effect
 
-    // Subscribe to auth state changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session?.user) {
         setUser({
@@ -70,7 +74,7 @@ const App: React.FC = () => {
           email: session.user.email || '',
           photo: session.user.user_metadata.avatar_url || `https://ui-avatars.com/api/?name=${session.user.email}`
         });
-        setIsLoginModalOpen(false); // Close login modal on successful sign-in
+        setIsLoginModalOpen(false);
       } else {
         setUser(null);
       }
@@ -79,10 +83,10 @@ const App: React.FC = () => {
     return () => {
       subscription.unsubscribe();
       window.removeEventListener('scroll', handleScroll);
+      clearTimeout(initTimer);
     };
   }, []);
 
-  // Spatial Archive Nodes (Small Particles)
   const archiveNodes = useMemo(() => {
     return Array.from({ length: 40 }).map((_, i) => ({
       id: i,
@@ -94,7 +98,6 @@ const App: React.FC = () => {
     }));
   }, []);
 
-  // 3D Spatial Artifacts (Rotating Wireframes)
   const spatialArtifacts = useMemo(() => {
     return Array.from({ length: 12 }).map((_, i) => ({
       id: i,
@@ -109,7 +112,6 @@ const App: React.FC = () => {
     }));
   }, []);
 
-  // Large Slow-Moving 3D Spheres for White Areas
   const floatingSpheres = useMemo(() => {
     return Array.from({ length: 6 }).map((_, i) => ({
       id: i,
@@ -123,8 +125,12 @@ const App: React.FC = () => {
     }));
   }, []);
 
-  if (isInitialLoading) {
-    return <LoadingScreen />;
+  const handleEnterSite = () => {
+    setIsSiteEntered(true);
+  };
+
+  if (!isSiteEntered) {
+    return <LoadingScreen onEnter={handleEnterSite} language={language} />;
   }
 
   const handleLogin = () => {
@@ -138,11 +144,12 @@ const App: React.FC = () => {
 
   const renderContent = () => {
     switch (view) {
-      case 'nexus':
-        // Passed setView to NexusRewards to enable navigation and resolve TypeScript error
+      case 'community':
         return <NexusRewards language={language} user={user} onLogin={handleLogin} setView={setView} />;
       case 'marketplace':
         return <div className="pt-24"><Marketplace language={language} /></div>;
+      case 'shop':
+        return <div className="pt-24"><TravelStore language={language} /></div>;
       case 'destinations':
         return <div className="pt-24"><Destinations language={language} /></div>;
       case 'foods':
@@ -179,10 +186,7 @@ const App: React.FC = () => {
       default:
         return (
           <div className="relative">
-            {/* 3D Global Atmospheric Layer */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden z-0" style={{ perspective: '2000px' }}>
-              
-              {/* Archive Grid Lines */}
               <div 
                 className="absolute inset-0 opacity-[0.02]" 
                 style={{ 
@@ -192,8 +196,6 @@ const App: React.FC = () => {
                   transformOrigin: 'top'
                 }} 
               />
-
-              {/* 3D Spatial Artifacts - Slow Rotating Prisms */}
               {spatialArtifacts.map(art => (
                 <div 
                   key={art.id}
@@ -222,8 +224,6 @@ const App: React.FC = () => {
                   </div>
                 </div>
               ))}
-
-              {/* Large Slow Moving 3D Balls (Spheres) - Start after hero height */}
               {floatingSpheres.map(sphere => (
                 <div 
                   key={sphere.id}
@@ -243,8 +243,6 @@ const App: React.FC = () => {
                   }}
                 />
               ))}
-
-              {/* Small Archive Particles */}
               {archiveNodes.map(node => (
                 <div 
                   key={node.id}
@@ -261,11 +259,8 @@ const App: React.FC = () => {
                 />
               ))}
             </div>
-
             <Hero language={language} setView={setView} />
-            
             <div className="relative z-10">
-              {/* Trust Banner */}
               <div className="py-8 md:py-16 bg-white/60 backdrop-blur-xl border-y border-gray-50 overflow-hidden relative">
                  <div className="absolute inset-0 bg-gradient-to-r from-white via-transparent to-white z-10 pointer-events-none" />
                  <div className="max-w-full flex whitespace-nowrap animate-marquee">
@@ -279,12 +274,11 @@ const App: React.FC = () => {
                     ))}
                  </div>
               </div>
-
               <PopularHighlights language={language} setView={setView} />
-
+              <div id="heritage-hub">
+                <HeritageHub language={language} setView={setView} />
+              </div>
               <HeritageCollection language={language} />
-
-              {/* Cinematic 3D Quiz CTA */}
               <div className="py-20 md:py-32 px-4 relative overflow-hidden group border-y border-gray-50 bg-transparent" style={{ perspective: '3000px' }}>
                 <div className="max-w-7xl mx-auto relative z-10 flex flex-col md:flex-row items-center gap-16 md:gap-24">
                    <div className="w-full md:w-1/2 space-y-8 md:space-y-12 text-center md:text-left transform md:translateZ(100px)">
@@ -309,7 +303,7 @@ const App: React.FC = () => {
                      </button>
                    </div>
                    <div className="hidden lg:block w-1/2 relative" style={{ transformStyle: 'preserve-3d' }}>
-                      <div className="absolute -inset-40 bg-[#E1306C]/5 rounded-full blur-[200px] animate-pulse"></div>
+                      <div className="absolute -inset-40 bg-[#E1306C]/5 rounded-full blur-[2000px] animate-pulse"></div>
                       <div className="relative rounded-[4rem] overflow-hidden shadow-[0_120px_220px_rgba(0,0,0,0.25)] border-4 border-white transform rotate-y-[-15deg] group-hover:rotate-y-0 transition-all duration-1000 group-hover:scale-105">
                          <img src="https://images.unsplash.com/photo-1580794749460-76f97b7180d8?auto=format&fit=crop&w=1200&q=80" className="w-full grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-1000" alt="Quiz" />
                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
@@ -317,8 +311,6 @@ const App: React.FC = () => {
                    </div>
                 </div>
               </div>
-
-              {/* Travel Concierge Section */}
               <section className="py-20 md:py-32 bg-transparent" style={{ perspective: '3000px' }}>
                 <div className="max-w-7xl mx-auto px-6">
                   <div className="bg-white/60 backdrop-blur-3xl rounded-[3rem] md:rounded-[8rem] p-8 md:p-24 shadow-[0_60px_120px_rgba(0,0,0,0.05)] border border-white relative overflow-hidden group transition-transform duration-1000 lg:hover:translateZ(50px)">
@@ -349,7 +341,6 @@ const App: React.FC = () => {
                            </div>
                         </button>
                       </div>
-                      
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-10" style={{ transformStyle: 'preserve-3d' }}>
                          <div className="space-y-8 md:space-y-10">
                             <div className="p-8 md:p-10 bg-white/80 backdrop-blur-md rounded-[2rem] md:rounded-[3rem] shadow-2xl border border-white space-y-6 md:space-y-8 transition-all lg:hover:-translate-y-6 lg:hover:rotate-y-12 lg:hover:shadow-[0_80px_150px_rgba(0,0,0,0.15)] group/card">
@@ -375,12 +366,8 @@ const App: React.FC = () => {
                   </div>
                 </div>
               </section>
-
               <CategoriesSection language={language} setView={setView} />
-              
               <StorySection language={language} setView={setView} />
-              
-              {/* Stats - 3D Floating Holograms */}
               <section className="py-20 md:py-32 px-4 bg-transparent relative overflow-hidden" style={{ perspective: '2000px' }}>
                 <div className="max-w-7xl mx-auto relative z-10">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-20 md:gap-32">
@@ -419,20 +406,17 @@ const App: React.FC = () => {
 
   return (
     <Layout language={language} setLanguage={setLanguage} setView={(v: any) => setView(v)} currentView={view} user={user} onLogin={handleLogin} onLogout={handleLogout}>
-      <div className="overflow-x-hidden">
+      <div className={`overflow-x-hidden transition-all duration-[2000ms] ${isSiteEntered ? 'scale-100 blur-0 opacity-100' : 'scale-[0.98] blur-lg opacity-0'}`}>
         {renderContent()}
       </div>
-      
+      {!isSiteEntered && <LoadingScreen onEnter={handleEnterSite} language={language} />}
       <LoginModal 
         isOpen={isLoginModalOpen} 
         onClose={() => setIsLoginModalOpen(false)} 
         language={language}
       />
-      
       <AIModal language={language} />
-
-      <ScrollControls /> { /* Integrated Scroll HUD */ }
-      
+      <ScrollControls />
       <style dangerouslySetInnerHTML={{ __html: `
         @keyframes marquee {
           0% { transform: translateX(0); }

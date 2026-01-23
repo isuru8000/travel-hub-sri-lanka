@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Language, Memory } from '../types.ts';
+import { Language, Memory, User } from '../types.ts';
 import { 
   Camera, 
   MapPin, 
@@ -21,7 +21,6 @@ import {
   Wand2,
   Loader2
 } from 'lucide-react';
-import { User } from '../App.tsx';
 import { refineTravelStory } from '../services/gemini.ts';
 
 interface TravelMemoriesProps {
@@ -212,11 +211,14 @@ const TravelMemories: React.FC<TravelMemoriesProps> = ({ language, user, onLogin
         {showForm && (
           <div className="bg-white p-10 md:p-16 rounded-[4rem] shadow-2xl border border-gray-100 animate-in slide-in-from-bottom-8 duration-700 relative overflow-hidden">
             {isSuccess && (
-              <div className="absolute inset-0 z-50 bg-white/95 backdrop-blur-sm flex flex-col items-center justify-center text-center space-y-6 animate-in fade-in duration-500">
-                <div className="w-24 h-24 bg-green-500 text-white rounded-full flex items-center justify-center shadow-[0_0_50px_rgba(34,197,94,0.4)]">
-                   <CheckCircle2 size={48} />
+              <div className="absolute inset-0 z-50 bg-white/98 backdrop-blur-md flex flex-col items-center justify-center text-center p-12 space-y-12 animate-in fade-in duration-700">
+                <div className="relative">
+                   <div className="w-32 h-32 bg-green-500 text-white rounded-full flex items-center justify-center shadow-[0_0_80px_rgba(34,197,94,0.4)] animate-bounce">
+                      <CheckCircle2 size={64} />
+                   </div>
+                   <div className="absolute -inset-6 border-2 border-dashed border-green-500/20 rounded-full animate-spin-slow" />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-6">
                   <h4 className="text-3xl font-heritage font-bold text-[#0a0a0a]">Memory Archived</h4>
                   <p className="text-gray-400 font-medium italic">Synchronization with public registry complete.</p>
                 </div>
@@ -231,7 +233,7 @@ const TravelMemories: React.FC<TravelMemoriesProps> = ({ language, user, onLogin
             <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-12">
                <div className="space-y-8">
                   <div className="space-y-3">
-                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Destination Name</label>
+                    <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">Destination Name</label>
                     <input 
                       required
                       type="text" 
@@ -243,7 +245,7 @@ const TravelMemories: React.FC<TravelMemoriesProps> = ({ language, user, onLogin
                   </div>
 
                   <div className="space-y-3">
-                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Archive Title</label>
+                    <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">Archive Title</label>
                     <input 
                       required
                       type="text" 
@@ -256,7 +258,7 @@ const TravelMemories: React.FC<TravelMemoriesProps> = ({ language, user, onLogin
 
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
-                      <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">The Narrative</label>
+                      <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">The Narrative</label>
                       <button 
                         type="button"
                         onClick={handleRefine}
@@ -280,7 +282,7 @@ const TravelMemories: React.FC<TravelMemoriesProps> = ({ language, user, onLogin
 
                <div className="space-y-8">
                   <div className="space-y-3">
-                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Visual Evidence (URL)</label>
+                    <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">Visual Evidence (URL)</label>
                     <div className="relative group">
                       <ImageIcon className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-[#E1306C] transition-colors" size={20} />
                       <input 
@@ -294,7 +296,7 @@ const TravelMemories: React.FC<TravelMemoriesProps> = ({ language, user, onLogin
                   </div>
 
                   <div className="space-y-3">
-                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Resonance Level</label>
+                    <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">Resonance Level</label>
                     <div className="flex gap-4 bg-gray-50 p-6 rounded-2xl border border-gray-100">
                        {[1,2,3,4,5].map(star => (
                          <button 
@@ -372,7 +374,7 @@ const TravelMemories: React.FC<TravelMemoriesProps> = ({ language, user, onLogin
                 </div>
 
                 <div className="relative">
-                  <Quote size={24} className="text-gray-50 absolute -top-4 -left-4" />
+                  <Quote size={24} className="text-[#E1306C]/10 absolute -top-4 -left-4" />
                   <p className="text-gray-500 leading-relaxed italic font-light line-clamp-4 relative z-10">
                     "{memory.story}"
                   </p>

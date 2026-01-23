@@ -1,7 +1,8 @@
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { Language } from '../types.ts';
 import { UI_STRINGS } from '../constants.tsx';
-import { Compass, Database, Box, Layers, ArrowRight, Sparkles, Globe, Cpu } from 'lucide-react';
+import { Navigation, Target, Activity, ShieldCheck, ChevronDown } from 'lucide-react';
 
 interface HeroProps {
   language: Language;
@@ -34,77 +35,65 @@ const Hero: React.FC<HeroProps> = ({ language, setView }) => {
 
   // Generate unique spatial nodes for the 3D background
   const spatialNodes = useMemo(() => {
-    return Array.from({ length: 40 }).map((_, i) => ({
+    return Array.from({ length: 50 }).map((_, i) => ({
       id: i,
       x: Math.random() * 100,
       y: Math.random() * 100,
-      z: Math.random() * 1000 - 500,
-      size: Math.random() * 2 + 1,
-      opacity: Math.random() * 0.5 + 0.1,
-      duration: Math.random() * 10 + 10,
+      z: Math.random() * 800 - 400,
+      size: Math.random() * 2.5 + 0.5,
+      opacity: Math.random() * 0.4 + 0.1,
+      duration: Math.random() * 15 + 10,
       delay: Math.random() * -20,
     }));
   }, []);
 
   return (
-    <div className="relative h-screen flex items-center justify-center overflow-hidden bg-[#020202]">
+    <div className="relative h-screen flex items-center justify-center overflow-hidden bg-[#02040a]">
       
-      {/* 1. Deep Perspective Wrapper */}
-      <div className="absolute inset-0 z-0 pointer-events-none" style={{ perspective: '1200px' }}>
+      {/* --- BACKGROUND ANIMATION ENGINE --- */}
+      <div className="absolute inset-0 z-0 pointer-events-none" style={{ perspective: '1500px' }}>
         
-        {/* A. Atmospheric Background Image Layer */}
+        {/* Layer 1: The Mountain Plate (Base) */}
         <div 
-          className="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out brightness-[0.45] contrast-[1.1]" 
+          className="absolute inset-0 bg-cover bg-center transition-transform duration-[4000ms] ease-out brightness-[0.35] contrast-[1.3] saturate-[0.8]" 
           style={{ 
-            backgroundImage: `url('https://plus.unsplash.com/premium_photo-1661954483883-edd65eac3577?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')`,
-            transform: `scale(${1.1 + scrollPos / 4000}) translateZ(-200px)`,
+            backgroundImage: `url('https://images.unsplash.com/photo-1546708973-b339540b5162?q=80&w=2400&auto=format&fit=crop')`,
+            transform: `scale(${1.1 + scrollPos / 3000}) translate3d(${mousePos.x * 15}px, ${mousePos.y * 15}px, -100px)`,
           }}
         >
-          {/* Main Cinematic Gradient Overlays */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#020202] via-transparent to-[#020202] opacity-80" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#020202] via-transparent to-transparent opacity-40" />
-        </div>
-
-        {/* NEW: Volumetric God Rays / Lighting effects */}
-        <div className="absolute inset-0 overflow-hidden">
-          {/* Top-Left Soft Warm Light Leak */}
+          {/* Layer 2: Volumetric Fog/Glow */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#02040a] via-transparent to-[#02040a] opacity-90" />
           <div 
-            className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] rounded-full opacity-20 blur-[120px] transition-transform duration-[3000ms] animate-pulse-slow"
+            className="absolute inset-0 opacity-40 transition-opacity duration-1000"
             style={{ 
-              background: 'radial-gradient(circle, #fdf497 0%, transparent 70%)',
-              transform: `translate3d(${mousePos.x * 40}px, ${mousePos.y * 40}px, 0)`
-            }}
+              background: `radial-gradient(circle at ${50 + mousePos.x * 30}% ${50 + mousePos.y * 30}%, #2ecc7122 0%, transparent 60%)` 
+            }} 
           />
-          
-          {/* Top Edge Beam */}
-          <div className="absolute top-0 left-0 w-full h-[30%] bg-gradient-to-b from-[#E1306C]/10 to-transparent opacity-40" />
-          
-          {/* God Rays Layer */}
-          <div className="absolute inset-0 opacity-15 mix-blend-screen overflow-hidden">
-            <div className="absolute top-[-50%] left-[-10%] w-[120%] h-[200%] rotate-[25deg] bg-[repeating-linear-gradient(90deg,transparent,transparent_40px,rgba(255,255,255,0.1)_41px,rgba(255,255,255,0.1)_45px,transparent_46px)] blur-[10px]" />
-          </div>
         </div>
 
-        {/* B. 3D Spatial Grid Floor */}
+        {/* Layer 3: Neural Mesh Protocol (Moving Grid) */}
         <div 
-          className="absolute inset-0 opacity-[0.1] transition-transform duration-500 ease-out"
+          className="absolute inset-0 opacity-[0.07] transition-transform duration-500 ease-out" 
           style={{ 
-            backgroundImage: `linear-gradient(#E1306C 1px, transparent 1px), linear-gradient(90deg, #E1306C 1px, transparent 1px)`, 
-            backgroundSize: '80px 80px',
-            transform: `rotateX(75deg) translateY(${100 + scrollPos * 0.5}px) translateZ(-400px) scale(4) rotateZ(${mousePos.x * 2}deg)`,
+            backgroundImage: `linear-gradient(#2ecc71 1px, transparent 1px), linear-gradient(90deg, #2ecc71 1px, transparent 1px)`, 
+            backgroundSize: '120px 120px', 
+            transform: `rotateX(65deg) translateY(${scrollPos * 0.1}px) translateZ(-200px) scale(2.5)`,
             maskImage: 'radial-gradient(ellipse at center, black 20%, transparent 80%)'
-          }}
+          }} 
         />
 
-        {/* C. Floating Neural Nodes (Particles) */}
+        {/* Layer 4: Vertical Scanline HUD Animation */}
+        <div className="absolute top-0 left-0 w-full h-[4px] bg-gradient-to-r from-transparent via-[#2ecc71]/40 to-transparent shadow-[0_0_30px_#2ecc71] animate-scan-hud z-10" />
+
+        {/* Layer 5: Data Nodes (Particles) */}
         <div 
-          className="absolute inset-0 transition-transform duration-1000 ease-out"
+          className="absolute inset-0 opacity-60"
           style={{ transform: `translate3d(${mousePos.x * -30}px, ${mousePos.y * -30}px, 0)` }}
         >
           {spatialNodes.map((node) => (
             <div 
               key={node.id}
-              className="absolute bg-white rounded-full animate-pulse-slow"
+              className="absolute bg-white rounded-full animate-pulse-slow shadow-[0_0_10px_rgba(255,255,255,0.5)]"
               style={{
                 left: `${node.x}%`,
                 top: `${node.y}%`,
@@ -112,153 +101,119 @@ const Hero: React.FC<HeroProps> = ({ language, setView }) => {
                 height: `${node.size}px`,
                 opacity: node.opacity,
                 transform: `translateZ(${node.z}px)`,
-                boxShadow: `0 0 10px rgba(255,255,255,${node.opacity})`,
                 animation: `float-node ${node.duration}s linear infinite`,
                 animationDelay: `${node.delay}s`
               }}
             />
           ))}
         </div>
-
-        {/* D. Moving High-Intensity Searchlight (Follows Mouse) */}
-        <div 
-          className="absolute inset-0 opacity-60 transition-opacity duration-1000 mix-blend-overlay"
-          style={{
-            background: `radial-gradient(circle at ${50 + mousePos.x * 30}% ${50 + mousePos.y * 30}%, rgba(225,48,108,0.3) 0%, transparent 35%)`,
-          }}
-        />
-        
-        {/* E. Holographic Scan Line */}
-        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#E1306C]/30 to-transparent animate-scan-line z-10" />
       </div>
 
-      {/* 2. Content Overlay */}
-      <div className="relative z-30 max-w-5xl w-full px-6 flex flex-col items-center text-center">
+      {/* --- CONTENT OVERLAY --- */}
+      <div className="relative z-30 max-w-6xl w-full px-8 flex flex-col items-center text-center">
         
-        {/* Top Floating Badge */}
-        <div className="flex flex-col items-center gap-4 mb-8 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-          <div className="px-5 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-xl flex items-center gap-3">
-             <div className="w-2 h-2 bg-[#E1306C] rounded-full animate-ping" />
-             <span className="white/80 font-black text-[9px] uppercase tracking-[0.5em]">
-               {language === 'EN' ? 'LIVE NEURAL LINK' : 'සජීවී සබඳතාවය'}
-             </span>
-          </div>
-          <div className="h-10 w-[1px] bg-gradient-to-b from-[#E1306C] via-[#E1306C]/40 to-transparent"></div>
+        {/* Protocol Metadata (Top Badge) */}
+        <div className="flex flex-col items-center gap-4 mb-14 animate-in fade-in slide-in-from-top-8 duration-1000">
+           <div className="inline-flex items-center gap-4 px-6 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-xl text-green-400 text-[9px] font-black uppercase tracking-[0.5em] shadow-[0_0_40px_rgba(46,204,113,0.2)]">
+             <Activity size={14} className="animate-pulse" />
+             ARCHIVE_SYNC_V3.1 ACTIVE
+           </div>
+           <div className="h-10 w-px bg-gradient-to-b from-green-500/50 to-transparent"></div>
         </div>
         
-        {/* Title with 3D Text Shadow Effect */}
-        <div className="space-y-4 mb-10 animate-in fade-in zoom-in-95 duration-1000 delay-200">
+        {/* Main Heading Group */}
+        <div className="space-y-0 mb-12 animate-in fade-in zoom-in-95 duration-1000 delay-200">
           <h1 
-            className="text-5xl sm:text-7xl md:text-[6.5rem] font-heritage font-black leading-[1] tracking-tighter text-white uppercase transition-transform duration-300"
-            style={{ 
-              transform: `rotateX(${mousePos.y * -10}deg) rotateY(${mousePos.x * 10}deg)`,
-              textShadow: `${mousePos.x * -10}px ${mousePos.y * -10}px 30px rgba(0,0,0,0.5)`
-            }}
+            className="text-4xl sm:text-6xl md:text-[6.5rem] font-heritage font-bold leading-[0.8] tracking-tight text-white uppercase"
+            style={{ textShadow: '0 15px 45px rgba(0,0,0,0.8)' }}
           >
             {language === 'EN' ? (
               <>
-                <span className="block opacity-95">Discover the</span>
-                <span className="block italic insta-text-gradient font-medium lowercase -mt-2">sri lanka</span>
+                <span className="block opacity-90 mb-4 tracking-[0.05em]">Discover the</span>
+                <span className="block font-script text-6xl sm:text-8xl md:text-[9.5rem] text-[#2ecc71] lowercase normal-case tracking-normal -mt-3 sm:-mt-6 md:-mt-8 drop-shadow-glow">Sri Lanka</span>
               </>
             ) : (
               <>
-                <span className="block opacity-95">ලංකා ආත්මය</span>
-                <span className="block italic insta-text-gradient -mt-2">සොයා යන්න.</span>
+                <span className="block opacity-90 mb-3 tracking-[0.05em]">ලංකා ආත්මය</span>
+                <span className="block font-script text-6xl sm:text-8xl md:text-[9.5rem] text-[#2ecc71] -mt-3 sm:-mt-6 md:-mt-8 drop-shadow-glow">සොයා යන්න.</span>
               </>
             )}
           </h1>
         </div>
         
-        <p className="text-base md:text-xl text-white/50 font-light max-w-2xl leading-relaxed italic mb-14 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
+        {/* Subtitle / Descriptive Text */}
+        <p className="text-base md:text-xl text-white/50 font-light max-w-2xl leading-relaxed mb-16 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500 italic">
           {language === 'EN' 
-            ? "Sync your consciousness with 2,500 years of historical architecture. The registry is ready for your arrival." 
-            : "වසර 2,500ක ඉතිහාසය සමඟ ඔබේ විඥානය සම්බන්ධ කරන්න. සංරක්ෂණාගාරය ඔබ වෙනුවෙන් සූදානම්."}
+            ? "Access the ultimate digital gateway to ancient heritages, sapphire waters, and the futuristic luxury of our island protocol." 
+            : "පුරාණ උරුමයන්, නිල්වන් සාගරය සහ දිවයිනේ අනාගත සුඛෝපභෝගී අත්දැකීම් වෙත පිවිසෙන පරම ඩිජිටල් ද්වාරය."}
         </p>
 
-        {/* Action Controls */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-8 animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-700">
+        {/* Action Controls - Glassmorphism Style */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-700">
           <button 
             onClick={() => setView('destinations')}
-            className="group relative flex items-center gap-6 px-12 py-6 bg-white rounded-full transition-all duration-500 hover:scale-110 active:scale-95 shadow-[0_30px_80px_rgba(255,255,255,0.15)] overflow-hidden"
+            className="group relative px-14 py-5 bg-white text-[#0a0a0a] rounded-full font-black text-[11px] uppercase tracking-[0.5em] transition-all duration-500 hover:scale-110 active:scale-95 shadow-[0_25px_60px_rgba(255,255,255,0.2)] animate-radiant-pulse"
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent -translate-x-full group-hover:translate-x-[200%] transition-transform duration-1000 ease-in-out pointer-events-none"></div>
-            <span className="relative z-10 text-[10px] font-black text-[#0a0a0a] uppercase tracking-[0.4em]">Initialize Portal</span>
-            <div className="relative z-10 w-8 h-8 rounded-full bg-[#0a0a0a] flex items-center justify-center text-white transition-all group-hover:rotate-45 group-hover:bg-[#E1306C]">
-              <ArrowRight size={16} />
-            </div>
+            <span className="relative z-10">{language === 'EN' ? 'Explore Destinations' : 'ගමනාන්ත ගවේෂණය'}</span>
           </button>
 
           <button 
             onClick={() => setView('vr-showcase')}
-            className="group relative flex items-center gap-5 px-12 py-6 bg-white/5 backdrop-blur-2xl border border-white/10 rounded-full transition-all duration-500 hover:bg-white/10 active:scale-95 shadow-2xl"
+            className="group relative px-14 py-5 bg-white/5 backdrop-blur-2xl border border-white/10 rounded-full font-black text-[11px] text-white uppercase tracking-[0.5em] transition-all duration-500 hover:bg-white/15 hover:border-white/30 active:scale-95 shadow-2xl overflow-hidden"
           >
-            <div className="relative">
-              <Globe size={18} className="text-[#E1306C] group-hover:rotate-180 transition-transform duration-1000" />
-              <div className="absolute inset-0 bg-[#E1306C]/40 blur-md rounded-full animate-ping group-hover:opacity-100 opacity-0" />
-            </div>
-            <span className="text-[10px] font-black text-white uppercase tracking-[0.4em]">3D Registry</span>
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+            <span className="relative z-10 flex items-center gap-4">
+              3D Registry
+              <ShieldCheck size={16} className="text-green-500 opacity-60" />
+            </span>
           </button>
         </div>
       </div>
 
-      {/* Dynamic HUD Details */}
-      <div className="absolute bottom-12 left-12 right-12 flex justify-between items-end pointer-events-none opacity-40 animate-in fade-in duration-1000 delay-1000">
-         <div className="flex items-center gap-6">
-            <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/40">
-               <Cpu size={20} className="animate-pulse" />
-            </div>
-            <div className="text-left space-y-1">
-               <p className="text-[8px] font-black text-white/20 uppercase tracking-widest">Core_Processing</p>
-               <p className="text-[10px] font-bold text-white/60 tracking-[0.2em]">STABLE_LINK_98%</p>
-            </div>
-         </div>
-
-         <div className="flex flex-col items-end gap-3">
-            <div className="h-0.5 w-32 bg-white/10 rounded-full overflow-hidden">
-               <div className="h-full bg-[#E1306C] animate-loading-bar" />
-            </div>
-            <p className="text-[8px] font-black text-white/20 uppercase tracking-[0.4em]">Streaming Reality Portals...</p>
-         </div>
-      </div>
-
-      {/* Descend Anchor */}
-      <div className={`absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 transition-all duration-1000 z-40 ${scrollPos > 50 ? 'opacity-0 translate-y-10' : 'opacity-100'}`}>
-        <div className="w-px h-12 bg-gradient-to-b from-[#E1306C] via-[#E1306C]/20 to-transparent animate-bounce-slow"></div>
-        <span className="text-[8px] font-black text-white/20 uppercase tracking-[1.5em] ml-[1.5em]">DESCEND</span>
+      {/* Atmospheric Bottom Decoration */}
+      <div className={`absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-5 transition-all duration-1000 z-40 ${scrollPos > 100 ? 'opacity-0' : 'opacity-30'}`}>
+        <span className="text-[8px] font-black text-white uppercase tracking-[1em] ml-1 animate-pulse">Sync_Scroll</span>
+        <div className="relative h-16 w-px overflow-hidden">
+           <div className="absolute inset-0 bg-white/20"></div>
+           <div className="absolute top-0 left-0 w-full h-1/2 bg-green-500 animate-scroll-indicator"></div>
+        </div>
       </div>
 
       <style dangerouslySetInnerHTML={{ __html: `
         @keyframes float-node {
           0% { transform: translateY(0) translateZ(0); }
-          50% { transform: translateY(-20px) translateZ(50px); }
+          50% { transform: translateY(-30px) translateZ(100px); }
           100% { transform: translateY(0) translateZ(0); }
         }
-        @keyframes scan-line {
-          0% { top: 0%; opacity: 0; }
-          10% { opacity: 0.8; }
-          90% { opacity: 0.8; }
-          100% { top: 100%; opacity: 0; }
+        @keyframes scan-hud {
+          0% { top: -10%; opacity: 0; }
+          10% { opacity: 1; }
+          90% { opacity: 1; }
+          100% { top: 110%; opacity: 0; }
         }
-        @keyframes loading-bar {
-          0% { width: 0%; transform: translateX(-100%); }
-          50% { width: 100%; transform: translateX(0%); }
-          100% { width: 0%; transform: translateX(100%); }
+        @keyframes scroll-indicator {
+          0% { transform: translateY(-100%); }
+          100% { transform: translateY(200%); }
+        }
+        @keyframes radiant-pulse {
+          0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
+          70% { box-shadow: 0 0 0 25px rgba(255, 255, 255, 0); }
+          100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+        .animate-scan-hud {
+          animation: scan-hud 8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+        .animate-scroll-indicator {
+          animation: scroll-indicator 2s ease-in-out infinite;
+        }
+        .animate-radiant-pulse {
+          animation: radiant-pulse 2s infinite;
+        }
+        .drop-shadow-glow {
+          filter: drop-shadow(0 0 15px rgba(46,204,113,0.6));
         }
         .animate-pulse-slow {
           animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        .animate-bounce-slow {
-          animation: bounce 3s ease-in-out infinite;
-        }
-        @keyframes bounce {
-          0%, 100% { transform: translateY(0); opacity: 0.2; }
-          50% { transform: translateY(10px); opacity: 1; }
-        }
-        .animate-scan-line {
-          animation: scan-line 6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-        }
-        .animate-loading-bar {
-          animation: loading-bar 3s linear infinite;
         }
       `}} />
     </div>

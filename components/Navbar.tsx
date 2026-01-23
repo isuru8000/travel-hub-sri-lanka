@@ -1,9 +1,38 @@
+
 import React, { useState, useEffect } from 'react';
-import { Language } from '../types';
-// Add Target to lucide-react imports
-import { Menu, X, Globe, LogIn, LogOut, ChevronRight, Sparkles, Compass, Search, ShoppingBag, ChevronDown, BedDouble, Map, Zap, Database, Signal, Activity, Wallet, Mountain, Utensils, Music, Target } from 'lucide-react';
-// Fix: Import User from parent directory as App.tsx is not in the same folder
-import { User } from '../App.tsx';
+import { Language, User } from '../types.ts';
+import { 
+  Menu, 
+  X, 
+  Globe, 
+  LogIn, 
+  LogOut, 
+  ChevronRight, 
+  Sparkles, 
+  Compass, 
+  Search, 
+  ShoppingBag, 
+  ChevronDown, 
+  BedDouble, 
+  Map, 
+  Zap, 
+  Database, 
+  Signal, 
+  Activity, 
+  Wallet, 
+  Mountain, 
+  Utensils, 
+  Music, 
+  Target, 
+  ShoppingCart, 
+  Users,
+  Sprout,
+  PartyPopper,
+  MessageSquare,
+  PawPrint,
+  Backpack,
+  HelpCircle
+} from 'lucide-react';
 
 interface NavbarProps {
   language: Language;
@@ -14,6 +43,109 @@ interface NavbarProps {
   onLogin: () => void;
   onLogout: () => void;
 }
+
+export const TravelHubLogo = ({ size = 48, className = "" }) => (
+  <div className={`relative group/logo-svg ${className}`}>
+    <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-[0_0_30px_rgba(40,90,235,0.6)] transition-all duration-700 group-hover/logo-svg:scale-110">
+      {/* Outer Tech Rings - Expanded */}
+      <circle cx="50" cy="50" r="49" stroke="currentColor" strokeWidth="0.5" className="text-gray-200/10" />
+      <circle cx="50" cy="50" r="47" stroke="rgba(255,255,255,0.1)" strokeWidth="0.8" strokeDasharray="4 12" className="animate-spin-slow" />
+      
+      {/* Expanded Network Neural Mesh Connections */}
+      <g className="opacity-80">
+        {/* Core to Edge Connections */}
+        <line x1="50" y1="50" x2="50" y2="15" stroke="white" strokeWidth="1" className="animate-pulse" />
+        <line x1="50" y1="50" x2="15" y2="45" stroke="white" strokeWidth="1" className="animate-pulse" style={{ animationDelay: '0.4s' }} />
+        <line x1="50" y1="50" x2="85" y2="45" stroke="white" strokeWidth="1" className="animate-pulse" style={{ animationDelay: '0.8s' }} />
+        <line x1="50" y1="50" x2="30" y2="80" stroke="white" strokeWidth="1" className="animate-pulse" style={{ animationDelay: '1.2s' }} />
+        <line x1="50" y1="50" x2="70" y2="80" stroke="white" strokeWidth="1" className="animate-pulse" style={{ animationDelay: '1.6s' }} />
+        
+        {/* Perimeter Mesh */}
+        <line x1="50" y1="15" x2="15" y2="45" stroke="white" strokeWidth="0.6" strokeDasharray="2 2" />
+        <line x1="15" y1="45" x2="30" y2="80" stroke="white" strokeWidth="0.6" strokeDasharray="2 2" />
+        <line x1="30" y1="80" x2="70" y2="80" stroke="white" strokeWidth="0.6" strokeDasharray="2 2" />
+        <line x1="70" y1="80" x2="85" y2="45" stroke="white" strokeWidth="0.6" strokeDasharray="2 2" />
+        <line x1="85" y1="45" x2="50" y2="15" stroke="white" strokeWidth="0.6" strokeDasharray="2 2" />
+      </g>
+
+      {/* Enlarged Network Nodes */}
+      <circle cx="50" cy="15" r="4" fill="white" className="animate-pulse shadow-glow-white" />
+      <circle cx="15" cy="45" r="3.5" fill="white" className="animate-pulse" style={{ animationDelay: '0.3s' }} />
+      <circle cx="85" cy="45" r="3.5" fill="white" className="animate-pulse" style={{ animationDelay: '0.6s' }} />
+      <circle cx="30" cy="80" r="4" fill="white" className="animate-pulse" style={{ animationDelay: '0.9s' }} />
+      <circle cx="70" cy="80" r="4" fill="white" className="animate-pulse" style={{ animationDelay: '1.2s' }} />
+      
+      {/* Massive Core Hub Node */}
+      <circle cx="50" cy="50" r="8" fill="url(#hub_core_grad)" className="animate-pulse shadow-glow-blue" />
+      <circle cx="50" cy="50" r="5" fill="white" className="animate-ping opacity-60" />
+
+      {/* Bold Blue Line Sweep - Max Visibility */}
+      <circle 
+        cx="50" cy="50" r="44" 
+        stroke="#285AEB" 
+        strokeWidth="2.5" 
+        strokeLinecap="round"
+        strokeDasharray="60 220"
+        className="animate-blue-line-sweep"
+        filter="url(#blue_glow)"
+      />
+      
+      {/* Inner Rapid Pulse Orbit */}
+      <circle 
+        cx="50" cy="50" r="32" 
+        stroke="#E1306C" 
+        strokeWidth="1" 
+        strokeDasharray="5 150"
+        className="animate-blue-line-sweep-reverse opacity-80"
+      />
+
+      <defs>
+        <filter id="blue_glow">
+          <feGaussianBlur stdDeviation="3.5" result="coloredBlur"/>
+          <feMerge>
+            <feMergeNode in="coloredBlur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+        <radialGradient id="hub_core_grad" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+          <stop offset="0%" stopColor="#285AEB" />
+          <stop offset="70%" stopColor="#E1306C" />
+          <stop offset="100%" stopColor="#000000" />
+        </radialGradient>
+      </defs>
+    </svg>
+    
+    <div className="absolute -inset-6 bg-blue-500/10 blur-[40px] rounded-full opacity-0 group-hover/logo-svg:opacity-100 transition-opacity duration-1000" />
+    
+    <style dangerouslySetInnerHTML={{ __html: `
+      @keyframes blue-line-sweep {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+      @keyframes blue-line-sweep-reverse {
+        from { transform: rotate(360deg); }
+        to { transform: rotate(0deg); }
+      }
+      .animate-blue-line-sweep {
+        transform-origin: center;
+        animation: blue-line-sweep 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      }
+      .animate-blue-line-sweep-reverse {
+        transform-origin: center;
+        animation: blue-line-sweep-reverse 1.5s linear infinite;
+      }
+      .animate-spin-slow {
+        animation: spin 15s linear infinite;
+      }
+      .shadow-glow-blue {
+        filter: drop-shadow(0 0 12px #285AEB);
+      }
+      .shadow-glow-white {
+        filter: drop-shadow(0 0 8px rgba(255,255,255,1));
+      }
+    `}} />
+  </div>
+);
 
 const Navbar: React.FC<NavbarProps> = ({ 
   language, 
@@ -62,8 +194,8 @@ const Navbar: React.FC<NavbarProps> = ({
             behavior: 'smooth'
           });
         }
-      }, 100);
-    } else {
+      }, 150);
+    } else if (view === currentView) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
@@ -75,11 +207,18 @@ const Navbar: React.FC<NavbarProps> = ({
       id: 'heritage', 
       label: language === 'EN' ? 'HERITAGE' : 'උරුමය', 
       hasDropdown: true,
+      anchor: 'heritage-hub',
       items: [
+        { id: 'destinations', label: language === 'EN' ? 'Wildlife' : 'වනජීවී', icon: <PawPrint size={14} /> },
         { id: 'hiking', label: language === 'EN' ? 'Heritage Hiking' : 'උරුම කඳු තරණය', icon: <Mountain size={14} /> },
         { id: 'foods', label: language === 'EN' ? 'Food Heritage' : 'ආහාර උරුමය', icon: <Utensils size={14} /> },
         { id: 'music', label: language === 'EN' ? 'Ancient Music' : 'පැරණි සංගීතය', icon: <Music size={14} /> },
         { id: 'medicine', label: language === 'EN' ? 'Hela Wedakama' : 'හෙළ වෙදකම', icon: <Activity size={14} /> },
+        { id: 'tea', label: language === 'EN' ? 'Tea Trails' : 'තේ සංස්කෘතිය', icon: <Sprout size={14} /> },
+        { id: 'festivals', label: language === 'EN' ? 'Festivals' : 'සංස්කෘතික උත්සව', icon: <PartyPopper size={14} /> },
+        { id: 'phrases', label: language === 'EN' ? 'Local Language' : 'දේශීය භාෂාව', icon: <MessageSquare size={14} /> },
+        { id: 'essentials', label: language === 'EN' ? 'Travel Guide' : 'සංචාරක උපදෙස්', icon: <Backpack size={14} /> },
+        { id: 'quiz', label: language === 'EN' ? 'Travel Quiz' : 'සංචාරක ප්‍රශ්න විචාරාත්මක', icon: <HelpCircle size={14} /> },
       ]
     },
     { 
@@ -88,14 +227,13 @@ const Navbar: React.FC<NavbarProps> = ({
       premium: true,
       hasDropdown: true,
       items: [
-        // Fix: Target is now imported from lucide-react
         { id: 'marketplace', label: language === 'EN' ? 'Portal Dashboard' : 'ප්‍රධාන පුවරුව', icon: <Target size={14} /> },
         { id: 'marketplace', label: language === 'EN' ? 'Heritage Stays' : 'පෞරාණික ලැගුම්හල්', anchor: 'heritage-stays', icon: <BedDouble size={14} /> },
         { id: 'marketplace', label: language === 'EN' ? 'Expeditions' : 'වික්‍රමාන්විත චාරිකා', anchor: 'luxury-expeditions', icon: <Map size={14} /> }
       ]
     },
-    { id: 'nexus', label: language === 'EN' ? 'NEXUS' : 'නෙක්සස්', highlight: true, icon: <Wallet size={10} /> },
-    { id: 'search', label: language === 'EN' ? 'News' : 'පුවත්' },
+    { id: 'shop', label: language === 'EN' ? 'STORE' : 'වෙළඳසැල', icon: <ShoppingCart size={11} /> },
+    { id: 'community', label: language === 'EN' ? 'COMMUNITY' : 'සමූහය', highlight: true, icon: <Users size={11} /> }
   ];
 
   return (
@@ -103,56 +241,27 @@ const Navbar: React.FC<NavbarProps> = ({
       <nav className={`transition-all duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] relative flex items-center justify-between px-4 md:px-8 w-[96%] max-w-[1700px] py-3 bg-black/70 backdrop-blur-[60px] rounded-full border border-white/10 shadow-[0_30px_100px_rgba(0,0,0,0.6)] pointer-events-auto group/nav ${
         scrolled ? 'scale-100 py-2.5 bg-black/85' : 'scale-[1.01] py-4'
       }`}>
-        
-        {/* LIGHTING: Rim Light (Top Edge) */}
         <div className="absolute inset-0 rounded-full border-t border-white/25 pointer-events-none" />
         <div className="absolute inset-0 rounded-full border-b border-black/40 pointer-events-none" />
-
-        {/* LIGHTING: Neural Scan Line */}
         <div className="absolute top-0 left-1/4 w-1/2 h-[1px] bg-gradient-to-r from-transparent via-[#E1306C] to-transparent opacity-0 group-hover/nav:opacity-100 transition-opacity duration-1000 animate-nav-scan" />
 
-        {/* Left: Premium Logo Hub */}
         <div className="flex items-center gap-5">
           <button 
             onClick={() => handleNav('home')}
             className={`flex items-center gap-4 group/logo transition-transform ${lastClicked === 'home' ? 'animate-nav-bounce' : ''}`}
           >
-            <div className="relative w-12 h-12 md:w-14 md:h-14">
-              <div className="absolute inset-0 bg-gradient-to-tr from-[#E1306C] via-purple-500 to-blue-500 rounded-full animate-spin-slow opacity-40 blur-md group-hover/logo:opacity-100 transition-opacity" />
-              <div className="relative w-full h-full rounded-full p-[2px] bg-white/20 backdrop-blur-3xl border border-white/30 overflow-hidden shadow-2xl transition-all duration-700 group-hover/logo:scale-110 group-hover/logo:rotate-[360deg]">
-                <div className="bg-white w-full h-full rounded-full flex items-center justify-center overflow-hidden relative">
-                   <div className="absolute inset-0 bg-gradient-to-br from-[#E1306C]/10 to-transparent animate-pulse" />
-                   <img 
-                    src="https://raw.githubusercontent.com/stackblitz/stackblitz-images/main/travel-hub-logo.png" 
-                    alt="Hub Logo" 
-                    className="w-full h-full object-cover p-1 relative z-10"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.style.display = 'none';
-                      const parent = target.parentElement;
-                      if (parent) {
-                        const span = document.createElement('span');
-                        span.className = "insta-text-gradient font-heritage font-black text-2xl drop-shadow-md";
-                        span.innerText = "L";
-                        parent.appendChild(span);
-                      }
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
+            <TravelHubLogo />
             
             <div className="hidden sm:flex flex-col items-start leading-none gap-1 drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
-              <span className="font-heritage font-black text-[14px] md:text-[16px] uppercase tracking-[0.3em] text-white brightness-125">Travel Hub</span>
+              <span className="font-heritage font-black text-[14px] md:text-[18px] uppercase tracking-[0.3em] text-white brightness-125">Travel Hub</span>
               <div className="flex items-center gap-3">
                  <div className="w-1.5 h-1.5 bg-[#E1306C] rounded-full animate-ping shadow-[0_0_8px_#E1306C]" />
-                 <span className="font-black text-[8px] uppercase tracking-[0.6em] text-white/40">Protocol_v4.5</span>
+                 <span className="font-black text-[8px] uppercase tracking-[0.6em] text-white/50">Sri Lanka • v4.5</span>
               </div>
             </div>
           </button>
         </div>
 
-        {/* Center: High-Visibility Navigation Pod */}
         <div className="hidden lg:flex items-center gap-1 bg-white/5 p-1 rounded-full border border-white/5 shadow-inner backdrop-blur-2xl">
           {navLinks.map((link) => (
             <div 
@@ -162,7 +271,7 @@ const Navbar: React.FC<NavbarProps> = ({
               onMouseLeave={() => setActiveDropdown(null)}
             >
               <button 
-                onClick={() => !link.hasDropdown && handleNav(link.id)} 
+                onClick={() => handleNav(link.anchor ? 'home' : link.id, link.anchor)} 
                 className={`px-6 py-2.5 rounded-full flex items-center gap-3 transition-all duration-500 relative group/link ${
                   currentView === link.id ? 'text-white' : 'text-white/60 hover:text-white'
                 }`}
@@ -184,10 +293,9 @@ const Navbar: React.FC<NavbarProps> = ({
                 </span>
               </button>
 
-              {/* Mega Dropdown */}
               {link.hasDropdown && activeDropdown === link.id && (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 pt-5 w-72 animate-in fade-in slide-in-from-top-3 duration-500">
-                  <div className="bg-black/95 backdrop-blur-3xl rounded-[2.5rem] shadow-[0_50px_120px_rgba(0,0,0,0.9)] border border-white/20 overflow-hidden p-4">
+                <div className="absolute top-full left-1/2 -translate-x-1/2 pt-5 w-80 animate-in fade-in slide-in-from-top-3 duration-500">
+                  <div className="bg-black/95 backdrop-blur-3xl rounded-[2.5rem] shadow-[0_50px_120px_rgba(0,0,0,0.9)] border border-white/20 overflow-hidden p-4 max-h-[80vh] overflow-y-auto no-scrollbar">
                     <div className="absolute inset-0 bg-gradient-to-tr from-[#E1306C]/15 via-transparent to-blue-500/15 pointer-events-none" />
                     {link.items?.map((item) => (
                       <button
@@ -210,7 +318,6 @@ const Navbar: React.FC<NavbarProps> = ({
           ))}
         </div>
 
-        {/* Right: Interaction Hub */}
         <div className="flex items-center gap-3 md:gap-6">
           <button 
             onClick={() => setLanguage(language === 'EN' ? 'SI' : 'EN')}
@@ -261,7 +368,6 @@ const Navbar: React.FC<NavbarProps> = ({
             </button>
           )}
 
-          {/* Mobile Menu Toggle */}
           <button 
             onClick={() => setIsOpen(!isOpen)} 
             className="lg:hidden w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-2xl bg-white/15 border border-white/30 text-white transition-all active:scale-90 hover:bg-white/25 shadow-xl"
@@ -276,7 +382,6 @@ const Navbar: React.FC<NavbarProps> = ({
         </div>
       </nav>
 
-      {/* Mobile Drawer */}
       {isOpen && (
         <div className="fixed inset-0 bg-black/98 backdrop-blur-[80px] z-[60] flex flex-col p-10 pt-40 animate-in fade-in slide-in-from-top-10 duration-700 pointer-events-auto">
           <div className="absolute top-0 right-0 p-40 opacity-[0.05] text-white pointer-events-none">
@@ -347,9 +452,6 @@ const Navbar: React.FC<NavbarProps> = ({
         }
         .animate-nav-scan {
           animation: nav-scan 6s linear infinite;
-        }
-        .animate-spin-slow {
-          animation: spin 16s linear infinite;
         }
       `}} />
     </div>

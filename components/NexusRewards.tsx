@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Language } from '../types.ts';
+import { Language, User } from '../types.ts';
 import { 
   Zap, 
   Wallet, 
@@ -32,15 +32,15 @@ import {
   Orbit,
   Signal,
   Hammer,
-  AlertTriangle
+  AlertTriangle,
+  Users
 } from 'lucide-react';
-import { User } from '../App.tsx';
 
 interface NexusRewardsProps {
   language: Language;
   user: User | null;
   onLogin: () => void;
-  // Added setView prop to fix the missing name error and enable navigation back to the home registry
+  // Prop to enable navigation back to the home registry
   setView: (view: any) => void;
 }
 
@@ -126,13 +126,13 @@ const NexusRewards: React.FC<NexusRewardsProps> = ({ language, user, onLogin, se
           <div className="space-y-10">
             <div className="flex flex-col items-start gap-6">
                <div className="inline-flex items-center gap-4 px-6 py-2.5 rounded-full bg-[#E1306C]/15 border border-[#E1306C]/30 text-[#E1306C] text-[10px] font-black uppercase tracking-[0.5em] shadow-3xl animate-pulse">
-                  <Zap size={14} fill="currentColor" /> Lanka_Nexus_Protocol_v2
+                  <Users size={14} fill="currentColor" /> Lanka_Community_Protocol_v2
                </div>
                <div className="h-16 w-[1px] bg-gradient-to-b from-[#E1306C] to-transparent"></div>
             </div>
             
             <h1 className="text-6xl md:text-[10rem] font-heritage font-bold tracking-tighter leading-[0.8] uppercase">
-              THE <br/><span className="italic insta-text-gradient">NEXUS HUB.</span>
+              COMMUNITY <br/><span className="italic insta-text-gradient">HUB.</span>
             </h1>
             
             <p className="text-gray-500 max-w-xl text-xl md:text-2xl font-light italic leading-relaxed border-l-4 border-[#E1306C]/20 pl-8">
@@ -193,12 +193,12 @@ const NexusRewards: React.FC<NexusRewardsProps> = ({ language, user, onLogin, se
               </div>
 
               <div className="space-y-6 max-w-2xl animate-in zoom-in duration-1000">
-                  <div className="px-8 py-2 bg-[#E1306C] text-white rounded-full text-[10px] font-black uppercase tracking-[0.6em] mx-auto w-fit shadow-2xl mb-6">Nexus Infrastructure Update</div>
+                  <div className="px-8 py-2 bg-[#E1306C] text-white rounded-full text-[10px] font-black uppercase tracking-[0.6em] mx-auto w-fit shadow-2xl mb-6">Community Infrastructure Update</div>
                   <h2 className="text-5xl md:text-8xl font-heritage font-bold text-white uppercase tracking-tighter leading-tight">
                     SYNC <span className="insta-text-gradient italic">PENDING.</span>
                   </h2>
                   <p className="text-gray-400 text-lg md:text-2xl font-medium italic leading-relaxed">
-                    "The essence economy and rewards manifold are currently being synthesized. The Nexus Network will go live in the next regional archival cycle."
+                    "The essence economy and rewards manifold are currently being synthesized. The Community Network will go live in the next regional archival cycle."
                   </p>
                   
                   <div className="pt-12 flex flex-col items-center gap-6">
@@ -209,7 +209,6 @@ const NexusRewards: React.FC<NexusRewardsProps> = ({ language, user, onLogin, se
                           <p className="text-sm font-bold text-white tracking-widest">ARCHITECTING_MANIFOLD_94%</p>
                        </div>
                     </div>
-                    {/* Fix: setView is now correctly accessed via props */}
                     <button 
                       onClick={() => setView('home')}
                       className="group flex items-center gap-4 text-[10px] font-black text-gray-500 uppercase tracking-[0.5em] hover:text-white transition-all"

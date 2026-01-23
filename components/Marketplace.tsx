@@ -40,7 +40,11 @@ import {
   Plane,
   ShieldHalf,
   Bot,
-  Hammer
+  Hammer,
+  Download,
+  Printer,
+  ExternalLink,
+  QrCode
 } from 'lucide-react';
 import HotelModal from './HotelModal.tsx';
 
@@ -164,19 +168,20 @@ const Marketplace: React.FC<MarketplaceProps> = ({ language }) => {
     return LUXURY_HOTELS.filter(h => h.price <= maxPrice);
   }, [maxPrice]);
 
-  const selectedItemPrice = useMemo(() => {
+  const selectedItem = useMemo(() => {
     const hotel = LUXURY_HOTELS.find(h => bookingState.destination.includes(h.name.EN));
-    if (hotel) return hotel.price;
+    if (hotel) return { ...hotel, priceType: 'nightly' };
     const pkg = PREMIUM_PACKAGES.find(p => p.title.EN === bookingState.destination);
-    return pkg ? pkg.price : 0;
+    if (pkg) return { ...pkg, name: pkg.title, priceType: 'total' };
+    return null;
   }, [bookingState.destination]);
 
   const bookingSummary = useMemo(() => {
-    const base = selectedItemPrice;
+    const base = selectedItem ? selectedItem.price : 0;
     const taxes = Math.round(base * 0.15);
     const total = base + taxes;
     return { base, taxes, total };
-  }, [selectedItemPrice]);
+  }, [selectedItem]);
 
   useEffect(() => {
     if (paymentProtocol === 'paypal' && window.paypal && paypalButtonRef.current) {
@@ -219,6 +224,7 @@ const Marketplace: React.FC<MarketplaceProps> = ({ language }) => {
   const handlePaymentSuccess = async (protocol: string) => {
     setBookingState(prev => ({ ...prev, isProcessingPayment: true }));
     try {
+      // Formspree logging for backend tracking
       await fetch("https://formspree.io/f/xpwzprow", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -232,6 +238,7 @@ const Marketplace: React.FC<MarketplaceProps> = ({ language }) => {
         }),
       });
       setBookingState(prev => ({ ...prev, isSuccess: true, isProcessingPayment: false }));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
       setBookingState(prev => ({ ...prev, error: "Registry logging failed.", isProcessingPayment: false }));
     }
@@ -317,29 +324,155 @@ const Marketplace: React.FC<MarketplaceProps> = ({ language }) => {
         </div>
       )}
 
-      {/* Success Overlay */}
+      {/* --- ENHANCED SUCCESS / CONFIRMATION DASHBOARD --- */}
       {bookingState.isSuccess && (
-        <div className="fixed inset-0 z-[200] bg-white flex flex-col items-center justify-center text-center p-6 animate-in fade-in duration-500">
-          <div className="relative mb-12">
-            <div className="w-32 h-32 bg-green-500 text-white rounded-full flex items-center justify-center shadow-[0_0_80px_rgba(34,197,94,0.4)] animate-bounce">
-              <CheckCircle2 size={64} />
+        <div className="fixed inset-0 z-[300] bg-[#020202] text-white overflow-y-auto animate-in fade-in duration-700">
+          {/* Animated Starfield Background */}
+          <div className="fixed inset-0 opacity-[0.05] pointer-events-none" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/stardust.png')` }} />
+          <div className="fixed inset-0 bg-[radial-gradient(circle_at_center,rgba(225,48,108,0.15)_0%,transparent_70%)] animate-pulse" />
+
+          <div className="relative z-10 max-w-5xl mx-auto px-6 py-20 flex flex-col items-center">
+            
+            {/* Header Success Status */}
+            <div className="flex flex-col items-center text-center space-y-8 mb-20">
+              <div className="relative">
+                <div className="w-40 h-40 bg-green-500/10 rounded-full flex items-center justify-center shadow-[0_0_100px_rgba(34,197,94,0.3)] animate-in zoom-in duration-1000">
+                   <div className="w-32 h-32 bg-green-500 text-white rounded-full flex items-center justify-center shadow-2xl animate-bounce-slow">
+                      <CheckCircle2 size={72} strokeWidth={2.5} />
+                   </div>
+                </div>
+                <div className="absolute -inset-4 border border-green-500/20 rounded-full animate-spin-slow pointer-events-none" />
+              </div>
+              
+              <div className="space-y-4">
+                 <div className="px-6 py-2 bg-green-500/10 border border-green-500/20 text-green-400 rounded-full text-[10px] font-black uppercase tracking-[0.6em] mx-auto w-fit shadow-2xl">
+                    Registry Synchronized Successfully
+                 </div>
+                 <h2 className="text-6xl md:text-8xl font-heritage font-bold tracking-tighter uppercase leading-none">
+                    TRAVEL <span className="insta-text-gradient italic">COMMITTED.</span>
+                 </h2>
+                 <p className="text-gray-400 text-lg md:text-xl font-medium italic opacity-70">
+                    "Your journey node has been encoded into the island's eternal archives."
+                 </p>
+              </div>
             </div>
-            <div className="absolute -inset-4 border-2 border-dashed border-green-500/20 rounded-full animate-spin-slow" />
+
+            {/* Confirmation Details Card */}
+            <div className="w-full grid grid-cols-1 md:grid-cols-12 gap-10">
+               
+               {/* Left: Summary Data */}
+               <div className="md:col-span-8 bg-white/5 backdrop-blur-3xl border border-white/10 rounded-[4rem] p-10 md:p-16 space-y-12 shadow-2xl">
+                  <div className="flex flex-col sm:flex-row justify-between items-start gap-8 border-b border-white/5 pb-12">
+                     <div className="flex items-center gap-6">
+                        <div className="w-24 h-24 rounded-3xl overflow-hidden shadow-2xl border border-white/20">
+                           <img src={selectedItem?.image} className="w-full h-full object-cover" />
+                        </div>
+                        <div className="space-y-1">
+                           <p className="text-[10px] font-black text-[#E1306C] uppercase tracking-widest opacity-60">Target Node</p>
+                           <h3 className="text-3xl font-heritage font-bold uppercase">{bookingState.destination}</h3>
+                        </div>
+                     </div>
+                     <div className="text-left sm:text-right space-y-1">
+                        <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest opacity-60">Registry Node ID</p>
+                        <p className="text-xl font-mono font-bold tracking-tighter text-white">THSL-772-{Math.floor(Math.random()*10000)}</p>
+                     </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-10">
+                     <div className="space-y-2">
+                        <div className="flex items-center gap-3 text-gray-500">
+                           <Calendar size={14} />
+                           <span className="text-[9px] font-black uppercase tracking-widest">Arrival</span>
+                        </div>
+                        <p className="text-xl font-bold">{new Date(bookingState.checkIn).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                     </div>
+                     <div className="space-y-2">
+                        <div className="flex items-center gap-3 text-gray-500">
+                           <Calendar size={14} />
+                           <span className="text-[9px] font-black uppercase tracking-widest">Departure</span>
+                        </div>
+                        <p className="text-xl font-bold">{new Date(bookingState.checkOut).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                     </div>
+                     <div className="space-y-2">
+                        <div className="flex items-center gap-3 text-gray-500">
+                           <Users size={14} />
+                           <span className="text-[9px] font-black uppercase tracking-widest">Voyagers</span>
+                        </div>
+                        <p className="text-xl font-bold">{bookingState.guests} Explorers</p>
+                     </div>
+                  </div>
+
+                  <div className="pt-12 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-8">
+                     <div className="flex items-center gap-6">
+                        <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center text-green-500 border border-white/10">
+                           <ShieldCheck size={28} />
+                        </div>
+                        <div className="space-y-1">
+                           <p className="text-[8px] font-black text-white/20 uppercase tracking-widest">Security Protocol</p>
+                           <p className="text-sm font-bold uppercase tracking-widest">FULLY_ENCRYPTED_SYNC</p>
+                        </div>
+                     </div>
+                     <div className="flex gap-4">
+                        <button className="p-4 bg-white/5 hover:bg-white/10 rounded-2xl text-white transition-all shadow-xl border border-white/10"><Printer size={20} /></button>
+                        <button className="p-4 bg-white/5 hover:bg-white/10 rounded-2xl text-white transition-all shadow-xl border border-white/10"><Download size={20} /></button>
+                     </div>
+                  </div>
+               </div>
+
+               {/* Right: Settlement Pod */}
+               <div className="md:col-span-4 space-y-8">
+                  <div className="bg-[#E1306C] p-10 rounded-[4rem] text-white space-y-8 shadow-[0_40px_100px_rgba(225,48,108,0.3)]">
+                     <div className="space-y-1">
+                        <p className="text-[10px] font-black uppercase tracking-[0.4em] opacity-60">Settlement Total</p>
+                        <p className="text-6xl font-heritage font-bold tracking-tighter">${bookingSummary.total}</p>
+                     </div>
+                     <div className="space-y-4 pt-6 border-t border-white/20">
+                        <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest opacity-60">
+                           <span>Base Rate</span>
+                           <span>${bookingSummary.base}</span>
+                        </div>
+                        <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest opacity-60">
+                           <span>Archive Fees (15%)</span>
+                           <span>${bookingSummary.taxes}</span>
+                        </div>
+                     </div>
+                     <div className="pt-4 flex items-center gap-3">
+                        <div className="px-3 py-1 bg-white/20 rounded-lg text-[8px] font-black uppercase tracking-widest">
+                           Paid via {paymentProtocol.toUpperCase()}
+                        </div>
+                     </div>
+                  </div>
+
+                  <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[3rem] p-10 space-y-6 text-center">
+                     <QrCode size={48} className="mx-auto text-white/20 mb-4" />
+                     <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest leading-relaxed px-4">
+                        Scanned at Colombo Hub for immediate priority access.
+                     </p>
+                  </div>
+               </div>
+            </div>
+
+            {/* Footer Actions */}
+            <div className="mt-20 flex flex-col md:flex-row items-center gap-8">
+               <button 
+                onClick={() => setBookingState(prev => ({ ...prev, isSuccess: false }))}
+                className="group flex items-center gap-6 px-16 py-8 bg-white text-black rounded-full text-xs font-black uppercase tracking-[0.6em] hover:scale-105 active:scale-95 transition-all shadow-[0_30px_80px_rgba(255,255,255,0.2)]"
+              >
+                Return to Main Registry
+                <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
+              </button>
+              
+              <button 
+                className="group flex items-center gap-4 text-gray-500 hover:text-[#E1306C] transition-all text-[11px] font-black uppercase tracking-[0.3em]"
+              >
+                Inquire via Lanka AI <ExternalLink size={16} />
+              </button>
+            </div>
           </div>
-          <h3 className="text-4xl font-heritage font-bold text-[#0a0a0a] uppercase tracking-tighter mb-4">Registration Complete</h3>
-          <p className="text-gray-500 text-xl font-medium italic max-w-md mx-auto mb-12">
-            Your travel node for <span className="text-[#E1306C] font-bold">{bookingState.destination}</span> has been synchronized.
-          </p>
-          <button 
-            onClick={() => setBookingState(prev => ({ ...prev, isSuccess: false }))}
-            className="px-12 py-5 bg-[#0a0a0a] text-white rounded-full text-[10px] font-black uppercase tracking-[0.5em] hover:scale-110 active:scale-95 transition-all shadow-2xl"
-          >
-            Acknowledge Registry
-          </button>
         </div>
       )}
 
-      {/* --- REFACTORED MAIN PORTAL --- */}
+      {/* --- MAIN PORTAL --- */}
       <div className="relative h-[65vh] flex items-center justify-center overflow-hidden bg-[#0a0a0a]">
         {/* Animated Grid Overlay */}
         <div className="absolute inset-0 opacity-10 pointer-events-none" 
@@ -362,32 +495,18 @@ const Marketplace: React.FC<MarketplaceProps> = ({ language }) => {
 
       <div className="max-w-7xl mx-auto px-6 -mt-24 relative z-10 space-y-40">
         
-        {/* --- BOOKING MANIFOLD - COMING SOON VARIANT --- */}
+        {/* --- BOOKING MANIFOLD - NOW FULLY ACTIVE --- */}
         <div className="relative group">
           <div className="absolute -inset-1 bg-gradient-to-r from-[#E1306C] via-purple-500 to-[#285AEB] rounded-[5rem] blur-[80px] opacity-10 group-hover:opacity-20 transition-opacity" />
           
-          <div className="relative bg-white/95 backdrop-blur-[60px] p-8 md:p-20 rounded-[5rem] shadow-[0_80px_180px_rgba(0,0,0,0.08)] border border-gray-100 space-y-20 overflow-hidden">
+          <div className="relative bg-white/95 backdrop-blur-[60px] p-8 md:p-20 rounded-[5rem] shadow-[0_80px_180px_rgba(0,0,0,0.08)] border border-gray-50 space-y-20 overflow-hidden">
             <div className="absolute top-0 right-0 p-32 opacity-[0.02] pointer-events-none text-gray-400 rotate-12"><Target size={400} /></div>
             
-            {/* COMING SOON OVERLAY FOR FORM */}
-            <div className="absolute inset-0 z-50 bg-[#0a0a0a]/5 backdrop-blur-[4px] flex flex-col items-center justify-center text-center p-12 group/coming">
-               <div className="w-24 h-24 bg-white rounded-3xl shadow-2xl flex items-center justify-center text-[#E1306C] mb-8 animate-float border border-gray-100 group-hover/coming:rotate-12 transition-transform duration-700">
-                  <Hammer size={48} />
-               </div>
-               <div className="space-y-4 max-w-lg">
-                  <div className="px-6 py-2 bg-[#E1306C] text-white rounded-full text-[10px] font-black uppercase tracking-[0.5em] mx-auto w-fit shadow-xl mb-4">Registry Enhancement Active</div>
-                  <h3 className="text-4xl md:text-6xl font-heritage font-bold text-[#0a0a0a] uppercase tracking-tighter">Coming <span className="insta-text-gradient italic">Soon.</span></h3>
-                  <p className="text-gray-500 text-lg font-medium italic leading-relaxed">
-                    Our direct synchronization manifold for online payments is being recalibrated for maximum fidelity.
-                  </p>
-               </div>
-            </div>
-
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-10 border-b border-gray-100 pb-16 opacity-20 grayscale pointer-events-none">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-10 border-b border-gray-50 pb-16">
               <div className="space-y-6">
                 <div className="flex items-center gap-5 text-[#E1306C]">
                   <div className="w-14 h-14 rounded-2xl bg-[#E1306C]/5 flex items-center justify-center shadow-inner border border-[#E1306C]/10">
-                    <ShieldCheck size={26} />
+                    <ShieldCheck size={26} className="animate-pulse" />
                   </div>
                   <span className="text-[12px] font-black uppercase tracking-[0.6em]">Registry_Uplink_Channel</span>
                 </div>
@@ -395,88 +514,264 @@ const Marketplace: React.FC<MarketplaceProps> = ({ language }) => {
                    Sync <span className="italic insta-text-gradient">Configuration.</span>
                 </h3>
               </div>
+              <div className="flex flex-col items-start md:items-end gap-3 px-6 py-4 bg-gray-50 rounded-3xl border border-gray-100 shadow-sm">
+                 <span className="text-[9px] font-black text-gray-300 uppercase tracking-widest leading-none">Latency_Monitor</span>
+                 <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 rounded-full bg-green-500 animate-ping" />
+                    <span className="text-xs font-bold text-[#0a0a0a] tracking-tight">STABLE_CONNECT_99%</span>
+                 </div>
+              </div>
             </div>
 
-            <form className="grid grid-cols-1 xl:grid-cols-6 gap-10 opacity-20 grayscale pointer-events-none">
+            <form onSubmit={handleBookingTrigger} className="grid grid-cols-1 xl:grid-cols-6 gap-10 relative z-10">
+              
+              {/* Field 01: Destination */}
               <div className="xl:col-span-3 space-y-5">
                 <label className="flex items-center gap-3 text-[11px] font-black text-gray-400 uppercase tracking-[0.4em] ml-4">
-                  <MapPin size={16} /> Primary Node
+                  <MapPin size={16} className="text-[#E1306C]" /> Primary Node
                 </label>
-                <div className="relative">
-                  <select disabled className="w-full pl-10 pr-16 py-8 bg-gray-50 border-2 border-transparent rounded-[3rem] font-bold text-xl appearance-none shadow-inner">
-                    <option value="">Locked Registry...</option>
+                <div className="relative group/select">
+                  <select 
+                    required
+                    value={bookingState.destination}
+                    onChange={(e) => setBookingState(prev => ({...prev, destination: e.target.value}))}
+                    className="w-full pl-10 pr-16 py-8 bg-gray-50 border-2 border-transparent rounded-[3rem] focus:bg-white focus:border-[#E1306C]/20 outline-none transition-all font-bold text-xl appearance-none cursor-pointer shadow-inner text-[#0a0a0a]"
+                  >
+                    <option value="">Choose Registry Archive...</option>
+                    <optgroup label="Heritage Boutiques">
+                      {LUXURY_HOTELS.map(h => <option key={h.id} value={h.name.EN}>{h.name[language]} — ${h.price}/nt</option>)}
+                    </optgroup>
+                    <optgroup label="Active Expeditions">
+                      {PREMIUM_PACKAGES.map(p => <option key={p.id} value={p.title.EN}>{p.title[language]} — ${p.price}</option>)}
+                    </optgroup>
                   </select>
+                  <ChevronDown size={28} className="absolute right-10 top-1/2 -translate-y-1/2 text-gray-200 pointer-events-none group-hover/select:text-[#E1306C] transition-colors" />
                 </div>
               </div>
+
+              {/* Field 02: Dates */}
               <div className="xl:col-span-2 grid grid-cols-2 gap-8">
                 <div className="space-y-5">
-                  <label className="text-[11px] font-black text-gray-400 uppercase tracking-[0.4em] ml-4">Arrival</label>
-                  <input disabled type="date" className="w-full px-8 py-8 bg-gray-50 rounded-[3rem] font-bold text-base shadow-inner" />
+                  <label className="flex items-center gap-3 text-[11px] font-black text-gray-400 uppercase tracking-[0.4em] ml-4">
+                    <ChevronDown size={14} /> Arrival
+                  </label>
+                  <div className="relative group/date">
+                    <input 
+                      required
+                      type="date"
+                      min={todayDateStr}
+                      value={bookingState.checkIn}
+                      onChange={(e) => setBookingState(prev => ({...prev, checkIn: e.target.value}))}
+                      className="w-full px-8 py-8 bg-gray-50 border-2 border-transparent rounded-[3rem] focus:bg-white focus:border-[#E1306C]/20 outline-none transition-all font-bold text-base shadow-inner text-[#0a0a0a]"
+                    />
+                    <Calendar size={18} className="absolute right-8 top-1/2 -translate-y-1/2 text-gray-200 pointer-events-none" />
+                  </div>
                 </div>
                 <div className="space-y-5">
-                  <label className="text-[11px] font-black text-gray-400 uppercase tracking-[0.4em] ml-4">Departure</label>
-                  <input disabled type="date" className="w-full px-8 py-8 bg-gray-50 rounded-[3rem] font-bold text-base shadow-inner" />
+                  <label className="flex items-center gap-3 text-[11px] font-black text-gray-400 uppercase tracking-[0.4em] ml-4">
+                    <ChevronUp size={14} /> Departure
+                  </label>
+                  <div className="relative group/date">
+                    <input 
+                      required
+                      type="date"
+                      min={bookingState.checkIn || todayDateStr}
+                      value={bookingState.checkOut}
+                      onChange={(e) => setBookingState(prev => ({...prev, checkOut: e.target.value}))}
+                      className="w-full px-8 py-8 bg-gray-50 border-2 border-transparent rounded-[3rem] focus:bg-white focus:border-[#E1306C]/20 outline-none transition-all font-bold text-base shadow-inner text-[#0a0a0a]"
+                    />
+                    <Calendar size={18} className="absolute right-8 top-1/2 -translate-y-1/2 text-gray-200 pointer-events-none" />
+                  </div>
                 </div>
               </div>
+
+              {/* Field 03: Guests */}
               <div className="xl:col-span-1 space-y-5">
-                <label className="text-[11px] font-black text-gray-400 uppercase tracking-[0.4em] ml-4">Manifest</label>
-                <div className="flex items-center justify-between bg-gray-50 p-3.5 rounded-[3rem] shadow-inner">
-                   <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center text-gray-100"><Minus size={20} /></div>
-                   <span className="font-black text-2xl text-gray-200">--</span>
-                   <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center text-gray-100"><Plus size={20} /></div>
+                <label className="flex items-center gap-3 text-[11px] font-black text-gray-400 uppercase tracking-[0.4em] ml-4">
+                  <Users size={16} /> Manifest
+                </label>
+                <div className="flex items-center justify-between bg-gray-50 p-3.5 rounded-[3rem] border-2 border-transparent shadow-inner">
+                  <button 
+                    type="button" 
+                    onClick={() => setBookingState(prev => ({...prev, guests: Math.max(1, prev.guests - 1)}))}
+                    className="w-14 h-14 rounded-full bg-white shadow-sm flex items-center justify-center text-gray-400 hover:text-red-500 hover:shadow-lg transition-all active:scale-90"
+                  >
+                    <Minus size={20} />
+                  </button>
+                  <span className="font-black text-2xl text-[#0a0a0a] tabular-nums">{bookingState.guests}</span>
+                  <button 
+                    type="button" 
+                    onClick={() => setBookingState(prev => ({...prev, guests: Math.min(10, prev.guests + 1)}))}
+                    className="w-14 h-14 rounded-full bg-white shadow-sm flex items-center justify-center text-gray-400 hover:text-green-500 hover:shadow-lg transition-all active:scale-90"
+                  >
+                    <Plus size={20} />
+                  </button>
                 </div>
+              </div>
+
+              {/* Payment Methods */}
+              <div className="xl:col-span-6 space-y-12 pt-16 border-t border-gray-50">
+                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <button 
+                      type="button"
+                      onClick={() => setPaymentProtocol('stripe')}
+                      className={`flex flex-col items-center gap-6 p-10 rounded-[3.5rem] border-2 transition-all group relative overflow-hidden ${paymentProtocol === 'stripe' ? 'bg-[#0a0a0a] text-white border-transparent shadow-[0_40px_100px_rgba(0,0,0,0.25)] scale-[1.03]' : 'bg-gray-50 border-gray-100 text-gray-400 hover:bg-white hover:border-[#E1306C]/20'}`}
+                    >
+                       <div className="absolute inset-0 bg-gradient-to-tr from-[#E1306C]/10 to-transparent opacity-0 group-hover:opacity-100" />
+                       <div className={`w-20 h-20 rounded-[2rem] flex items-center justify-center transition-all duration-700 ${paymentProtocol === 'stripe' ? 'bg-[#E1306C] text-white shadow-[0_0_30px_#E1306C]' : 'bg-white text-gray-300 group-hover:text-[#E1306C]'}`}>
+                          <CreditCard size={36} />
+                       </div>
+                       <div className="text-center space-y-2 relative z-10">
+                          <p className="text-[10px] font-black uppercase tracking-[0.4em] opacity-40">Payment_Core_01</p>
+                          <p className="text-xl font-heritage font-bold">Credit/Debit Card</p>
+                       </div>
+                    </button>
+
+                    <button 
+                      type="button"
+                      onClick={() => setPaymentProtocol('paypal')}
+                      className={`flex flex-col items-center gap-6 p-10 rounded-[3.5rem] border-2 transition-all group relative overflow-hidden ${paymentProtocol === 'paypal' ? 'bg-[#0a0a0a] text-white border-transparent shadow-[0_40px_100px_rgba(0,0,0,0.25)] scale-[1.03]' : 'bg-gray-50 border-gray-100 text-gray-400 hover:bg-white hover:border-blue-500/20'}`}
+                    >
+                       <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100" />
+                       <div className={`w-20 h-20 rounded-[2rem] flex items-center justify-center transition-all duration-700 ${paymentProtocol === 'paypal' ? 'bg-blue-600 text-white shadow-[0_0_30px_#2563eb]' : 'bg-white text-gray-300 group-hover:text-blue-500'}`}>
+                          <CircleDollarSign size={36} />
+                       </div>
+                       <div className="text-center space-y-2 relative z-10">
+                          <p className="text-[10px] font-black uppercase tracking-[0.4em] opacity-40">Payment_Core_02</p>
+                          <p className="text-xl font-heritage font-bold">PayPal Hub</p>
+                       </div>
+                    </button>
+
+                    <button 
+                      type="button"
+                      onClick={() => setPaymentProtocol('bank')}
+                      className={`flex flex-col items-center gap-6 p-10 rounded-[3.5rem] border-2 transition-all group relative overflow-hidden ${paymentProtocol === 'bank' ? 'bg-[#0a0a0a] text-white border-transparent shadow-[0_40px_100px_rgba(0,0,0,0.25)] scale-[1.03]' : 'bg-gray-50 border-gray-100 text-gray-400 hover:bg-white hover:border-green-500/20'}`}
+                    >
+                       <div className="absolute inset-0 bg-gradient-to-tr from-green-500/10 to-transparent opacity-0 group-hover:opacity-100" />
+                       <div className={`w-20 h-20 rounded-[2rem] flex items-center justify-center transition-all duration-700 ${paymentProtocol === 'bank' ? 'bg-green-600 text-white shadow-[0_0_30px_#16a34a]' : 'bg-white text-gray-300 group-hover:text-green-500'}`}>
+                          <Building2 size={36} />
+                       </div>
+                       <div className="text-center space-y-2 relative z-10">
+                          <p className="text-[10px] font-black uppercase tracking-[0.4em] opacity-40">Payment_Core_03</p>
+                          <p className="text-xl font-heritage font-bold">Bank Transfer</p>
+                       </div>
+                    </button>
+                 </div>
+
+                 {bookingState.error && (
+                   <div className="p-8 bg-red-50 border border-red-100 rounded-[2.5rem] flex items-center gap-6 text-red-600 animate-in slide-in-from-top-4 shadow-xl">
+                     <ShieldAlert size={32} className="animate-pulse" />
+                     <div className="space-y-1">
+                        <p className="text-[10px] font-black uppercase tracking-[0.3em]">Validation_Interrupt</p>
+                        <p className="text-lg font-bold italic">{bookingState.error}</p>
+                     </div>
+                   </div>
+                 )}
+
+                 <div className="min-h-[160px] flex items-center justify-center">
+                    {paymentProtocol === 'paypal' ? (
+                       <div className="w-full max-w-lg space-y-10 animate-in fade-in zoom-in duration-500">
+                          <div className="text-center space-y-4">
+                             <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-blue-50 text-blue-600 text-[9px] font-black uppercase tracking-widest border border-blue-100">
+                                <Lock size={12} /> Secure Smart Redirect
+                             </div>
+                             <h4 className="text-2xl font-heritage font-bold text-[#0a0a0a]">Complete with PayPal</h4>
+                          </div>
+                          <div ref={paypalButtonRef} className="z-10 relative"></div>
+                       </div>
+                    ) : (
+                       <button 
+                        type="submit"
+                        disabled={bookingState.isProcessingPayment}
+                        className="w-full h-32 bg-[#0a0a0a] text-white rounded-[4rem] font-black text-2xl uppercase tracking-[0.8em] flex items-center justify-center gap-12 hover:bg-[#E1306C] transition-all hover:scale-[1.01] shadow-[0_50px_120px_rgba(225,48,108,0.3)] active:scale-95 group/btn relative overflow-hidden disabled:opacity-50"
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000" />
+                        <span className="relative z-10">{bookingState.isProcessingPayment ? 'Initiating Uplink...' : 'EXECUTE BOOKING'}</span>
+                        <div className="relative z-10 w-20 h-20 rounded-[2.2rem] bg-white/10 flex items-center justify-center transition-all duration-700 group-hover/btn:rotate-[360deg] group-hover/btn:bg-[#0a0a0a] group-hover/btn:shadow-2xl">
+                          {bookingState.isProcessingPayment ? <Loader2 size={40} className="animate-spin" /> : <Target size={40} />}
+                        </div>
+                      </button>
+                    )}
+                 </div>
               </div>
             </form>
           </div>
         </div>
 
-        {/* --- LUXURY SELECTION - WITH COMING SOON STATUS --- */}
-        <div className="space-y-24 relative" id="heritage-stays">
+        {/* --- LUXURY SELECTION --- */}
+        <div className="space-y-24" id="heritage-stays">
           <div className="text-center space-y-8">
             <div className="inline-flex items-center gap-4 px-6 py-2 rounded-full bg-black/5 border border-black/10 text-[#0a0a0a] text-[10px] font-black uppercase tracking-[0.5em]">
                <Gem size={16} className="text-[#E1306C]" />
                Curated Registry 01
             </div>
-            <h3 className="text-5xl md:text-8xl font-heritage font-bold text-[#0a0a0a] tracking-tighter uppercase text-center">Elite <span className="italic insta-text-gradient">Hotels.</span></h3>
+            <h3 className="text-5xl md:text-8xl font-heritage font-bold text-[#0a0a0a] tracking-tighter uppercase text-center">Elite <span className="italic insta-text-gradient">Registry.</span></h3>
           </div>
 
-          {/* COMING SOON OVERLAY FOR HOTEL SECTION */}
-          <div className="relative group">
-            <div className="absolute inset-x-0 -top-12 -bottom-12 z-40 bg-white/60 backdrop-blur-[6px] pointer-events-none flex flex-col items-center justify-center overflow-hidden rounded-[5rem] border border-gray-100/50 shadow-inner">
-               <div className="w-20 h-20 bg-[#0a0a0a] rounded-3xl flex items-center justify-center text-white mb-6 shadow-2xl animate-pulse">
-                  <BedDouble size={40} />
-               </div>
-               <div className="px-12 py-6 bg-[#0a0a0a] text-white rounded-[2rem] font-black text-xs uppercase tracking-[0.8em] shadow-[0_40px_100px_rgba(0,0,0,0.4)] border border-white/10 animate-in zoom-in duration-1000">
-                  Hotel_Archive_Pending
-               </div>
-               <p className="mt-6 text-gray-500 font-heritage font-bold italic text-lg">"Registry expansion in progress..."</p>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-16 opacity-30 grayscale blur-[4px]">
-              {filteredHotels.map((hotel) => (
-                <div key={hotel.id} className="relative bg-white rounded-[4rem] overflow-hidden border border-gray-100 shadow-sm">
-                  <div className="relative h-[480px] overflow-hidden">
-                    <img src={hotel.image} className="w-full h-full object-cover" alt={hotel.name[language]} />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+            {filteredHotels.map((hotel) => (
+              <div key={hotel.id} className="group relative bg-white rounded-[4rem] overflow-hidden border border-gray-100 shadow-[0_20px_60px_rgba(0,0,0,0.05)] transition-all duration-1000 hover:shadow-[0_80px_150px_rgba(0,0,0,0.1)] hover:-translate-y-4">
+                <div className="relative h-[480px] overflow-hidden">
+                  <img src={hotel.image} className="w-full h-full object-cover transition-transform duration-[6000ms] group-hover:scale-110" alt={hotel.name[language]} />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+                  
+                  <div className="absolute top-10 left-10 p-1.5 bg-white/10 backdrop-blur-3xl rounded-[2rem] border border-white/20 shadow-2xl transition-all duration-700 group-hover:rotate-6">
+                    <div className="px-8 py-4 bg-white/80 rounded-[1.8rem] text-[#0a0a0a] text-[10px] font-black uppercase tracking-widest flex items-center gap-3">
+                       <Radio size={14} className="text-[#E1306C] animate-pulse" />
+                       High_Res Archive
+                    </div>
                   </div>
-                  <div className="p-16 space-y-10">
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-3 text-gray-400">
-                        <MapPin size={14} className="text-[#E1306C]" />
-                        <span className="text-[10px] font-bold uppercase tracking-[0.4em]">{hotel.location}</span>
-                      </div>
-                      <h4 className="text-4xl md:text-5xl font-heritage font-bold text-[#0a0a0a]">{hotel.name[language]}</h4>
-                    </div>
-                    <div className="flex gap-6 pt-4">
-                      <div className="flex-grow py-6 bg-gray-50 text-gray-300 rounded-[2rem] font-black text-[11px] uppercase text-center border border-gray-100">Locked</div>
-                    </div>
+
+                  <div className="absolute bottom-0 right-0 bg-[#0a0a0a] text-white px-12 py-8 rounded-tl-[4rem] shadow-[0_-20px_50px_rgba(0,0,0,0.4)]">
+                     <p className="text-[11px] font-black text-[#E1306C] uppercase tracking-[0.4em] mb-1">Nightly_Manifest</p>
+                     <p className="text-4xl font-heritage font-bold">$ {hotel.price}</p>
                   </div>
                 </div>
-              ))}
-            </div>
+                
+                <div className="p-16 space-y-10">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3 text-gray-400">
+                       <MapPin size={14} className="text-[#E1306C]" />
+                       <span className="text-[10px] font-bold uppercase tracking-[0.4em]">{hotel.location}</span>
+                    </div>
+                    <h4 className="text-4xl md:text-5xl font-heritage font-bold text-[#0a0a0a] transition-all group-hover:insta-text-gradient">{hotel.name[language]}</h4>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-6 border-y border-gray-50 py-10">
+                     <div className="flex items-center gap-4 text-gray-500">
+                        <Waves size={20} />
+                        <span className="text-[10px] font-bold uppercase tracking-widest">Infinity Pool</span>
+                     </div>
+                     <div className="flex items-center gap-4 text-gray-500">
+                        <Wind size={20} />
+                        <span className="text-[10px] font-bold uppercase tracking-widest">Spa Center</span>
+                     </div>
+                  </div>
+
+                  <div className="flex gap-6 pt-4">
+                    <button 
+                      onClick={() => setSelectedHotel(hotel)}
+                      className="flex-grow py-6 bg-gray-50 text-[#0a0a0a] rounded-[2rem] font-black text-[11px] uppercase tracking-[0.4em] border border-gray-100 hover:bg-[#0a0a0a] hover:text-white transition-all shadow-sm hover:shadow-2xl"
+                    >
+                      Archive Specs
+                    </button>
+                    <button 
+                      onClick={() => { 
+                         setBookingState(prev => ({...prev, destination: hotel.name.EN}));
+                         window.scrollTo({ top: 400, behavior: 'smooth' });
+                      }}
+                      className="w-20 h-20 bg-[#0a0a0a] text-white rounded-[2rem] flex items-center justify-center hover:bg-[#E1306C] transition-all shadow-2xl active:scale-90"
+                    >
+                      <FastForward size={24} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* --- FUTURE MODULES / PLACES COMING SOON --- */}
+        {/* --- FUTURE MODULES / COMING SOON --- */}
         <div className="space-y-20 py-20 border-t border-gray-50 relative overflow-hidden" id="luxury-expeditions">
            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-40 bg-blue-600/[0.03] blur-[150px] -rotate-6 pointer-events-none" />
 
@@ -486,10 +781,10 @@ const Marketplace: React.FC<MarketplaceProps> = ({ language }) => {
                  Expansion Registry 02 & 03
               </div>
               <h3 className="text-4xl md:text-8xl font-heritage font-bold text-[#0a0a0a] uppercase tracking-tighter leading-none">
-                 COMING <span className="insta-text-gradient italic">PLACES.</span>
+                 COMING <span className="insta-text-gradient italic">SOON.</span>
               </h3>
               <p className="text-gray-400 text-base md:text-xl font-light italic max-w-2xl mx-auto border-l-4 border-blue-100 pl-8 text-center">
-                 "Our architectural bureau is currently calibrating the next wave of high-fidelity travel destinations and expeditions. Prepare for full integration."
+                 "Our architectural bureau is currently calibrating the next wave of high-fidelity travel modules. Prepare for full integration."
               </p>
            </div>
 
@@ -547,6 +842,11 @@ const Marketplace: React.FC<MarketplaceProps> = ({ language }) => {
         }
         .animate-loading-bar { animation: loading-bar 3s linear infinite; }
         .tabular-nums { font-variant-numeric: tabular-nums; }
+        @keyframes bounce-slow {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
+        .animate-bounce-slow { animation: bounce-slow 2s ease-in-out infinite; }
       `}} />
     </div>
   );
