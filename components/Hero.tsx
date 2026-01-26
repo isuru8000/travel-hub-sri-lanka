@@ -66,24 +66,24 @@ const Hero: React.FC<HeroProps> = ({ language, setView }) => {
           <div 
             className="absolute inset-0 opacity-40 transition-opacity duration-1000"
             style={{ 
-              background: `radial-gradient(circle at ${50 + mousePos.x * 30}% ${50 + mousePos.y * 30}%, #2ecc7122 0%, transparent 60%)` 
+              background: `radial-gradient(circle at ${50 + mousePos.x * 30}% ${50 + mousePos.y * 30}%, #22D3EE22 0%, transparent 60%)` 
             }} 
           />
         </div>
 
-        {/* Layer 3: Neural Mesh Protocol (Moving Grid) */}
+        {/* Layer 3: Neural Mesh Protocol (Moving Grid) - Cyan Themed */}
         <div 
           className="absolute inset-0 opacity-[0.07] transition-transform duration-500 ease-out" 
           style={{ 
-            backgroundImage: `linear-gradient(#2ecc71 1px, transparent 1px), linear-gradient(90deg, #2ecc71 1px, transparent 1px)`, 
+            backgroundImage: `linear-gradient(#22D3EE 1px, transparent 1px), linear-gradient(90deg, #22D3EE 1px, transparent 1px)`, 
             backgroundSize: '120px 120px', 
             transform: `rotateX(65deg) translateY(${scrollPos * 0.1}px) translateZ(-200px) scale(2.5)`,
             maskImage: 'radial-gradient(ellipse at center, black 20%, transparent 80%)'
           }} 
         />
 
-        {/* Layer 4: Vertical Scanline HUD Animation */}
-        <div className="absolute top-0 left-0 w-full h-[4px] bg-gradient-to-r from-transparent via-[#2ecc71]/40 to-transparent shadow-[0_0_30px_#2ecc71] animate-scan-hud z-10" />
+        {/* Layer 4: Vertical Scanline HUD Animation - Cyan Themed */}
+        <div className="absolute top-0 left-0 w-full h-[4px] bg-gradient-to-r from-transparent via-[#22D3EE]/40 to-transparent shadow-[0_0_30px_#22D3EE] animate-scan-hud z-10" />
 
         {/* Layer 5: Data Nodes (Particles) */}
         <div 
@@ -114,11 +114,11 @@ const Hero: React.FC<HeroProps> = ({ language, setView }) => {
         
         {/* Protocol Metadata (Top Badge) */}
         <div className="flex flex-col items-center gap-4 mb-14 animate-in fade-in slide-in-from-top-8 duration-1000">
-           <div className="inline-flex items-center gap-4 px-6 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-xl text-green-400 text-[9px] font-black uppercase tracking-[0.5em] shadow-[0_0_40px_rgba(46,204,113,0.2)]">
+           <div className="inline-flex items-center gap-4 px-6 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-xl text-cyan-400 text-[9px] font-black uppercase tracking-[0.5em] shadow-[0_0_40px_rgba(34,211,238,0.2)]">
              <Activity size={14} className="animate-pulse" />
              ARCHIVE_SYNC_V3.1 ACTIVE
            </div>
-           <div className="h-10 w-px bg-gradient-to-b from-green-500/50 to-transparent"></div>
+           <div className="h-10 w-px bg-gradient-to-b from-cyan-500/50 to-transparent"></div>
         </div>
         
         {/* Main Heading Group */}
@@ -130,12 +130,12 @@ const Hero: React.FC<HeroProps> = ({ language, setView }) => {
             {language === 'EN' ? (
               <>
                 <span className="block opacity-90 mb-4 tracking-[0.05em]">Discover the</span>
-                <span className="block font-script text-6xl sm:text-8xl md:text-[9.5rem] text-[#2ecc71] lowercase normal-case tracking-normal -mt-3 sm:-mt-6 md:-mt-8 drop-shadow-glow">Sri Lanka</span>
+                <span className="block font-script text-6xl sm:text-8xl md:text-[9.5rem] text-[#22D3EE] lowercase normal-case tracking-normal -mt-3 sm:-mt-6 md:-mt-8 drop-shadow-glow">Sri Lanka</span>
               </>
             ) : (
               <>
                 <span className="block opacity-90 mb-3 tracking-[0.05em]">ලංකා ආත්මය</span>
-                <span className="block font-script text-6xl sm:text-8xl md:text-[9.5rem] text-[#2ecc71] -mt-3 sm:-mt-6 md:-mt-8 drop-shadow-glow">සොයා යන්න.</span>
+                <span className="block font-script text-6xl sm:text-8xl md:text-[9.5rem] text-[#22D3EE] -mt-3 sm:-mt-6 md:-mt-8 drop-shadow-glow">සොයා යන්න.</span>
               </>
             )}
           </h1>
@@ -164,7 +164,7 @@ const Hero: React.FC<HeroProps> = ({ language, setView }) => {
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
             <span className="relative z-10 flex items-center gap-4">
               3D Registry
-              <ShieldCheck size={16} className="text-green-500 opacity-60" />
+              <ShieldCheck size={16} className="text-cyan-500 opacity-60" />
             </span>
           </button>
         </div>
@@ -175,7 +175,7 @@ const Hero: React.FC<HeroProps> = ({ language, setView }) => {
         <span className="text-[8px] font-black text-white uppercase tracking-[1em] ml-1 animate-pulse">Sync_Scroll</span>
         <div className="relative h-16 w-px overflow-hidden">
            <div className="absolute inset-0 bg-white/20"></div>
-           <div className="absolute top-0 left-0 w-full h-1/2 bg-green-500 animate-scroll-indicator"></div>
+           <div className="absolute top-0 left-0 w-full h-1/2 bg-cyan-500 animate-scroll-indicator"></div>
         </div>
       </div>
 
@@ -210,7 +210,7 @@ const Hero: React.FC<HeroProps> = ({ language, setView }) => {
           animation: radiant-pulse 2s infinite;
         }
         .drop-shadow-glow {
-          filter: drop-shadow(0 0 15px rgba(46,204,113,0.6));
+          filter: drop-shadow(0 0 15px rgba(34,211,238,0.6));
         }
         .animate-pulse-slow {
           animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;

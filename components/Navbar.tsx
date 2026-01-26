@@ -46,10 +46,10 @@ interface NavbarProps {
 
 export const TravelHubLogo = ({ size = 48, className = "" }) => (
   <div className={`relative group/logo-svg ${className}`}>
-    <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-[0_0_30px_rgba(40,90,235,0.6)] transition-all duration-700 group-hover/logo-svg:scale-110">
-      {/* Outer Tech Rings - Expanded */}
-      <circle cx="50" cy="50" r="49" stroke="currentColor" strokeWidth="0.5" className="text-gray-200/10" />
-      <circle cx="50" cy="50" r="47" stroke="rgba(255,255,255,0.1)" strokeWidth="0.8" strokeDasharray="4 12" className="animate-spin-slow" />
+    <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-[0_0_30px_rgba(34,211,238,0.6)] transition-all duration-700 group-hover/logo-svg:scale-110">
+      {/* Outer Tech Rings - Blue/Cyan Themed */}
+      <circle cx="50" cy="50" r="49" stroke="currentColor" strokeWidth="0.5" className="text-cyan-400/20" />
+      <circle cx="50" cy="50" r="47" stroke="rgba(34,211,238,0.2)" strokeWidth="0.8" strokeDasharray="4 12" className="animate-spin-slow" />
       
       {/* Expanded Network Neural Mesh Connections */}
       <g className="opacity-80">
@@ -75,14 +75,14 @@ export const TravelHubLogo = ({ size = 48, className = "" }) => (
       <circle cx="30" cy="80" r="4" fill="white" className="animate-pulse" style={{ animationDelay: '0.9s' }} />
       <circle cx="70" cy="80" r="4" fill="white" className="animate-pulse" style={{ animationDelay: '1.2s' }} />
       
-      {/* Massive Core Hub Node */}
+      {/* Massive Core Hub Node - Blue/Cyan Themed */}
       <circle cx="50" cy="50" r="8" fill="url(#hub_core_grad)" className="animate-pulse shadow-glow-blue" />
       <circle cx="50" cy="50" r="5" fill="white" className="animate-ping opacity-60" />
 
-      {/* Bold Blue Line Sweep - Max Visibility */}
+      {/* Bold Cyan Line Sweep - Max Visibility */}
       <circle 
         cx="50" cy="50" r="44" 
-        stroke="#285AEB" 
+        stroke="#22D3EE" 
         strokeWidth="2.5" 
         strokeLinecap="round"
         strokeDasharray="60 220"
@@ -90,10 +90,10 @@ export const TravelHubLogo = ({ size = 48, className = "" }) => (
         filter="url(#blue_glow)"
       />
       
-      {/* Inner Rapid Pulse Orbit */}
+      {/* Inner Rapid Pulse Orbit - Indigo Themed */}
       <circle 
         cx="50" cy="50" r="32" 
-        stroke="#E1306C" 
+        stroke="#6366F1" 
         strokeWidth="1" 
         strokeDasharray="5 150"
         className="animate-blue-line-sweep-reverse opacity-80"
@@ -108,14 +108,14 @@ export const TravelHubLogo = ({ size = 48, className = "" }) => (
           </feMerge>
         </filter>
         <radialGradient id="hub_core_grad" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-          <stop offset="0%" stopColor="#285AEB" />
-          <stop offset="70%" stopColor="#E1306C" />
-          <stop offset="100%" stopColor="#000000" />
+          <stop offset="0%" stopColor="#22D3EE" />
+          <stop offset="70%" stopColor="#3B82F6" />
+          <stop offset="100%" stopColor="#1E3A8A" />
         </radialGradient>
       </defs>
     </svg>
     
-    <div className="absolute -inset-6 bg-blue-500/10 blur-[40px] rounded-full opacity-0 group-hover/logo-svg:opacity-100 transition-opacity duration-1000" />
+    <div className="absolute -inset-6 bg-cyan-500/10 blur-[40px] rounded-full opacity-0 group-hover/logo-svg:opacity-100 transition-opacity duration-1000" />
     
     <style dangerouslySetInnerHTML={{ __html: `
       @keyframes blue-line-sweep {
@@ -138,7 +138,7 @@ export const TravelHubLogo = ({ size = 48, className = "" }) => (
         animation: spin 15s linear infinite;
       }
       .shadow-glow-blue {
-        filter: drop-shadow(0 0 12px #285AEB);
+        filter: drop-shadow(0 0 12px #22D3EE);
       }
       .shadow-glow-white {
         filter: drop-shadow(0 0 8px rgba(255,255,255,1));
@@ -243,7 +243,7 @@ const Navbar: React.FC<NavbarProps> = ({
       }`}>
         <div className="absolute inset-0 rounded-full border-t border-white/25 pointer-events-none" />
         <div className="absolute inset-0 rounded-full border-b border-black/40 pointer-events-none" />
-        <div className="absolute top-0 left-1/4 w-1/2 h-[1px] bg-gradient-to-r from-transparent via-[#E1306C] to-transparent opacity-0 group-hover/nav:opacity-100 transition-opacity duration-1000 animate-nav-scan" />
+        <div className="absolute top-0 left-1/4 w-1/2 h-[1px] bg-gradient-to-r from-transparent via-[#22D3EE] to-transparent opacity-0 group-hover/nav:opacity-100 transition-opacity duration-1000 animate-nav-scan" />
 
         <div className="flex items-center gap-5">
           <button 
@@ -255,7 +255,7 @@ const Navbar: React.FC<NavbarProps> = ({
             <div className="hidden sm:flex flex-col items-start leading-none gap-1 drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
               <span className="font-heritage font-black text-[14px] md:text-[18px] uppercase tracking-[0.3em] text-white brightness-125">Travel Hub</span>
               <div className="flex items-center gap-3">
-                 <div className="w-1.5 h-1.5 bg-[#E1306C] rounded-full animate-ping shadow-[0_0_8px_#E1306C]" />
+                 <div className="w-1.5 h-1.5 bg-[#22D3EE] rounded-full animate-ping shadow-[0_0_8px_#22D3EE]" />
                  <span className="font-black text-[8px] uppercase tracking-[0.6em] text-white/50">Sri Lanka • v4.5</span>
               </div>
             </div>
@@ -284,8 +284,8 @@ const Navbar: React.FC<NavbarProps> = ({
                   currentView === link.id ? 'drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]' : 'group-hover/link:drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]'
                 }`}>
                   {link.premium && <Zap size={11} className={`${currentView === link.id ? 'text-yellow-400 drop-shadow-[0_0_10px_#facc15]' : 'text-yellow-400/50 group-hover:text-yellow-400'}`} />}
-                  {link.highlight && <Signal size={11} className={`${currentView === link.id ? 'text-[#E1306C] drop-shadow-[0_0_10px_#E1306C]' : 'text-[#E1306C]/50 group-hover:text-[#E1306C]'}`} />}
-                  {link.icon && <span className="text-[#E1306C]">{link.icon}</span>}
+                  {link.highlight && <Signal size={11} className={`${currentView === link.id ? 'text-[#22D3EE] drop-shadow-[0_0_10px_#22D3EE]' : 'text-[#22D3EE]/50 group-hover:text-[#22D3EE]'}`} />}
+                  {link.icon && <span className="text-[#22D3EE]">{link.icon}</span>}
                   {link.label}
                   {link.hasDropdown && (
                     <ChevronDown size={14} className={`transition-transform duration-500 ${activeDropdown === link.id ? 'rotate-180 text-white' : 'opacity-40'} group-hover:opacity-100`} />
@@ -296,14 +296,14 @@ const Navbar: React.FC<NavbarProps> = ({
               {link.hasDropdown && activeDropdown === link.id && (
                 <div className="absolute top-full left-1/2 -translate-x-1/2 pt-5 w-80 animate-in fade-in slide-in-from-top-3 duration-500">
                   <div className="bg-black/95 backdrop-blur-3xl rounded-[2.5rem] shadow-[0_50px_120px_rgba(0,0,0,0.9)] border border-white/20 overflow-hidden p-4 max-h-[80vh] overflow-y-auto no-scrollbar">
-                    <div className="absolute inset-0 bg-gradient-to-tr from-[#E1306C]/15 via-transparent to-blue-500/15 pointer-events-none" />
+                    <div className="absolute inset-0 bg-gradient-to-tr from-[#22D3EE]/15 via-transparent to-blue-500/15 pointer-events-none" />
                     {link.items?.map((item) => (
                       <button
                         key={item.id}
                         onClick={() => handleNav(item.id, item.anchor)}
                         className="w-full flex items-center gap-6 px-6 py-5 hover:bg-white/10 rounded-3xl transition-all group/item text-left border border-transparent hover:border-white/10"
                       >
-                        <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-white/60 group-hover/item:bg-[#E1306C] group-hover/item:text-white transition-all shadow-inner border border-white/10 group-hover/item:shadow-[0_0_20px_rgba(225,48,108,0.4)]">
+                        <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-white/60 group-hover/item:bg-[#22D3EE] group-hover/item:text-black transition-all shadow-inner border border-white/10 group-hover/item:shadow-[0_0_20px_rgba(34,211,238,0.4)]">
                           {item.icon}
                         </div>
                         <span className="text-[11px] font-black uppercase tracking-[0.2em] text-white/80 group-hover/item:text-white group-hover/item:translate-x-2 transition-all drop-shadow-lg">
@@ -323,7 +323,7 @@ const Navbar: React.FC<NavbarProps> = ({
             onClick={() => setLanguage(language === 'EN' ? 'SI' : 'EN')}
             className="hidden sm:flex items-center gap-3 px-6 py-3 rounded-2xl transition-all text-[11px] font-black uppercase tracking-[0.4em] bg-white/10 hover:bg-white/25 text-white border border-white/20 active:scale-90 shadow-xl drop-shadow-xl"
           >
-            <Globe size={16} className="text-[#E1306C] drop-shadow-[0_0_8px_#E1306C]" />
+            <Globe size={16} className="text-[#22D3EE] drop-shadow-[0_0_8px_#22D3EE]" />
             <span className="drop-shadow-md brightness-150">{language}</span>
           </button>
 
@@ -333,7 +333,7 @@ const Navbar: React.FC<NavbarProps> = ({
                 onClick={() => setShowUserMenu(!showUserMenu)}
                 className="flex items-center gap-4 p-2 pr-8 rounded-full bg-white/15 border border-white/30 hover:border-white/50 hover:bg-white/20 transition-all active:scale-95 group/user shadow-2xl"
               >
-                <div className="w-10 h-10 rounded-full border border-[#E1306C] shadow-[0_0_20px_rgba(225,48,108,0.5)] overflow-hidden group-hover/user:scale-110 transition-transform">
+                <div className="w-10 h-10 rounded-full border border-[#22D3EE] shadow-[0_0_20px_rgba(34,211,238,0.5)] overflow-hidden group-hover/user:scale-110 transition-transform">
                   <img src={user.photo} alt={user.name} className="w-full h-full object-cover" />
                 </div>
                 <div className="hidden sm:flex flex-col items-start drop-shadow-lg">
@@ -363,7 +363,7 @@ const Navbar: React.FC<NavbarProps> = ({
               title={language === 'EN' ? "Portal Login" : "පිවිසුමට"}
               className="relative w-12 h-12 md:w-16 md:h-16 flex items-center justify-center bg-white text-black rounded-full transition-all duration-700 hover:scale-115 active:scale-90 shadow-[0_0_50px_rgba(255,255,255,0.5)] group/login overflow-hidden border border-white/60"
             >
-              <div className="absolute inset-0 bg-gradient-to-tr from-[#E1306C] via-purple-500 to-blue-500 opacity-0 group-hover/login:opacity-30 transition-opacity duration-1000" />
+              <div className="absolute inset-0 bg-gradient-to-tr from-[#22D3EE] via-purple-500 to-blue-500 opacity-0 group-hover/login:opacity-30 transition-opacity duration-1000" />
               <LogIn size={24} className="relative z-10 transition-transform group-hover/login:translate-x-1 group-hover:-translate-y-1 md:w-7 md:h-7 drop-shadow-md" />
             </button>
           )}
@@ -375,7 +375,7 @@ const Navbar: React.FC<NavbarProps> = ({
             {isOpen ? <X size={28} className="drop-shadow-xl" /> : (
               <div className="space-y-1.5 drop-shadow-xl">
                 <div className="w-7 h-0.5 bg-white rounded-full shadow-[0_0_8px_white]"></div>
-                <div className="w-5 h-0.5 bg-[#E1306C] rounded-full shadow-[0_0_8px_#E1306C]"></div>
+                <div className="w-5 h-0.5 bg-[#22D3EE] rounded-full shadow-[0_0_8px_#22D3EE]"></div>
               </div>
             )}
           </button>
@@ -404,7 +404,7 @@ const Navbar: React.FC<NavbarProps> = ({
                     {link.premium && <Zap size={32} className="text-yellow-400 animate-pulse shadow-yellow-400" />}
                     {link.label}
                   </span>
-                  {link.hasDropdown && <ChevronDown size={32} className={`text-white/30 transition-transform duration-500 ${activeDropdown === link.id ? 'rotate-180 text-[#E1306C]' : ''}`} />}
+                  {link.hasDropdown && <ChevronDown size={32} className={`text-white/30 transition-transform duration-500 ${activeDropdown === link.id ? 'rotate-180 text-[#22D3EE]' : ''}`} />}
                 </button>
                 
                 {link.hasDropdown && activeDropdown === link.id && (
@@ -415,7 +415,7 @@ const Navbar: React.FC<NavbarProps> = ({
                         onClick={() => handleNav(item.id, item.anchor)}
                         className="flex items-center gap-8 text-3xl font-bold text-white/50 hover:text-white transition-all group/item"
                       >
-                        <div className="w-2.5 h-2.5 rounded-full bg-[#E1306C] shadow-[0_0_20px_#E1306C] group-hover/item:scale-200 transition-transform" />
+                        <div className="w-2.5 h-2.5 rounded-full bg-[#22D3EE] shadow-[0_0_20px_#22D3EE] group-hover/item:scale-200 transition-transform" />
                         <span className="uppercase tracking-[0.3em] drop-shadow-2xl">{item.label}</span>
                       </button>
                     ))}
@@ -430,7 +430,7 @@ const Navbar: React.FC<NavbarProps> = ({
               onClick={() => setLanguage(language === 'EN' ? 'SI' : 'EN')}
               className="w-full py-10 rounded-[3rem] text-[13px] font-black uppercase tracking-[0.7em] text-white border border-white/20 flex items-center justify-center gap-8 bg-white/5 active:scale-95 transition-all shadow-[0_30px_80px_rgba(0,0,0,0.8)]"
             >
-              <Globe size={32} className="text-[#E1306C] animate-spin-slow drop-shadow-[0_0_15px_#E1306C]" />
+              <Globe size={32} className="text-[#22D3EE] animate-spin-slow drop-shadow-[0_0_15px_#22D3EE]" />
               <span className="drop-shadow-xl brightness-150">{language === 'EN' ? 'RECODE LANGUAGE' : 'භාෂාව වෙනස් කරන්න'}</span>
             </button>
           </div>
